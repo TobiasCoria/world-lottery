@@ -267,6 +267,66 @@
   .legend{display:flex; flex-wrap:wrap; gap:10px 20px; font-size:12px; color:var(--muted);}
   .legend i{display:inline-block; width:9px;height:9px;border-radius:2px; margin-right:6px; vertical-align:middle;}
 
+  /* ---------- user strip (persistent) ---------- */
+  .user-strip{
+    display:none; align-items:center; justify-content:space-between;
+    background:linear-gradient(135deg, rgba(23,226,154,0.08), rgba(255,255,255,0.03));
+    border:1px solid var(--panel-brd); border-radius:999px; padding:8px 18px 8px 8px; margin-bottom:20px;
+  }
+  .user-strip.show{display:flex;}
+  .us-left{display:flex; align-items:center; gap:10px;}
+  .us-avatar{width:34px;height:34px;border-radius:50%; background:linear-gradient(150deg, var(--emerald), var(--emerald-dim)); color:#04140d; font-weight:800; font-family:'Oswald'; display:flex; align-items:center; justify-content:center; font-size:14px;}
+  .us-name{font-size:13.5px; font-weight:700; color:var(--ink);}
+  .us-club{font-size:11px; color:var(--muted);}
+  .us-lbl{font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); text-align:right;}
+  .us-amt{font-family:'JetBrains Mono'; font-weight:700; font-size:16px; color:var(--emerald); text-align:right;}
+
+  /* ---------- rules box (jogo screen) ---------- */
+  .rules-box{border:1px solid var(--panel-brd); border-radius:var(--radius-md); margin-top:20px; overflow:hidden; background:rgba(255,255,255,0.02);}
+  .rules-head{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; cursor:pointer; font-weight:700; font-size:13.5px; color:var(--ink);}
+  .rules-chevron{transition:transform .2s ease; color:var(--emerald);}
+  .rules-box.open .rules-chevron{transform:rotate(180deg);}
+  .rules-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+  .rules-box.open .rules-body{max-height:600px;}
+  .rules-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:0 18px 18px;}
+  .rules-col-title{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--emerald); margin-bottom:10px;}
+  .rules-item{display:flex; gap:10px; font-size:12.5px; color:var(--muted); margin-bottom:9px; line-height:1.5;}
+  .rules-item b{flex:none; width:20px;height:20px; border-radius:5px; background:rgba(23,226,154,0.15); color:var(--emerald); font-size:11px; display:flex; align-items:center; justify-content:center;}
+  .rules-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  .rules-table td{padding:7px 8px; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--ink);}
+  .rules-table td:first-child{width:34px;}
+
+  /* ---------- concept badge ---------- */
+  .concept-banner{background:rgba(242,196,81,0.1); border:1px solid rgba(242,196,81,0.3); color:var(--gold); font-size:12px; padding:10px 14px; border-radius:var(--radius-sm); margin-bottom:22px; line-height:1.5;}
+
+  /* ---------- senagol demo ---------- */
+  .sena-grid{display:grid; grid-template-columns:repeat(10,1fr); gap:8px; margin-bottom:20px;}
+  .sena-num{aspect-ratio:1; border-radius:8px; border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); color:var(--ink); font-family:'JetBrains Mono'; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .12s ease;}
+  .sena-num:hover{border-color:rgba(23,226,154,0.4);}
+  .sena-num.picked{background:var(--emerald); color:#04140d; border-color:var(--emerald);}
+  .sena-num.disabled{opacity:.3; cursor:not-allowed;}
+  .sena-result{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;}
+  .sena-ball{width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-family:'JetBrains Mono'; font-weight:700; font-size:13px;}
+  .sena-ball.hit{background:var(--emerald); color:#04140d;}
+  .sena-ball.miss{background:rgba(255,255,255,0.08); color:var(--muted);}
+
+  /* ---------- raspadinha demo ---------- */
+  .raspa-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto 20px;}
+  .raspa-cell{aspect-ratio:1; border-radius:14px; background:linear-gradient(150deg,#2a3b4d,#152230); border:1.5px solid rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; user-select:none; transition:transform .15s ease;}
+  .raspa-cell.revealed{cursor:default; background:rgba(255,255,255,0.05); animation:pop .25s ease;}
+  @keyframes pop{from{transform:scale(.8);} to{transform:scale(1);}}
+  .raspa-status{text-align:center; font-weight:800; margin-top:6px; font-size:14px;}
+
+  /* ---------- result buttons on historico ---------- */
+  .result-btns{display:flex; gap:6px;}
+  .btn-mini{border:none; border-radius:7px; padding:6px 10px; font-size:11px; font-weight:800; cursor:pointer;}
+  .btn-mini.win{background:rgba(23,226,154,0.15); color:var(--emerald);}
+  .btn-mini.win:hover{background:rgba(23,226,154,0.28);}
+  .btn-mini.lose{background:rgba(255,77,94,0.15); color:var(--crimson);}
+  .btn-mini.lose:hover{background:rgba(255,77,94,0.28);}
+  .tag.ok2{background:rgba(23,226,154,0.15); color:var(--emerald);}
+  .tag.lost{background:rgba(255,77,94,0.15); color:var(--crimson);}
+
   footer.disclaimer{margin-top:26px; font-size:11px; color:var(--muted-dim); text-align:center; line-height:1.6;}
 
   @media(max-width:760px){
@@ -314,6 +374,20 @@
     </div>
   </div>
 
+  <div class="user-strip" id="userStrip">
+    <div class="us-left">
+      <div class="us-avatar" id="usAvatar">?</div>
+      <div>
+        <div class="us-name" id="usName">—</div>
+        <div class="us-club" id="usClub">—</div>
+      </div>
+    </div>
+    <div class="us-right">
+      <div class="us-lbl" data-i18n="us_saldo">Saldo</div>
+      <div class="us-amt" id="usAmt">R$ 0,00</div>
+    </div>
+  </div>
+
   <div class="stepper" id="stepper"></div>
 
   <!-- SCREEN: PORTADA -->
@@ -325,7 +399,7 @@
         <p data-i18n="hero_p1">O World Lottery é uma plataforma de <b>títulos de capitalização</b> — o mesmo mecanismo do tradicional "Pé de Meia" ou sorteio "São Jorge" — reconhecida pela Federação de Clubes de Futebol do Brasil para que clubes arrecadem fundos através de jogos.</p>
         <p class="pt" data-i18n="hero_p2">Não é uma casa de apostas: cada jogada compra um título de capitalização, parte concorre a prêmios e parte financia diretamente o clube, sua escolinha social e a rede que a Federação organiza.</p>
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="goTo('cadastro')" data-i18n="cta_cadastro">Cadastre-se e escolha seu clube →</button>
+          <button class="btn btn-primary" onclick="goTo('clube')" data-i18n="cta_cadastro">Escolha seu clube →</button>
           <button class="btn btn-ghost" onclick="goTo('caixaExplicacao')" data-i18n="cta_caixa">Como funciona o dinheiro?</button>
         </div>
       </div>
@@ -349,6 +423,7 @@
       <div class="step"><div class="n">05</div><div class="t" data-i18n="pyr5">Federação Internacional</div></div>
     </div>
     <footer class="disclaimer" data-i18n="disclaimer_home">World Lottery opera títulos de capitalização regulados — não é uma casa de apostas esportivas. Ambiente 100% de demonstração.</footer>
+    <footer class="disclaimer" data-i18n="disclaimer_login" style="margin-top:6px;">O login é feito na plataforma do cassino — este módulo assume que você já está autenticado por lá.</footer>
   </div>
 
   <!-- SCREEN: EXPLICAÇÃO DA CAIXA -->
@@ -369,74 +444,7 @@
       </div>
       <div class="btn-row">
         <button class="btn btn-dark" onclick="goTo('portada')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" onclick="goTo('cadastro')" data-i18n="btn_continuar_cadastro">Continuar cadastro →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: CADASTRO -->
-  <div class="screen" id="screen-cadastro">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step1of5">Passo 1 de 5</div>
-      <h2 data-i18n="h_cadastro">Crie sua conta</h2>
-      <p class="sub" data-i18n="sub_cadastro">Precisamos de alguns dados para validar sua identidade, conforme exigido para títulos de capitalização.</p>
-
-      <div class="grid2">
-        <div class="field" id="f-nome">
-          <label data-i18n="lbl_nome">Nome completo</label>
-          <input type="text" id="in-nome" data-i18n-ph="ph_nome" placeholder="Ex: João da Silva Santos">
-          <div class="err" data-i18n="err_nome">Informe seu nome completo.</div>
-        </div>
-        <div class="field" id="f-cpf">
-          <label data-i18n="lbl_cpf">CPF</label>
-          <input type="text" id="in-cpf" placeholder="000.000.000-00" maxlength="14">
-          <div class="err" data-i18n="err_cpf">CPF inválido. Verifique os dígitos.</div>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field" id="f-nasc">
-          <label data-i18n="lbl_nasc">Data de nascimento</label>
-          <input type="date" id="in-nasc">
-          <div class="err" data-i18n="err_nasc">Você precisa ter 18 anos ou mais.</div>
-        </div>
-        <div class="field" id="f-usuario">
-          <label data-i18n="lbl_usuario">Usuário</label>
-          <input type="text" id="in-usuario" data-i18n-ph="ph_usuario" placeholder="Escolha um nome de usuário">
-          <div class="err" data-i18n="err_usuario">Escolha um usuário com ao menos 4 caracteres.</div>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field" id="f-senha">
-          <label data-i18n="lbl_senha">Senha</label>
-          <input type="password" id="in-senha" data-i18n-ph="ph_senha" placeholder="Mínimo 8 caracteres">
-          <div class="err" data-i18n="err_senha">Senha muito curta.</div>
-        </div>
-        <div class="field" id="f-senha2">
-          <label data-i18n="lbl_senha2">Confirmar senha</label>
-          <input type="password" id="in-senha2" data-i18n-ph="ph_senha2" placeholder="Repita a senha">
-          <div class="err" data-i18n="err_senha2">As senhas não coincidem.</div>
-        </div>
-      </div>
-
-      <div class="check-row">
-        <input type="checkbox" id="in-2fa" checked>
-        <label for="in-2fa" data-i18n="lbl_2fa">Ativar autenticação em duas etapas (recomendado)</label>
-      </div>
-      <div class="field" id="f-2fa" style="display:none">
-        <label data-i18n="lbl_2facode">Código enviado por SMS (simulado)</label>
-        <input type="text" id="in-2fa-code" placeholder="000000" maxlength="6">
-        <div class="hint" data-i18n="hint_2fa">Ambiente de demonstração: qualquer código de 6 dígitos é aceito.</div>
-      </div>
-
-      <div class="check-row" id="f-termos">
-        <input type="checkbox" id="in-termos">
-        <label for="in-termos" data-i18n="lbl_termos">Li e aceito o regulamento do título de capitalização e a política de privacidade</label>
-      </div>
-      <div class="err" id="err-termos" style="display:none; margin:-10px 0 14px; font-size:11.5px; color:var(--crimson);" data-i18n="err_termos">Você precisa aceitar o regulamento para continuar.</div>
-
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('portada')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" onclick="submitCadastro()" data-i18n="btn_continuar">Continuar →</button>
+        <button class="btn btn-primary" onclick="goTo('clube')" data-i18n="btn_continuar_cadastro">Escolher meu clube →</button>
       </div>
     </div>
   </div>
@@ -444,7 +452,7 @@
   <!-- SCREEN: CLUBE -->
   <div class="screen" id="screen-clube">
     <div class="card">
-      <div class="eyebrow" data-i18n="step2of5">Passo 2 de 5</div>
+      <div class="eyebrow" data-i18n="step1of4">Passo 1 de 4</div>
       <h2 data-i18n="h_clube">Escolha seu clube do coração</h2>
       <p class="sub" data-i18n="sub_clube">Toda vez que você jogar, parte do valor vai para este clube e sua escolinha social.</p>
 
@@ -458,7 +466,7 @@
       <div class="selected-strip" id="selectedStrip"></div>
 
       <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('cadastro')" data-i18n="btn_voltar">← Voltar</button>
+        <button class="btn btn-dark" onclick="goTo('portada')" data-i18n="btn_voltar">← Voltar</button>
         <button class="btn btn-primary" id="btnClubContinue" disabled onclick="goTo('jogo')" data-i18n="btn_continuar">Continuar →</button>
       </div>
     </div>
@@ -467,9 +475,9 @@
   <!-- SCREEN: JOGO -->
   <div class="screen" id="screen-jogo">
     <div class="card">
-      <div class="eyebrow" data-i18n="step3of5">Passo 3 de 5</div>
+      <div class="eyebrow" data-i18n="step2of4">Passo 2 de 4</div>
       <h2 data-i18n="h_jogo">Escolha o jogo</h2>
-      <p class="sub" data-i18n="sub_jogo">Os três jogos aguardam definição final da Federação. Enquanto isso, você pode testar o circuito com o jogo de demonstração.</p>
+      <p class="sub" data-i18n="sub_jogo">A Federação ainda vai definir qual(is) jogo(s) usar. Gold League já está com demo completa; para Senagol e Raspadinha/Kini Gol não há especificação pública dos fornecedores, então montamos um modelo conceitual para você já visualizar o circuito.</p>
 
       <div class="games">
         <div class="game-card" data-game="gold" onclick="selectGame('gold')">
@@ -479,16 +487,16 @@
           <p data-i18n="game_gold_desc">Prognósticos de gols por rodada. Disponível em modo demonstração com o Campeonato Argentino.</p>
         </div>
         <div class="game-card" data-game="senagol" onclick="selectGame('senagol')">
-          <span class="badge-pending" data-i18n="badge_pend">Em definição</span>
+          <span class="badge-pending" data-i18n="badge_concept">Modelo conceitual</span>
           <div class="game-icon">SN</div>
           <h3>Senagol</h3>
-          <p data-i18n="game_pend_desc">API ainda não desenvolvida — aguardando escolha da Federação.</p>
+          <p data-i18n="game_senagol_desc">Loteria de números por rodada (modelo conceitual — sem especificação pública do fornecedor).</p>
         </div>
         <div class="game-card" data-game="raspa" onclick="selectGame('raspa')">
-          <span class="badge-pending" data-i18n="badge_pend">Em definição</span>
+          <span class="badge-pending" data-i18n="badge_concept">Modelo conceitual</span>
           <div class="game-icon">RK</div>
           <h3>Raspadinha / Kini Gol</h3>
-          <p data-i18n="game_pend_desc">API ainda não desenvolvida — aguardando escolha da Federação.</p>
+          <p data-i18n="game_raspa_desc">Cartela instantânea estilo raspadinha (modelo conceitual — sem especificação pública do fornecedor).</p>
         </div>
       </div>
 
@@ -524,14 +532,41 @@
     </div>
   </div>
 
-  <!-- SCREEN: PENDING GAME -->
-  <div class="screen" id="screen-pendente">
+  <!-- SCREEN: SENAGOL DEMO (modelo conceitual) -->
+  <div class="screen" id="screen-jogarSenagol">
     <div class="card">
-      <div class="eyebrow" data-i18n="eb_aguardando">Aguardando Federação</div>
-      <h2 id="pendenteTitulo" data-i18n="h_pendente">Jogo em definição</h2>
-      <p class="sub" data-i18n="sub_pendente">Este módulo só será integrado quando a Federação confirmar qual(is) jogo(s) serão utilizados. O esqueleto da plataforma já está pronto para conectar a API assim que ela existir.</p>
+      <div class="eyebrow" data-i18n="step4of4b">Passo 4 de 4 · Modelo conceitual</div>
+      <h2>Senagol</h2>
+      <div class="concept-banner" data-i18n="concept_senagol">Não encontramos especificação pública deste jogo — este é um modelo conceitual (loteria de números) só para testar o circuito de cadastro → carteira → jogada → histórico. Substitua pela API real quando a Federação definir o fornecedor.</div>
+      <p class="sub" data-i18n="sub_senagol">Escolha 5 números de 1 a 50. Jogada de <b>R$ 10,00</b>.</p>
+
+      <div class="sena-grid" id="senaGrid"></div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <span class="hint" id="senaPickCount"></span>
+      </div>
+      <div id="senaError" style="color:var(--crimson); font-size:12.5px; display:none;" data-i18n="goal_error">Preencha todos os campos e verifique se há saldo suficiente.</div>
+
       <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('jogo')" data-i18n="btn_outrojogo">← Escolher outro jogo</button>
+        <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_voltar">← Voltar</button>
+        <button class="btn btn-primary" onclick="submitSenagol()" data-i18n="btn_confirmarjogada2">Confirmar jogada — R$ 10,00 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN: RASPADINHA DEMO (modelo conceitual) -->
+  <div class="screen" id="screen-jogarRaspa">
+    <div class="card">
+      <div class="eyebrow" data-i18n="step4of4b">Passo 4 de 4 · Modelo conceitual</div>
+      <h2>Raspadinha / Kini Gol</h2>
+      <div class="concept-banner" data-i18n="concept_raspa">Não encontramos especificação pública deste jogo — este é um modelo conceitual (cartela instantânea) só para testar o circuito. Substitua pela API real quando a Federação definir o fornecedor.</div>
+      <p class="sub" data-i18n="sub_raspa">Raspe as 9 células. Três bolas iguais em linha, coluna ou diagonal = prêmio. Cartela de <b>R$ 10,00</b>.</p>
+
+      <div class="raspa-grid" id="raspaGrid"></div>
+      <div class="raspa-status" id="raspaStatus"></div>
+
+      <div class="btn-row">
+        <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_voltar">← Voltar</button>
+        <button class="btn btn-primary" id="btnNovaCartela" onclick="startRaspa()" data-i18n="btn_novacartela">Comprar nova cartela — R$ 10,00</button>
       </div>
     </div>
   </div>
@@ -539,7 +574,7 @@
   <!-- SCREEN: CARTEIRA -->
   <div class="screen" id="screen-carteira">
     <div class="card">
-      <div class="eyebrow" data-i18n="step4of5">Passo 4 de 5</div>
+      <div class="eyebrow" data-i18n="step3of4">Passo 3 de 4</div>
       <h2 data-i18n="h_carteira">Carregue sua carteira</h2>
       <p class="sub" data-i18n="sub_carteira">Toda carga é feita via Pix (99,9% dos casos). Este é um ambiente de demonstração — nenhuma cobrança real é feita.</p>
 
@@ -561,9 +596,14 @@
         <button class="btn btn-gold" onclick="confirmPix()" data-i18n="pix_confirm">Confirmar pagamento simulado</button>
       </div>
 
+      <div id="txWrap" style="margin-top:22px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:8px;" data-i18n="tx_title">Últimas movimentações</div>
+        <table><tbody id="txBody"></tbody></table>
+      </div>
+
       <div class="btn-row">
         <button class="btn btn-dark" onclick="goTo('jogo')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" id="btnCarteiraContinue" disabled onclick="goTo('jogar')" data-i18n="btn_irjogo">Ir para o jogo →</button>
+        <button class="btn btn-primary" id="btnCarteiraContinue" disabled onclick="goToGameScreen()" data-i18n="btn_irjogo">Ir para o jogo →</button>
       </div>
     </div>
   </div>
@@ -571,7 +611,7 @@
   <!-- SCREEN: JOGAR (GOAL LEAGUE DEMO) -->
   <div class="screen" id="screen-jogar">
     <div class="card">
-      <div class="eyebrow" data-i18n="step5of5">Passo 5 de 5 · Demo · Campeonato Argentino</div>
+      <div class="eyebrow" data-i18n="step4of4">Passo 4 de 4 · Demo · Campeonato Argentino</div>
       <h2 data-i18n="h_jogar">Faça seu prognóstico</h2>
       <p class="sub" data-i18n="sub_jogar">Jogada de <b>R$ 10,00</b> por cartão. O valor será descontado do seu saldo e distribuído conforme a tabela de repasse.</p>
 
@@ -626,7 +666,7 @@
 
       <div class="btn-row">
         <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_maissaldo">Carregar mais saldo</button>
-        <button class="btn btn-primary" onclick="goTo('jogar')" data-i18n="btn_jogarnovamente">Jogar novamente</button>
+        <button class="btn btn-primary" onclick="goToGameScreen()" data-i18n="btn_jogarnovamente">Jogar novamente</button>
       </div>
     </div>
   </div>
@@ -661,15 +701,15 @@ const T = {
     hero_h1:'Seu clube pode <em>ganhar</em> a cada jogada',
     hero_p1:'O World Lottery é uma plataforma de <b>títulos de capitalização</b> — o mesmo mecanismo do tradicional "Pé de Meia" ou sorteio "São Jorge" — reconhecida pela Federação de Clubes de Futebol do Brasil para que clubes arrecadem fundos através de jogos.',
     hero_p2:'Não é uma casa de apostas: cada jogada compra um título de capitalização, parte concorre a prêmios e parte financia diretamente o clube, sua escolinha social e a rede que a Federação organiza.',
-    cta_cadastro:'Cadastre-se e escolha seu clube →', cta_caixa:'Como funciona o dinheiro?',
+    cta_cadastro:'Escolha seu clube →', cta_caixa:'Como funciona o dinheiro?',
     ticket_live:'RODADA ABERTA', ticket_l1:'Jogo em demonstração', ticket_l2:'Valor por cartão', ticket_l3:'Prêmio bruto da rodada', ticket_l4:'Repasse ao clube + escolinha',
     pyr1:'Você escolhe o jogo', pyr2:'Seu clube do coração', pyr3:'Escolinha social do clube', pyr4:'Federação estadual', pyr5:'Federação Internacional',
     disclaimer_home:'World Lottery opera títulos de capitalização regulados — não é uma casa de apostas esportivas. Ambiente 100% de demonstração.',
+    disclaimer_login:'O login é feito na plataforma do cassino — este módulo assume que você já está autenticado por lá.',
     eb_transp:'Transparência', h_caixa:'Como funciona sua carteira', sub_caixa:'Toda carga de saldo é feita via Pix. Sua carteira tem dois compartimentos, sempre rastreáveis, conforme a lei antilavagem do Brasil.',
     lbl_seusaldo:'Seu saldo', hint_seusaldo:'É sempre seu. Pode ser usado em jogadas ou solicitado de volta pelo mesmo Pix de origem.',
     lbl_receita:'Receita da plataforma', hint_receita:'Comissões e taxas descontadas apenas quando você joga — nunca sobre o saldo parado.',
-    btn_voltar:'← Voltar', btn_continuar_cadastro:'Continuar cadastro →',
-    step1of5:'Passo 1 de 5', h_cadastro:'Crie sua conta', sub_cadastro:'Precisamos de alguns dados para validar sua identidade, conforme exigido para títulos de capitalização.',
+    btn_voltar:'← Voltar', btn_continuar_cadastro:'Escolher meu clube →',
     lbl_nome:'Nome completo', ph_nome:'Ex: João da Silva Santos', err_nome:'Informe seu nome completo.',
     lbl_cpf:'CPF', err_cpf:'CPF inválido. Verifique os dígitos.',
     lbl_nasc:'Data de nascimento', err_nasc:'Você precisa ter 18 anos ou mais.',
@@ -679,19 +719,36 @@ const T = {
     lbl_2fa:'Ativar autenticação em duas etapas (recomendado)', lbl_2facode:'Código enviado por SMS (simulado)', hint_2fa:'Ambiente de demonstração: qualquer código de 6 dígitos é aceito.',
     lbl_termos:'Li e aceito o regulamento do título de capitalização e a política de privacidade', err_termos:'Você precisa aceitar o regulamento para continuar.',
     btn_continuar:'Continuar →',
-    step2of5:'Passo 2 de 5', h_clube:'Escolha seu clube do coração', sub_clube:'Toda vez que você jogar, parte do valor vai para este clube e sua escolinha social.',
-    note_clube:'Lista de amostra enquanto o levantamento oficial das 27 federações estaduais é concluído (pendente 2 assinaturas).',
+    step1of4:'Passo 1 de 4', h_clube:'Escolha seu clube do coração', sub_clube:'Toda vez que você jogar, parte do valor vai para este clube e sua escolinha social.',
+    note_clube:'Base com os clubes reais das Séries A, B, C e D do Brasileirão 2026 (CBF), cobrindo as 27 federações. Ainda não inclui as divisões estaduais amadoras — levantamento completo é tarefa separada.',
     ph_buscar:'Buscar clube ou estado...', fed_word:'Federação',
-    step3of5:'Passo 3 de 5', h_jogo:'Escolha o jogo', sub_jogo:'Os três jogos aguardam definição final da Federação. Enquanto isso, você pode testar o circuito com o jogo de demonstração.',
-    badge_demo:'Demo ativa', badge_pend:'Em definição',
+    step2of4:'Passo 2 de 4', h_jogo:'Escolha o jogo', sub_jogo:'A Federação ainda vai definir qual(is) jogo(s) usar. Gold League já está com demo completa; para Senagol e Raspadinha/Kini Gol não há especificação pública dos fornecedores, então montamos um modelo conceitual para você já visualizar o circuito.',
+    badge_demo:'Demo ativa', badge_pend:'Em definição', badge_concept:'Modelo conceitual',
     game_gold_desc:'Prognósticos de gols por rodada. Disponível em modo demonstração com o Campeonato Argentino.',
     game_pend_desc:'API ainda não desenvolvida — aguardando escolha da Federação.',
+    game_senagol_desc:'Loteria de números por rodada (modelo conceitual — sem especificação pública do fornecedor).',
+    game_raspa_desc:'Cartela instantânea estilo raspadinha (modelo conceitual — sem especificação pública do fornecedor).',
+    rules_title:'Como jogar e ganhar — Gold League', rules_mecanica_t:'Mecânica',
+    rules_mecanica_1:'Total, 2º tempo e atacantes: quantidade de gols em cada categoria, na rodada.',
+    rules_mecanica_2:'Cabeça e faltas: gols de cabeça e gols de falta/pênalti da rodada.',
+    rules_mecanica_3:'Primeiro gol: minuto em que sai o primeiro gol da rodada.',
+    rules_premios_t:'Faixas de prêmio', rules_p1:'6 acertos — Linha 1 + Linha 2 + Linha 3',
+    rules_p2:'4 ou 5 acertos entre as três linhas', rules_p3:'Acerto exato da Linha 1 (Total)',
     eb_aguardando:'Aguardando Federação', h_pendente:'Jogo em definição',
     sub_pendente:'Este módulo só será integrado quando a Federação confirmar qual(is) jogo(s) serão utilizados. O esqueleto da plataforma já está pronto para conectar a API assim que ela existir.',
     btn_outrojogo:'← Escolher outro jogo',
-    step4of5:'Passo 4 de 5', h_carteira:'Carregue sua carteira', sub_carteira:'Toda carga é feita via Pix (99,9% dos casos). Este é um ambiente de demonstração — nenhuma cobrança real é feita.',
+    step3of4:'Passo 3 de 4', h_carteira:'Carregue sua carteira', sub_carteira:'Toda carga é feita via Pix (99,9% dos casos). Este é um ambiente de demonstração — nenhuma cobrança real é feita.',
     lbl_saldodisp:'Saldo disponível', lbl_clubesel:'Clube selecionado', pix_scan:'Escaneie o QR Pix (simulado)', pix_confirm:'Confirmar pagamento simulado', btn_irjogo:'Ir para o jogo →',
-    step5of5:'Passo 5 de 5 · Demo · Campeonato Argentino', h_jogar:'Faça seu prognóstico',
+    tx_title:'Últimas movimentações', tx_empty:'Nenhuma movimentação ainda.', tx_carga:'Carga via Pix', tx_jogada:'Jogada',
+    us_saldo:'Saldo',
+    step4of4:'Passo 4 de 4 · Demo · Campeonato Argentino', h_jogar:'Faça seu prognóstico',
+    step4of4b:'Passo 4 de 4 · Modelo conceitual',
+    concept_senagol:'Não encontramos especificação pública deste jogo — este é um modelo conceitual (loteria de números) só para testar o circuito de cadastro → carteira → jogada → histórico. Substitua pela API real quando a Federação definir o fornecedor.',
+    sub_senagol:'Escolha 5 números de 1 a 50. Jogada de <b>R$ 10,00</b>.',
+    sena_pick:'números escolhidos', btn_confirmarjogada2:'Confirmar jogada — R$ 10,00 →',
+    concept_raspa:'Não encontramos especificação pública deste jogo — este é um modelo conceitual (cartela instantânea) só para testar o circuito. Substitua pela API real quando a Federação definir o fornecedor.',
+    sub_raspa:'Raspe as 9 células. Três bolas iguais em linha, coluna ou diagonal = prêmio. Cartela de <b>R$ 10,00</b>.',
+    btn_novacartela:'Comprar nova cartela — R$ 10,00', raspa_ganhou:'🎉 Cartela premiada!', raspa_perdeu:'Não foi dessa vez.', raspa_saldo:'Saldo insuficiente para comprar a cartela.',
     sub_jogar:'Jogada de <b>R$ 10,00</b> por cartão. O valor será descontado do seu saldo e distribuído conforme a tabela de repasse.',
     g_total:'TOTAL', g_segundo:'2º TEMPO', g_atacantes:'ATACANTES', g_cabeca:'CABEÇA', g_faltas:'FALTAS', g_primeiro:'PRIMEIRO GOL', g_min:'Min.', g_liga:'Liga', g_ml:'ML (Multiliga)',
     goal_error:'Preencha todos os campos e verifique se há saldo suficiente.', btn_confirmarjogada:'Confirmar jogada — R$ 10,00 →',
@@ -699,7 +756,9 @@ const T = {
     sub_historico:'Isso é tudo que o módulo de jogo informa: se você ganhou ou perdeu e a cobrança correspondente. O repasse para clube, escolinha e federações é administrado pela plataforma.',
     th_data:'Data', th_clube:'Clube', th_jogo:'Jogo', th_valor:'Valor', th_status:'Status',
     btn_maissaldo:'Carregar mais saldo', btn_jogarnovamente:'Jogar novamente',
-    status_pendente:'Aguardando resultado', empty_clubs:'Nenhum clube encontrado.', empty_history:'Nenhuma jogada ainda.',
+    status_pendente:'Aguardando resultado', status_ganhou:'Ganhou', status_perdeu:'Perdeu',
+    btn_marcarganhou:'Marcar ganhou', btn_marcarperdeu:'Marcar perdeu',
+    empty_clubs:'Nenhum clube encontrado.', empty_history:'Nenhuma jogada ainda.',
     split_title:'Distribuição da arrecadação (por jogada)',
     dash_freelancer_title:'Painel do Freelancer', dash_freelancer_eb:'Visão individual', dash_freelancer_sub:'Você vê apenas o que você mesmo gerou — nunca os dados de outros freelancers.',
     dash_clube_title:'Painel do Clube', dash_clube_eb:'Visão do clube', dash_clube_sub:'Arrecadação trazida pelos freelancers e influencers do clube, e valor destinado à escolinha.',
@@ -719,15 +778,15 @@ const T = {
     hero_h1:'Tu club puede <em>ganar</em> en cada jugada',
     hero_p1:'World Lottery es una plataforma de <b>títulos de capitalización</b> — el mismo mecanismo del tradicional sorteo tipo "San Jorge" — reconocida por la Federación de Clubes de Fútbol de Brasil para que los clubes recauden fondos a través de juegos.',
     hero_p2:'No es una casa de apuestas: cada jugada compra un título de capitalización, parte concursa por premios y parte financia directamente al club, su escuelita social y la red que organiza la Federación.',
-    cta_cadastro:'Registrate y elegí tu club →', cta_caixa:'¿Cómo funciona el dinero?',
+    cta_cadastro:'Elegí tu club →', cta_caixa:'¿Cómo funciona el dinero?',
     ticket_live:'FECHA ABIERTA', ticket_l1:'Juego en demostración', ticket_l2:'Valor por cartón', ticket_l3:'Premio bruto de la fecha', ticket_l4:'Reparto a club + escuelita',
     pyr1:'Elegís el juego', pyr2:'Tu club del corazón', pyr3:'Escuelita social del club', pyr4:'Federación estadual', pyr5:'Federación Internacional',
     disclaimer_home:'World Lottery opera títulos de capitalización regulados — no es una casa de apuestas deportivas. Entorno 100% de demostración.',
+    disclaimer_login:'El login se hace en la plataforma del casino — este módulo asume que ya estás autenticado desde ahí.',
     eb_transp:'Transparencia', h_caixa:'Cómo funciona tu billetera', sub_caixa:'Toda carga de saldo se hace vía Pix. Tu billetera tiene dos compartimentos, siempre trazables, según la ley antilavado de Brasil.',
     lbl_seusaldo:'Tu saldo', hint_seusaldo:'Siempre es tuyo. Podés usarlo en jugadas o pedirlo de vuelta por el mismo Pix de origen.',
     lbl_receita:'Ingresos de la plataforma', hint_receita:'Comisiones y tasas descontadas solo cuando jugás — nunca sobre el saldo parado.',
-    btn_voltar:'← Volver', btn_continuar_cadastro:'Continuar registro →',
-    step1of5:'Paso 1 de 5', h_cadastro:'Creá tu cuenta', sub_cadastro:'Necesitamos algunos datos para validar tu identidad, según lo exigido para títulos de capitalización.',
+    btn_voltar:'← Volver', btn_continuar_cadastro:'Elegir mi club →',
     lbl_nome:'Nombre completo', ph_nome:'Ej: Juan Pérez González', err_nome:'Ingresá tu nombre completo.',
     lbl_cpf:'CPF', err_cpf:'CPF inválido. Verificá los dígitos.',
     lbl_nasc:'Fecha de nacimiento', err_nasc:'Necesitás tener 18 años o más.',
@@ -737,19 +796,36 @@ const T = {
     lbl_2fa:'Activar autenticación en dos pasos (recomendado)', lbl_2facode:'Código enviado por SMS (simulado)', hint_2fa:'Entorno de demostración: cualquier código de 6 dígitos es aceptado.',
     lbl_termos:'Leí y acepto el reglamento del título de capitalización y la política de privacidad', err_termos:'Necesitás aceptar el reglamento para continuar.',
     btn_continuar:'Continuar →',
-    step2of5:'Paso 2 de 5', h_clube:'Elegí tu club del corazón', sub_clube:'Cada vez que juegues, parte del valor va para este club y su escuelita social.',
-    note_clube:'Lista de muestra mientras se completa el relevamiento oficial de las 27 federaciones estaduales (faltan 2 firmas).',
+    step1of4:'Paso 1 de 4', h_clube:'Elegí tu club del corazón', sub_clube:'Cada vez que juegues, parte del valor va para este club y su escuelita social.',
+    note_clube:'Base con los clubes reales de las Series A, B, C y D del Brasileirão 2026 (CBF), cubriendo las 27 federaciones. Todavía no incluye las divisiones estaduales amateur — el relevamiento completo es una tarea aparte.',
     ph_buscar:'Buscar club o estado...', fed_word:'Federación',
-    step3of5:'Paso 3 de 5', h_jogo:'Elegí el juego', sub_jogo:'Los tres juegos esperan la definición final de la Federación. Mientras tanto, podés probar el circuito con el juego de demostración.',
-    badge_demo:'Demo activa', badge_pend:'En definición',
+    step2of4:'Paso 2 de 4', h_jogo:'Elegí el juego', sub_jogo:'La Federación todavía va a definir qué juego(s) usar. Gold League ya tiene demo completa; para Senagol y Raspadinha/Kini Gol no hay especificación pública de los proveedores, así que armamos un modelo conceptual para que ya veas el circuito.',
+    badge_demo:'Demo activa', badge_pend:'En definición', badge_concept:'Modelo conceptual',
     game_gold_desc:'Pronósticos de goles por fecha. Disponible en modo demostración con el Campeonato Argentino.',
     game_pend_desc:'API todavía no desarrollada — esperando la elección de la Federación.',
+    game_senagol_desc:'Lotería de números por fecha (modelo conceptual — sin especificación pública del proveedor).',
+    game_raspa_desc:'Cartón instantáneo tipo raspadita (modelo conceptual — sin especificación pública del proveedor).',
+    rules_title:'Cómo jugar y ganar — Gold League', rules_mecanica_t:'Mecánica',
+    rules_mecanica_1:'Total, 2º tiempo y delanteros: cantidad de goles en cada categoría, en la fecha.',
+    rules_mecanica_2:'Cabeza y tiros libres: goles de cabeza y de tiro libre/penal de la fecha.',
+    rules_mecanica_3:'Primer gol: minuto en que llega el primer gol de la fecha.',
+    rules_premios_t:'Niveles de premio', rules_p1:'6 aciertos — Línea 1 + Línea 2 + Línea 3',
+    rules_p2:'4 o 5 aciertos entre las tres líneas', rules_p3:'Acierto exacto de la Línea 1 (Total)',
     eb_aguardando:'Esperando a la Federación', h_pendente:'Juego en definición',
     sub_pendente:'Este módulo solo se integrará cuando la Federación confirme qué juego(s) se van a usar. El esqueleto de la plataforma ya está listo para conectar la API en cuanto exista.',
     btn_outrojogo:'← Elegir otro juego',
-    step4of5:'Paso 4 de 5', h_carteira:'Cargá tu billetera', sub_carteira:'Toda carga se hace vía Pix (99,9% de los casos). Este es un entorno de demostración — no se realiza ningún cobro real.',
+    step3of4:'Paso 3 de 4', h_carteira:'Cargá tu billetera', sub_carteira:'Toda carga se hace vía Pix (99,9% de los casos). Este es un entorno de demostración — no se realiza ningún cobro real.',
     lbl_saldodisp:'Saldo disponible', lbl_clubesel:'Club seleccionado', pix_scan:'Escaneá el QR Pix (simulado)', pix_confirm:'Confirmar pago simulado', btn_irjogo:'Ir al juego →',
-    step5of5:'Paso 5 de 5 · Demo · Campeonato Argentino', h_jogar:'Hacé tu pronóstico',
+    tx_title:'Últimos movimientos', tx_empty:'Todavía no hay movimientos.', tx_carga:'Carga vía Pix', tx_jogada:'Jugada',
+    us_saldo:'Saldo',
+    step4of4:'Paso 4 de 4 · Demo · Campeonato Argentino', h_jogar:'Hacé tu pronóstico',
+    step4of4b:'Paso 4 de 4 · Modelo conceptual',
+    concept_senagol:'No encontramos especificación pública de este juego — este es un modelo conceptual (lotería de números) solo para probar el circuito de registro → billetera → jugada → historial. Reemplazalo por la API real cuando la Federación defina el proveedor.',
+    sub_senagol:'Elegí 5 números del 1 al 50. Jugada de <b>R$ 10,00</b>.',
+    sena_pick:'números elegidos', btn_confirmarjogada2:'Confirmar jugada — R$ 10,00 →',
+    concept_raspa:'No encontramos especificación pública de este juego — este es un modelo conceptual (cartón instantáneo) solo para probar el circuito. Reemplazalo por la API real cuando la Federación defina el proveedor.',
+    sub_raspa:'Raspá las 9 celdas. Tres bolas iguales en línea, columna o diagonal = premio. Cartón de <b>R$ 10,00</b>.',
+    btn_novacartela:'Comprar cartón nuevo — R$ 10,00', raspa_ganhou:'🎉 ¡Cartón premiado!', raspa_perdeu:'No fue esta vez.', raspa_saldo:'Saldo insuficiente para comprar el cartón.',
     sub_jogar:'Jugada de <b>R$ 10,00</b> por cartón. El valor se descuenta de tu saldo y se distribuye según la tabla de reparto.',
     g_total:'TOTAL', g_segundo:'2º TIEMPO', g_atacantes:'DELANTEROS', g_cabeca:'CABEZA', g_faltas:'TIROS LIBRES', g_primeiro:'PRIMER GOL', g_min:'Min.', g_liga:'Liga', g_ml:'ML (Multiliga)',
     goal_error:'Completá todos los campos y verificá que haya saldo suficiente.', btn_confirmarjogada:'Confirmar jugada — R$ 10,00 →',
@@ -757,7 +833,9 @@ const T = {
     sub_historico:'Esto es todo lo que informa el módulo del juego: si ganaste o perdiste y el cobro correspondiente. El reparto a club, escuelita y federaciones lo administra la plataforma.',
     th_data:'Fecha', th_clube:'Club', th_jogo:'Juego', th_valor:'Valor', th_status:'Estado',
     btn_maissaldo:'Cargar más saldo', btn_jogarnovamente:'Jugar de nuevo',
-    status_pendente:'Esperando resultado', empty_clubs:'No se encontraron clubes.', empty_history:'Todavía no hay jugadas.',
+    status_pendente:'Esperando resultado', status_ganhou:'Ganó', status_perdeu:'Perdió',
+    btn_marcarganhou:'Marcar ganó', btn_marcarperdeu:'Marcar perdió',
+    empty_clubs:'No se encontraron clubes.', empty_history:'Todavía no hay jugadas.',
     split_title:'Distribución de la recaudación (por jugada)',
     dash_freelancer_title:'Panel del Freelancer', dash_freelancer_eb:'Vista individual', dash_freelancer_sub:'Solo ves lo que vos mismo generaste — nunca los datos de otros freelancers.',
     dash_clube_title:'Panel del Club', dash_clube_eb:'Vista del club', dash_clube_sub:'Recaudación traída por los freelancers e influencers del club, y monto destinado a la escuelita.',
@@ -791,34 +869,110 @@ function setLang(lang){
   applyStaticI18n();
   renderClubs();
   renderHistorico();
+  renderTx();
+  renderUserStrip();
   if(state.viewMode !== 'jogador') renderDashboard(state.viewMode);
   renderWallet();
+  if(state.step === 'jogarSenagol') renderSenaGrid();
 }
 
 /* ---------------- state ---------------- */
+// O login acontece na plataforma do cassino. Este módulo assume a sessão já autenticada
+// (em produção, isso viria do token/contexto que o cassino injeta no módulo do jogo).
 const state = {
-  step: 'portada', user: {}, club: null, game: null,
-  wallet: 0, entryValue: 10, history: [], viewMode: 'jogador'
+  step: 'portada', user: {usuario:'jogador_cassino'}, club: null, game: null,
+  wallet: 0, entryValue: 10, history: [], tx: [], viewMode: 'jogador',
+  senaPicks: []
 };
-const playerFlow = ['portada','cadastro','clube','jogo','carteira','jogar','historico'];
-const stepScreens = ['cadastro','clube','jogo','carteira','jogar'];
+const playerFlow = ['portada','clube','jogo','carteira','jogar','jogarSenagol','jogarRaspa','historico'];
+const stepScreens = ['clube','jogo','carteira','jogar'];
 
 /* ---------------- federations badges ---------------- */
 const feds = ['CBF','RJ','SP','MG','RS'];
 document.getElementById('fedRow').innerHTML = feds.map(f=>`<div class="fed-badge"><div class="dot">${f}</div><span>${t('fed_word')||'Federação'} ${f}</span></div>`).join('');
 
 /* ---------------- club data ---------------- */
+// Base real de clubes: Séries A, B, C e D do Brasileirão 2026 (CBF), cobrindo as 27 unidades federativas.
+// ~155 clubes verificados. A lista oficial completa de filiados (incluindo divisões amadoras) é tarefa
+// separada pendente com a Federação (conforme minuta) — esta base já cobre todos os estados com clubes reais.
 const clubs = [
-  {name:'Flamengo', state:'RJ'}, {name:'Fluminense', state:'RJ'}, {name:'Vasco da Gama', state:'RJ'}, {name:'Botafogo', state:'RJ'},
-  {name:'Palmeiras', state:'SP'}, {name:'Corinthians', state:'SP'}, {name:'São Paulo', state:'SP'}, {name:'Santos', state:'SP'},
-  {name:'Cruzeiro', state:'MG'}, {name:'Atlético Mineiro', state:'MG'}, {name:'América Mineiro', state:'MG'},
-  {name:'Grêmio', state:'RS'}, {name:'Internacional', state:'RS'}, {name:'Juventude', state:'RS'},
-  {name:'Bahia', state:'BA'}, {name:'Vitória', state:'BA'},
-  {name:'Sport Recife', state:'PE'}, {name:'Náutico', state:'PE'},
-  {name:'Athletico Paranaense', state:'PR'}, {name:'Coritiba', state:'PR'},
-  {name:'Fortaleza', state:'CE'}, {name:'Ceará', state:'CE'},
-  {name:'Goiás', state:'GO'}, {name:'Vila Nova', state:'GO'},
-  {name:'Bragantino', state:'SP'}, {name:'Criciúma', state:'SC'}, {name:'Avaí', state:'SC'}
+  // Série A 2026 (20)
+  {name:'Atlético Mineiro', state:'MG'}, {name:'Bahia', state:'BA'}, {name:'Botafogo', state:'RJ'},
+  {name:'Bragantino', state:'SP'}, {name:'Corinthians', state:'SP'}, {name:'Cruzeiro', state:'MG'},
+  {name:'Flamengo', state:'RJ'}, {name:'Fluminense', state:'RJ'}, {name:'Grêmio', state:'RS'},
+  {name:'Internacional', state:'RS'}, {name:'Mirassol', state:'SP'}, {name:'Palmeiras', state:'SP'},
+  {name:'Santos', state:'SP'}, {name:'São Paulo', state:'SP'}, {name:'Vasco da Gama', state:'RJ'},
+  {name:'Vitória', state:'BA'}, {name:'Athletico Paranaense', state:'PR'}, {name:'Chapecoense', state:'SC'},
+  {name:'Coritiba', state:'PR'}, {name:'Remo', state:'PA'},
+  // Série B 2026
+  {name:'Botafogo-SP', state:'SP'}, {name:'Novorizontino', state:'SP'}, {name:'Ponte Preta', state:'SP'}, {name:'São Bernardo', state:'SP'},
+  {name:'Atlético Goianiense', state:'GO'}, {name:'Goiás', state:'GO'}, {name:'Vila Nova', state:'GO'},
+  {name:'Ceará', state:'CE'}, {name:'Fortaleza', state:'CE'},
+  {name:'América Mineiro', state:'MG'}, {name:'Athletic', state:'MG'},
+  {name:'Londrina', state:'PR'}, {name:'Operário Ferroviário', state:'PR'},
+  {name:'Náutico', state:'PE'}, {name:'Sport Recife', state:'PE'},
+  {name:'Avaí', state:'SC'}, {name:'Criciúma', state:'SC'},
+  {name:'CRB', state:'AL'}, {name:'Juventude', state:'RS'},
+  // Série C 2026
+  {name:'Confiança', state:'SE'}, {name:'Ypiranga', state:'RS'}, {name:'Maringá', state:'PR'}, {name:'Ituano', state:'SP'},
+  {name:'Botafogo-PB', state:'PB'}, {name:'Figueirense', state:'SC'}, {name:'Anápolis', state:'GO'}, {name:'Itabaiana', state:'SE'},
+  {name:'Guarani', state:'SP'}, {name:'Floresta', state:'CE'}, {name:'Brusque', state:'SC'}, {name:'Caxias', state:'RS'},
+  {name:'Inter de Limeira', state:'SP'}, {name:'Barra', state:'SC'}, {name:'Maranhão', state:'MA'}, {name:'Santa Cruz', state:'PE'},
+  {name:'Paysandu', state:'PA'}, {name:'Volta Redonda', state:'RJ'}, {name:'Amazonas', state:'AM'}, {name:'Ferroviária', state:'SP'},
+  // Série D 2026 — Acre
+  {name:'Independência', state:'AC'}, {name:'Galvez', state:'AC'}, {name:'Humaitá', state:'AC'},
+  // Alagoas
+  {name:'ASA', state:'AL'}, {name:'CSE', state:'AL'}, {name:'CSA', state:'AL'},
+  // Amapá
+  {name:'Trem', state:'AP'}, {name:'Oratório', state:'AP'},
+  // Amazonas
+  {name:'Nacional', state:'AM'}, {name:'Manaus', state:'AM'}, {name:'Manauara', state:'AM'},
+  // Bahia
+  {name:'Jacuipense', state:'BA'}, {name:'Atlético de Alagoinhas', state:'BA'}, {name:'Porto', state:'BA'}, {name:'Juazeirense', state:'BA'},
+  // Ceará
+  {name:'Maracanã', state:'CE'}, {name:'Ferroviário', state:'CE'}, {name:'Tirol', state:'CE'}, {name:'Atlético Cearense', state:'CE'}, {name:'Iguatu', state:'CE'},
+  // Distrito Federal
+  {name:'Gama', state:'DF'}, {name:'Capital', state:'DF'}, {name:'Ceilândia', state:'DF'}, {name:'Brasiliense', state:'DF'},
+  // Espírito Santo
+  {name:'Rio Branco-ES', state:'ES'}, {name:'Vitória-ES', state:'ES'}, {name:'Real Noroeste', state:'ES'},
+  // Goiás
+  {name:'CRAC', state:'GO'}, {name:'ABECAT', state:'GO'}, {name:'Inhumas', state:'GO'}, {name:'Goiatuba', state:'GO'}, {name:'Aparecidense', state:'GO'},
+  // Maranhão
+  {name:'Imperatriz', state:'MA'}, {name:'IAPE', state:'MA'}, {name:'Sampaio Corrêa', state:'MA'}, {name:'Moto Club', state:'MA'},
+  // Mato Grosso
+  {name:'Primavera', state:'MT'}, {name:'Mixto', state:'MT'}, {name:'Luverdense', state:'MT'}, {name:'CEOV', state:'MT'}, {name:'União Rondonópolis', state:'MT'},
+  // Mato Grosso do Sul
+  {name:'Operário (MS)', state:'MS'}, {name:'Ivinhema', state:'MS'},
+  // Minas Gerais
+  {name:'Tombense', state:'MG'}, {name:'Uberlândia', state:'MG'}, {name:'Betim', state:'MG'}, {name:'Democrata GV', state:'MG'}, {name:'Pouso Alegre', state:'MG'},
+  // Pará
+  {name:'Tuna Luso', state:'PA'}, {name:'Águia de Marabá', state:'PA'},
+  // Paraíba
+  {name:'Sousa', state:'PB'}, {name:'Serra Branca', state:'PB'}, {name:'Treze', state:'PB'},
+  // Paraná
+  {name:'Cianorte', state:'PR'}, {name:'Azuriz', state:'PR'}, {name:'São Joseense', state:'PR'}, {name:'FC Cascavel', state:'PR'},
+  // Pernambuco
+  {name:'Retrô', state:'PE'}, {name:'Maguary', state:'PE'}, {name:'Decisão', state:'PE'}, {name:'Central', state:'PE'},
+  // Piauí
+  {name:'Piauí', state:'PI'}, {name:'Fluminense-PI', state:'PI'}, {name:'Altos', state:'PI'}, {name:'Parnahyba', state:'PI'},
+  // Rio de Janeiro
+  {name:'Sampaio Corrêa-RJ', state:'RJ'}, {name:'Madureira', state:'RJ'}, {name:'America-RJ', state:'RJ'}, {name:'Maricá', state:'RJ'}, {name:'Nova Iguaçu', state:'RJ'}, {name:'Portuguesa-RJ', state:'RJ'},
+  // Rio Grande do Norte
+  {name:'ABC', state:'RN'}, {name:'América de Natal', state:'RN'}, {name:'Laguna', state:'RN'},
+  // Rio Grande do Sul
+  {name:'São Luiz', state:'RS'}, {name:'Guarany de Bagé', state:'RS'}, {name:'Brasil de Pelotas', state:'RS'}, {name:'São José', state:'RS'},
+  // Rondônia
+  {name:'Porto Velho', state:'RO'}, {name:'Guaporé', state:'RO'},
+  // Roraima
+  {name:'GAS', state:'RR'}, {name:'Monte Roraima', state:'RR'}, {name:'São Raimundo', state:'RR'},
+  // Santa Catarina
+  {name:'Santa Catarina', state:'SC'}, {name:'Joinville', state:'SC'}, {name:'Blumenau', state:'SC'}, {name:'Marcílio Dias', state:'SC'},
+  // São Paulo
+  {name:'Velo Clube', state:'SP'}, {name:'Portuguesa', state:'SP'}, {name:'Noroeste', state:'SP'}, {name:'XV de Piracicaba', state:'SP'}, {name:'Água Santa', state:'SP'},
+  // Sergipe
+  {name:'Sergipe', state:'SE'}, {name:'Lagarto', state:'SE'},
+  // Tocantins
+  {name:'Araguaína', state:'TO'}, {name:'Tocantinópolis', state:'TO'}
 ];
 function clubColor(name){ let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))%360; return `hsl(${h},55%,42%)`; }
 function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
@@ -842,8 +996,8 @@ function renderClubs(){
   });
   document.getElementById('clubList').innerHTML = html || `<div class="empty-state">${t('empty_clubs')}</div>`;
   document.getElementById('clubCount').textContent =
-    (LANG==='pt' ? `Mostrando ${filtered.length} de ${clubs.length} clubes de amostra · lista oficial terá +200`
-                 : `Mostrando ${filtered.length} de ${clubs.length} clubes de muestra · la lista oficial tendrá +200`);
+    (LANG==='pt' ? `Mostrando ${filtered.length} de ${clubs.length} clubes (Séries A-D 2026, 27 federações)`
+                 : `Mostrando ${filtered.length} de ${clubs.length} clubes (Series A-D 2026, 27 federaciones)`);
   if(state.club){
     const strip = document.getElementById('selectedStrip');
     strip.classList.add('show');
@@ -856,56 +1010,7 @@ function pickClub(name){
   document.getElementById('btnClubContinue').disabled = false;
 }
 
-/* ---------------- validation helpers ---------------- */
-function isValidCPF(cpf){
-  // Ambiente de demonstração: valida apenas o formato (11 dígitos, não todos iguais).
-  // Quando a integração real existir, trocar por validação de dígito verificador completa.
-  cpf = cpf.replace(/\D/g,'');
-  if(cpf.length !== 11) return false;
-  if(/^(\d)\1{10}$/.test(cpf)) return false;
-  return true;
-}
-document.getElementById('in-cpf').addEventListener('input', e=>{
-  let v = e.target.value.replace(/\D/g,'').slice(0,11);
-  if(v.length>9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');
-  else if(v.length>6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/,'$1.$2.$3');
-  else if(v.length>3) v = v.replace(/(\d{3})(\d{0,3})/,'$1.$2');
-  e.target.value = v;
-});
-document.getElementById('in-2fa').addEventListener('change', e=>{
-  document.getElementById('f-2fa').style.display = e.target.checked ? 'block' : 'none';
-});
 function setInvalid(id, invalid){ document.getElementById(id).classList.toggle('invalid', invalid); }
-
-function submitCadastro(){
-  let ok = true;
-  const nome = document.getElementById('in-nome').value.trim();
-  const cpf = document.getElementById('in-cpf').value;
-  const nasc = document.getElementById('in-nasc').value;
-  const usuario = document.getElementById('in-usuario').value.trim();
-  const senha = document.getElementById('in-senha').value;
-  const senha2 = document.getElementById('in-senha2').value;
-
-  setInvalid('f-nome', nome.split(' ').length < 2); if(nome.split(' ').length < 2) ok=false;
-  setInvalid('f-cpf', !isValidCPF(cpf)); if(!isValidCPF(cpf)) ok=false;
-
-  let idade = 0;
-  if(nasc){ const d = new Date(nasc); idade = (Date.now() - d.getTime()) / (1000*60*60*24*365.25); }
-  setInvalid('f-nasc', !nasc || idade < 18); if(!nasc || idade < 18) ok=false;
-
-  setInvalid('f-usuario', usuario.length < 4); if(usuario.length < 4) ok=false;
-  setInvalid('f-senha', senha.length < 8); if(senha.length < 8) ok=false;
-  setInvalid('f-senha2', senha !== senha2 || senha2.length===0); if(senha !== senha2 || senha2.length===0) ok=false;
-
-  const termosOk = document.getElementById('in-termos').checked;
-  document.getElementById('err-termos').style.display = termosOk ? 'none' : 'block';
-  if(!termosOk) ok=false;
-
-  if(!ok) return;
-  state.user = {nome, cpf, nasc, usuario};
-  goTo('clube');
-  renderClubs();
-}
 
 /* ---------------- game selection ---------------- */
 function selectGame(g){
@@ -915,15 +1020,29 @@ function selectGame(g){
   document.getElementById('btnJogoContinue').disabled = false;
 }
 function onGameContinue(){
-  if(state.game === 'gold'){
-    goTo('carteira');
-    renderWallet();
-  } else {
-    document.getElementById('pendenteTitulo').textContent =
-      state.game === 'senagol' ? (LANG==='pt'?'Senagol — aguardando definição':'Senagol — esperando definición')
-                                : (LANG==='pt'?'Raspadinha / Kini Gol — aguardando definição':'Raspadinha / Kini Gol — esperando definición');
-    goTo('pendente');
-  }
+  goTo('carteira');
+  renderWallet();
+}
+function goToGameScreen(){
+  const map = { gold:'jogar', senagol:'jogarSenagol', raspa:'jogarRaspa' };
+  const screen = map[state.game] || 'jogar';
+  goTo(screen);
+  if(screen === 'jogarSenagol') renderSenaGrid();
+  if(screen === 'jogarRaspa') startRaspa();
+}
+
+/* ---------------- toggle rules panel ---------------- */
+function toggleRules(){ document.getElementById('rulesBox').classList.toggle('open'); }
+
+/* ---------------- persistent user strip ---------------- */
+function renderUserStrip(){
+  const strip = document.getElementById('userStrip');
+  if(!state.user.usuario){ strip.classList.remove('show'); return; }
+  strip.classList.add('show');
+  document.getElementById('usAvatar').textContent = state.user.usuario.slice(0,2).toUpperCase();
+  document.getElementById('usName').textContent = state.user.usuario;
+  document.getElementById('usClub').textContent = state.club || (LANG==='pt'?'Sem clube ainda':'Sin club todavía');
+  document.getElementById('usAmt').textContent = 'R$ ' + state.wallet.toFixed(2).replace('.',',');
 }
 
 /* ---------------- wallet ---------------- */
@@ -934,10 +1053,23 @@ function renderWallet(){
   document.getElementById('amountChips').innerHTML = chipValues.map(v=>
     `<div class="chip ${v===pixSelected?'active':''}" data-v="${v}" onclick="selectChip(${v})">R$ ${v}</div>`).join('');
   document.getElementById('btnCarteiraContinue').disabled = state.wallet < state.entryValue;
+  renderUserStrip();
 }
 let pixSelected = 20;
 function selectChip(v){ pixSelected = v; renderWallet(); }
-function confirmPix(){ state.wallet += pixSelected; renderWallet(); }
+function pushTx(type, value){
+  state.tx.unshift({date:new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'), type, value});
+  renderTx();
+}
+function renderTx(){
+  const body = document.getElementById('txBody');
+  if(!body) return;
+  body.innerHTML = state.tx.slice(0,6).map(x=>`
+    <tr><td>${x.date}</td><td>${x.type==='carga'?t('tx_carga'):t('tx_jogada')}</td>
+    <td class="mono" style="color:${x.value>0?'var(--emerald)':'var(--crimson)'}">${x.value>0?'+':''}R$ ${x.value.toFixed(2).replace('.',',')}</td></tr>
+  `).join('') || `<tr><td class="empty-state" style="padding:20px 0;">${t('tx_empty')}</td></tr>`;
+}
+function confirmPix(){ state.wallet += pixSelected; pushTx('carga', pixSelected); renderWallet(); }
 
 /* ---------------- jogar / goal league demo ---------------- */
 function submitJogada(){
@@ -950,20 +1082,145 @@ function submitJogada(){
   errBox.style.display = 'none';
 
   state.wallet -= state.entryValue;
+  pushTx('jogada', -state.entryValue);
   state.history.unshift({
     date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'),
-    club: state.club, game: 'Gold League (demo)', value: state.entryValue
+    club: state.club, game: 'Gold League', value: state.entryValue, status:'pendente'
   });
   renderHistorico();
+  renderWallet();
   goTo('historico');
 }
 
+/* ---------------- senagol demo (modelo conceitual) ---------------- */
+function renderSenaGrid(){
+  const grid = document.getElementById('senaGrid');
+  grid.innerHTML = '';
+  for(let n=1; n<=50; n++){
+    const picked = state.senaPicks.includes(n);
+    const disabled = !picked && state.senaPicks.length >= 5;
+    const el = document.createElement('div');
+    el.className = 'sena-num' + (picked?' picked':'') + (disabled?' disabled':'');
+    el.textContent = n;
+    el.onclick = () => toggleSenaNum(n);
+    grid.appendChild(el);
+  }
+  document.getElementById('senaPickCount').textContent =
+    `${state.senaPicks.length}/5 ${t('sena_pick')}`;
+}
+function toggleSenaNum(n){
+  const i = state.senaPicks.indexOf(n);
+  if(i>-1) state.senaPicks.splice(i,1);
+  else if(state.senaPicks.length < 5) state.senaPicks.push(n);
+  renderSenaGrid();
+}
+function submitSenagol(){
+  const errBox = document.getElementById('senaError');
+  if(state.senaPicks.length !== 5 || state.wallet < state.entryValue){ errBox.style.display='block'; return; }
+  errBox.style.display = 'none';
+  state.wallet -= state.entryValue;
+  pushTx('jogada', -state.entryValue);
+  state.history.unshift({
+    date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'),
+    club: state.club, game: 'Senagol (conceitual)', value: state.entryValue, status:'pendente'
+  });
+  state.senaPicks = [];
+  renderHistorico();
+  renderWallet();
+  goTo('historico');
+}
+
+/* ---------------- raspadinha demo (modelo conceitual) ---------------- */
+const raspaIcons = ['⚽','🏆','⭐','🎯','🔥'];
+let raspaBoard = []; let raspaRevealed = []; let raspaActive = false;
+function startRaspa(){
+  if(state.wallet < state.entryValue){
+    document.getElementById('raspaStatus').textContent = t('raspa_saldo');
+    document.getElementById('raspaStatus').style.color = 'var(--crimson)';
+    return;
+  }
+  state.wallet -= state.entryValue;
+  pushTx('jogada', -state.entryValue);
+  renderWallet();
+
+  raspaBoard = [];
+  // build a board that guarantees a coherent random outcome
+  for(let i=0;i<9;i++) raspaBoard.push(raspaIcons[Math.floor(Math.random()*raspaIcons.length)]);
+  raspaRevealed = new Array(9).fill(false);
+  raspaActive = true;
+  document.getElementById('raspaStatus').textContent = '';
+  document.getElementById('btnNovaCartela').disabled = true;
+  renderRaspaGrid();
+}
+function renderRaspaGrid(){
+  const grid = document.getElementById('raspaGrid');
+  grid.innerHTML = '';
+  for(let i=0;i<9;i++){
+    const cell = document.createElement('div');
+    cell.className = 'raspa-cell' + (raspaRevealed[i] ? ' revealed' : '');
+    cell.textContent = raspaRevealed[i] ? raspaBoard[i] : '?';
+    cell.onclick = () => revealRaspa(i);
+    grid.appendChild(cell);
+  }
+}
+function revealRaspa(i){
+  if(!raspaActive || raspaRevealed[i]) return;
+  raspaRevealed[i] = true;
+  renderRaspaGrid();
+  if(raspaRevealed.every(r=>r)) finishRaspa();
+}
+function finishRaspa(){
+  raspaActive = false;
+  document.getElementById('btnNovaCartela').disabled = false;
+  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  const won = lines.some(([a,b,c]) => raspaBoard[a]===raspaBoard[b] && raspaBoard[b]===raspaBoard[c]);
+  const statusEl = document.getElementById('raspaStatus');
+  if(won){
+    const premio = state.entryValue * 3;
+    state.wallet += premio;
+    pushTx('jogada', premio);
+    statusEl.textContent = t('raspa_ganhou') + ' +R$ ' + premio.toFixed(2).replace('.',',');
+    statusEl.style.color = 'var(--emerald)';
+  } else {
+    statusEl.textContent = t('raspa_perdeu');
+    statusEl.style.color = 'var(--muted)';
+  }
+  state.history.unshift({
+    date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'),
+    club: state.club, game: 'Raspadinha/Kini Gol (conceitual)', value: state.entryValue,
+    status: won ? 'ganhou' : 'perdeu'
+  });
+  renderWallet();
+  renderHistorico();
+}
+
+/* ---------------- historico ---------------- */
+function resolveHistory(idx, result){
+  const h = state.history[idx];
+  h.status = result;
+  if(result === 'ganhou'){
+    const premio = h.value * 3;
+    state.wallet += premio;
+    pushTx('jogada', premio);
+    renderWallet();
+  }
+  renderHistorico();
+}
+function statusTag(h, idx){
+  if(h.status === 'ganhou') return `<span class="tag ok2">${t('status_ganhou')}</span>`;
+  if(h.status === 'perdeu') return `<span class="tag lost">${t('status_perdeu')}</span>`;
+  return `<div class="result-btns">
+    <button class="btn-mini win" onclick="resolveHistory(${idx},'ganhou')">${t('btn_marcarganhou')}</button>
+    <button class="btn-mini lose" onclick="resolveHistory(${idx},'perdeu')">${t('btn_marcarperdeu')}</button>
+  </div>`;
+}
+
 function renderHistorico(){
-  document.getElementById('historicoBody').innerHTML = state.history.map(h=>`
+  document.getElementById('historicoBody').innerHTML = state.history.map((h,idx)=>`
     <tr>
       <td>${h.date}</td><td>${h.club}</td><td>${h.game}</td>
       <td class="mono">R$ ${h.value.toFixed(2).replace('.',',')}</td>
-      <td><span class="tag pend">${t('status_pendente')}</span></td>
+      <td>${statusTag(h, idx)}</td>
     </tr>`).join('') || `<tr><td colspan="5" class="empty-state">${t('empty_history')}</td></tr>`;
 }
 
@@ -973,6 +1230,7 @@ function goTo(name){
   document.getElementById('screen-'+name).classList.add('active');
   state.step = name;
   renderStepper();
+  renderUserStrip();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function renderStepper(){
@@ -1027,6 +1285,8 @@ applyStaticI18n();
 renderClubs();
 renderStepper();
 renderWallet();
+renderTx();
+renderUserStrip();
 </script>
 </body>
 </html>

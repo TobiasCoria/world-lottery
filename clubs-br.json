@@ -1,0 +1,1394 @@
+[
+{
+"name": "Flamengo",
+"state": "RJ"
+},
+{
+"name": "Fluminense",
+"state": "RJ"
+},
+{
+"name": "Vasco da Gama",
+"state": "RJ"
+},
+{
+"name": "Botafogo",
+"state": "RJ"
+},
+{
+"name": "Palmeiras",
+"state": "SP"
+},
+{
+"name": "Corinthians",
+"state": "SP"
+},
+{
+"name": "São Paulo",
+"state": "SP"
+},
+{
+"name": "Santos",
+"state": "SP"
+},
+{
+"name": "Red Bull Bragantino",
+"state": "SP"
+},
+{
+"name": "Mirassol",
+"state": "SP"
+},
+{
+"name": "São Bernardo",
+"state": "SP"
+},
+{
+"name": "Cruzeiro",
+"state": "MG"
+},
+{
+"name": "Atlético Mineiro",
+"state": "MG"
+},
+{
+"name": "América Mineiro",
+"state": "MG"
+},
+{
+"name": "Grêmio",
+"state": "RS"
+},
+{
+"name": "Internacional",
+"state": "RS"
+},
+{
+"name": "Juventude",
+"state": "RS"
+},
+{
+"name": "Bahia",
+"state": "BA"
+},
+{
+"name": "Vitória",
+"state": "BA"
+},
+{
+"name": "Fortaleza",
+"state": "CE"
+},
+{
+"name": "Ceará",
+"state": "CE"
+},
+{
+"name": "Athletico Paranaense",
+"state": "PR"
+},
+{
+"name": "Coritiba",
+"state": "PR"
+},
+{
+"name": "Goiás",
+"state": "GO"
+},
+{
+"name": "Vila Nova",
+"state": "GO"
+},
+{
+"name": "Atlético Goianiense",
+"state": "GO"
+},
+{
+"name": "Cuiabá",
+"state": "MT"
+},
+{
+"name": "Sport Recife",
+"state": "PE"
+},
+{
+"name": "Náutico",
+"state": "PE"
+},
+{
+"name": "Santa Cruz",
+"state": "PE"
+},
+{
+"name": "Chapecoense",
+"state": "SC"
+},
+{
+"name": "Avaí",
+"state": "SC"
+},
+{
+"name": "Criciúma",
+"state": "SC"
+},
+{
+"name": "Figueirense",
+"state": "SC"
+},
+{
+"name": "Paysandu",
+"state": "PA"
+},
+{
+"name": "Remo",
+"state": "PA"
+},
+{
+"name": "Sampaio Corrêa",
+"state": "MA"
+},
+{
+"name": "Moto Club",
+"state": "MA"
+},
+{
+"name": "ABC",
+"state": "RN"
+},
+{
+"name": "América RN",
+"state": "RN"
+},
+{
+"name": "CSA",
+"state": "AL"
+},
+{
+"name": "CRB",
+"state": "AL"
+},
+{
+"name": "ASA",
+"state": "AL"
+},
+{
+"name": "Confiança",
+"state": "SE"
+},
+{
+"name": "Sergipe",
+"state": "SE"
+},
+{
+"name": "River",
+"state": "PI"
+},
+{
+"name": "Altos",
+"state": "PI"
+},
+{
+"name": "Fluminense PI",
+"state": "PI"
+},
+{
+"name": "Parnahyba",
+"state": "PI"
+},
+{
+"name": "Caucaia",
+"state": "CE"
+},
+{
+"name": "Ferroviário",
+"state": "CE"
+},
+{
+"name": "Icasa",
+"state": "CE"
+},
+{
+"name": "Floresta",
+"state": "CE"
+},
+{
+"name": "Guarany Sobral",
+"state": "CE"
+},
+{
+"name": "Tiradentes",
+"state": "CE"
+},
+{
+"name": "Amapá",
+"state": "AP"
+},
+{
+"name": "Santos AP",
+"state": "AP"
+},
+{
+"name": "Trem",
+"state": "AP"
+},
+{
+"name": "Manaus",
+"state": "AM"
+},
+{
+"name": "Amazonas",
+"state": "AM"
+},
+{
+"name": "Nacional AM",
+"state": "AM"
+},
+{
+"name": "Fast Clube",
+"state": "AM"
+},
+{
+"name": "Porto Velho",
+"state": "RO"
+},
+{
+"name": "Ji-Paraná",
+"state": "RO"
+},
+{
+"name": "Guajará",
+"state": "RO"
+},
+{
+"name": "São Raimundo RR",
+"state": "RR"
+},
+{
+"name": "Atlético Roraima",
+"state": "RR"
+},
+{
+"name": "GAS",
+"state": "RR"
+},
+{
+"name": "Palmas",
+"state": "TO"
+},
+{
+"name": "Tocantinópolis",
+"state": "TO"
+},
+{
+"name": "Araguaína",
+"state": "TO"
+},
+{
+"name": "Cascavel",
+"state": "PR"
+},
+{
+"name": "FC Cascavel",
+"state": "PR"
+},
+{
+"name": "Londrina",
+"state": "PR"
+},
+{
+"name": "Operário PR",
+"state": "PR"
+},
+{
+"name": "Maringá",
+"state": "PR"
+},
+{
+"name": "Cianorte",
+"state": "PR"
+},
+{
+"name": "São José RS",
+"state": "RS"
+},
+{
+"name": "Pelotas",
+"state": "RS"
+},
+{
+"name": "Brasil Pelotas",
+"state": "RS"
+},
+{
+"name": "Esportivo",
+"state": "RS"
+},
+{
+"name": "Aimoré",
+"state": "RS"
+},
+{
+"name": "Veranópolis",
+"state": "RS"
+},
+{
+"name": "Marcílio Dias",
+"state": "SC"
+},
+{
+"name": "Joinville",
+"state": "SC"
+},
+{
+"name": "Brusque",
+"state": "SC"
+},
+{
+"name": "Metropolitano",
+"state": "SC"
+},
+{
+"name": "Camboriú",
+"state": "SC"
+},
+{
+"name": "Hercílio Luz",
+"state": "SC"
+},
+{
+"name": "XV de Piracicaba",
+"state": "SP"
+},
+{
+"name": "Ponte Preta",
+"state": "SP"
+},
+{
+"name": "Guarani",
+"state": "SP"
+},
+{
+"name": "Ituano",
+"state": "SP"
+},
+{
+"name": "Novorizontino",
+"state": "SP"
+},
+{
+"name": "Bota S-P",
+"state": "SP"
+},
+{
+"name": "Portuguesa",
+"state": "SP"
+},
+{
+"name": "São Bento",
+"state": "SP"
+},
+{
+"name": "Taubaté",
+"state": "SP"
+},
+{
+"name": "Nacional SP",
+"state": "SP"
+},
+{
+"name": "Juventus SP",
+"state": "SP"
+},
+{
+"name": "Rio Claro",
+"state": "SP"
+},
+{
+"name": "Votuporanguense",
+"state": "SP"
+},
+{
+"name": "Desportivo Brasil",
+"state": "SP"
+},
+{
+"name": "Monte Azul",
+"state": "SP"
+},
+{
+"name": "Tupi",
+"state": "MG"
+},
+{
+"name": "Caldense",
+"state": "MG"
+},
+{
+"name": "Uberlândia",
+"state": "MG"
+},
+{
+"name": "Ipatinga",
+"state": "MG"
+},
+{
+"name": "Democrata GV",
+"state": "MG"
+},
+{
+"name": "América TO",
+"state": "MG"
+},
+{
+"name": "Social",
+"state": "MG"
+},
+{
+"name": "Mamoré",
+"state": "MG"
+},
+{
+"name": "URT",
+"state": "MG"
+},
+{
+"name": "Villa Nova",
+"state": "MG"
+},
+{
+"name": "Boa Esporte",
+"state": "MG"
+},
+{
+"name": "Patrocinense",
+"state": "MG"
+},
+{
+"name": "Tombense",
+"state": "MG"
+},
+{
+"name": "AAC",
+"state": "MG"
+},
+{
+"name": "Uberaba",
+"state": "MG"
+},
+{
+"name": "Rio Branco ES",
+"state": "ES"
+},
+{
+"name": "Real Noroeste",
+"state": "ES"
+},
+{
+"name": "Vitória ES",
+"state": "ES"
+},
+{
+"name": "Espírito Santo",
+"state": "ES"
+},
+{
+"name": "Conilon",
+"state": "ES"
+},
+{
+"name": "Gama",
+"state": "DF"
+},
+{
+"name": "Brasiliense",
+"state": "DF"
+},
+{
+"name": "Ceilândia",
+"state": "DF"
+},
+{
+"name": "Legião",
+"state": "DF"
+},
+{
+"name": "Sobradinho",
+"state": "DF"
+},
+{
+"name": "Águia Negra",
+"state": "MS"
+},
+{
+"name": "Operário MS",
+"state": "MS"
+},
+{
+"name": "Aquidauanense",
+"state": "MS"
+},
+{
+"name": "Novoperário",
+"state": "MS"
+},
+{
+"name": "CENE",
+"state": "MS"
+},
+{
+"name": "URSO",
+"state": "MS"
+},
+{
+"name": "Luverdense",
+"state": "MT"
+},
+{
+"name": "União Rondonópolis",
+"state": "MT"
+},
+{
+"name": "CEOV",
+"state": "MT"
+},
+{
+"name": "Mixto",
+"state": "MT"
+},
+{
+"name": "Academia MT",
+"state": "MT"
+},
+{
+"name": "Dom Bosco",
+"state": "MT"
+},
+{
+"name": "Goiatuba",
+"state": "GO"
+},
+{
+"name": "CRAC",
+"state": "GO"
+},
+{
+"name": "Anápolis",
+"state": "GO"
+},
+{
+"name": "Grêmio Anápolis",
+"state": "GO"
+},
+{
+"name": "Inhumas",
+"state": "GO"
+},
+{
+"name": "Morrinhos",
+"state": "GO"
+},
+{
+"name": "Jataiense",
+"state": "GO"
+},
+{
+"name": "Aparecidense",
+"state": "GO"
+},
+{
+"name": "Goiânia",
+"state": "GO"
+},
+{
+"name": "ABECAT",
+"state": "GO"
+},
+{
+"name": "Picos",
+"state": "PI"
+},
+{
+"name": "4 de Julho",
+"state": "PI"
+},
+{
+"name": "Ferroviário PI",
+"state": "PI"
+},
+{
+"name": "Bacabal",
+"state": "MA"
+},
+{
+"name": "Tuntum",
+"state": "MA"
+},
+{
+"name": "Maranhão AC",
+"state": "MA"
+},
+{
+"name": "São José MA",
+"state": "MA"
+},
+{
+"name": "Juazeirense",
+"state": "BA"
+},
+{
+"name": "Jacobina",
+"state": "BA"
+},
+{
+"name": "Barcelona IL",
+"state": "BA"
+},
+{
+"name": "Vitória Conquista",
+"state": "BA"
+},
+{
+"name": "Jacuipense",
+"state": "BA"
+},
+{
+"name": "Alagoinhas",
+"state": "BA"
+},
+{
+"name": "Leônico",
+"state": "BA"
+},
+{
+"name": "Petrolina",
+"state": "PE"
+},
+{
+"name": "Retrô",
+"state": "PE"
+},
+{
+"name": "Afogados",
+"state": "PE"
+},
+{
+"name": "Central",
+"state": "PE"
+},
+{
+"name": "Salgueiro",
+"state": "PE"
+},
+{
+"name": "Serra Talhada",
+"state": "PE"
+},
+{
+"name": "América PE",
+"state": "PE"
+},
+{
+"name": "River PI",
+"state": "PI"
+},
+{
+"name": "Campinense",
+"state": "PB"
+},
+{
+"name": "Treze",
+"state": "PB"
+},
+{
+"name": "Sousa",
+"state": "PB"
+},
+{
+"name": "Auto Esporte",
+"state": "PB"
+},
+{
+"name": "CSP",
+"state": "PB"
+},
+{
+"name": "Nacional PB",
+"state": "PB"
+},
+{
+"name": "Atlético Cajazeirense",
+"state": "PB"
+},
+{
+"name": "Lagarto",
+"state": "SE"
+},
+{
+"name": "Estanciano",
+"state": "SE"
+},
+{
+"name": "Sete de Setembro",
+"state": "SE"
+},
+{
+"name": "Maracanã",
+"state": "CE"
+},
+{
+"name": "Iguatu",
+"state": "CE"
+},
+{
+"name": "Atlético CE",
+"state": "CE"
+},
+{
+"name": "Barra SC",
+"state": "SC"
+},
+{
+"name": "Atlético Tubarão",
+"state": "SC"
+},
+{
+"name": "São Luiz",
+"state": "RS"
+},
+{
+"name": "Guarany Bagé",
+"state": "RS"
+},
+{
+"name": "São Paulo RS",
+"state": "RS"
+},
+{
+"name": "Rio Grande",
+"state": "RS"
+},
+{
+"name": "Ypiranga RS",
+"state": "RS"
+},
+{
+"name": "Caxias RS",
+"state": "RS"
+},
+{
+"name": "Azuriz",
+"state": "PR"
+},
+{
+"name": "Independente PR",
+"state": "PR"
+},
+{
+"name": "Batel",
+"state": "PR"
+},
+{
+"name": "Grêmio Maringá",
+"state": "PR"
+},
+{
+"name": "Democrata",
+"state": "MG"
+},
+{
+"name": "Betim",
+"state": "MG"
+},
+{
+"name": "Pouso Alegre",
+"state": "MG"
+},
+{
+"name": "Rio Branco",
+"state": "ES"
+},
+{
+"name": "São Mateus",
+"state": "ES"
+},
+{
+"name": "Aracruz",
+"state": "ES"
+},
+{
+"name": "Colatina",
+"state": "ES"
+},
+{
+"name": "Capital",
+"state": "DF"
+},
+{
+"name": "Bosque Formosa",
+"state": "DF"
+},
+{
+"name": "Real Brasília",
+"state": "DF"
+},
+{
+"name": "Primavera AC",
+"state": "MT"
+},
+{
+"name": "Comercial MS",
+"state": "MS"
+},
+{
+"name": "Genus",
+"state": "RO"
+},
+{
+"name": "Real Ariquemes",
+"state": "RO"
+},
+{
+"name": "Baré",
+"state": "RR"
+},
+{
+"name": "Náutico RR",
+"state": "RR"
+},
+{
+"name": "São Paulo AP",
+"state": "AP"
+},
+{
+"name": "Oratório",
+"state": "AP"
+},
+{
+"name": "Independente AP",
+"state": "AP"
+},
+{
+"name": "Interporto",
+"state": "TO"
+},
+{
+"name": "Gurupi",
+"state": "TO"
+},
+{
+"name": "Nacional",
+"state": "AM"
+},
+{
+"name": "Operário AM",
+"state": "AM"
+},
+{
+"name": "Atlético Acreano",
+"state": "AC"
+},
+{
+"name": "Rio Branco AC",
+"state": "AC"
+},
+{
+"name": "Galvez",
+"state": "AC"
+},
+{
+"name": "Humaitá",
+"state": "AC"
+},
+{
+"name": "Independência",
+"state": "AC"
+},
+{
+"name": "São Gonçalo",
+"state": "RJ"
+},
+{
+"name": "Macaé",
+"state": "RJ"
+},
+{
+"name": "Bonsucesso",
+"state": "RJ"
+},
+{
+"name": "Friburguense",
+"state": "RJ"
+},
+{
+"name": "Madureira",
+"state": "RJ"
+},
+{
+"name": "Olaria",
+"state": "RJ"
+},
+{
+"name": "Americano",
+"state": "RJ"
+},
+{
+"name": "Carapebus",
+"state": "RJ"
+},
+{
+"name": "Itaboraí",
+"state": "RJ"
+},
+{
+"name": "São Cristóvão",
+"state": "RJ"
+},
+{
+"name": "Angra Reis",
+"state": "RJ"
+},
+{
+"name": "Volta Redonda",
+"state": "RJ"
+},
+{
+"name": "Resende",
+"state": "RJ"
+},
+{
+"name": "Nova Iguaçu",
+"state": "RJ"
+},
+{
+"name": "Duque Caxias",
+"state": "RJ"
+},
+{
+"name": "Boavista",
+"state": "RJ"
+},
+{
+"name": "Bangu",
+"state": "RJ"
+},
+{
+"name": "Portuguesa RJ",
+"state": "RJ"
+},
+{
+"name": "Santa Cruz PE",
+"state": "PE"
+},
+{
+"name": "Cabofriense",
+"state": "RJ"
+},
+{
+"name": "Serra Macaense",
+"state": "RJ"
+},
+{
+"name": "America",
+"state": "RJ"
+},
+{
+"name": "Goytacaz",
+"state": "RJ"
+},
+{
+"name": "Esportiva Guaxupé",
+"state": "MG"
+},
+{
+"name": "EC Mamoré",
+"state": "MG"
+},
+{
+"name": "Guarani MG",
+"state": "MG"
+},
+{
+"name": "Nacional MG",
+"state": "MG"
+},
+{
+"name": "CA Patrocinense",
+"state": "MG"
+},
+{
+"name": "Sete de Setembro",
+"state": "MG"
+},
+{
+"name": "Santa Cruz MG",
+"state": "MG"
+},
+{
+"name": "Rio Preto",
+"state": "SP"
+},
+{
+"name": "Francana",
+"state": "SP"
+},
+{
+"name": "Comercial SP",
+"state": "SP"
+},
+{
+"name": "XV de Jaú",
+"state": "SP"
+},
+{
+"name": "América SP",
+"state": "SP"
+},
+{
+"name": "Nacional AC",
+"state": "SP"
+},
+{
+"name": "CA Juventus",
+"state": "SP"
+},
+{
+"name": "Audax",
+"state": "SP"
+},
+{
+"name": "Red Bull Brasil",
+"state": "SP"
+},
+{
+"name": "Paulista",
+"state": "SP"
+},
+{
+"name": "São Caetano",
+"state": "SP"
+},
+{
+"name": "Santo André",
+"state": "SP"
+},
+{
+"name": "Pão de Açúcar",
+"state": "SP"
+},
+{
+"name": "Jabaquara",
+"state": "SP"
+},
+{
+"name": "Esportiva",
+"state": "SP"
+},
+{
+"name": "Inter de Limeira",
+"state": "SP"
+},
+{
+"name": "União Barbarense",
+"state": "SP"
+},
+{
+"name": "São José SP",
+"state": "SP"
+},
+{
+"name": "São Gonçalo FC",
+"state": "RJ"
+},
+{
+"name": "Novo Hamburgo",
+"state": "RS"
+},
+{
+"name": "Lajeadense",
+"state": "RS"
+},
+{
+"name": "J. Malucelli",
+"state": "PR"
+},
+{
+"name": "Rolândia",
+"state": "PR"
+},
+{
+"name": "XV de Outubro",
+"state": "SC"
+},
+{
+"name": "Santa Catarina SC",
+"state": "SC"
+},
+{
+"name": "Fluminense Feira",
+"state": "BA"
+},
+{
+"name": "Bahia de Feira",
+"state": "BA"
+},
+{
+"name": "Decisão",
+"state": "PE"
+},
+{
+"name": "Perilima",
+"state": "PB"
+},
+{
+"name": "Globo",
+"state": "RN"
+},
+{
+"name": "Potiguar",
+"state": "RN"
+},
+{
+"name": "Assu",
+"state": "RN"
+},
+{
+"name": "Laguna",
+"state": "RN"
+},
+{
+"name": "Santa Cruz RN",
+"state": "RN"
+},
+{
+"name": "Maranhão",
+"state": "MA"
+},
+{
+"name": "Juventude Timon",
+"state": "MA"
+},
+{
+"name": "Tuna Luso",
+"state": "PA"
+},
+{
+"name": "Castanhal",
+"state": "PA"
+},
+{
+"name": "Águia Marabá",
+"state": "PA"
+},
+{
+"name": "São Raimundo PA",
+"state": "PA"
+},
+{
+"name": "Bragantino PA",
+"state": "PA"
+},
+{
+"name": "Independente PA",
+"state": "PA"
+},
+{
+"name": "Tapajós",
+"state": "PA"
+},
+{
+"name": "Tecnolândia",
+"state": "TO"
+},
+{
+"name": "Andirá",
+"state": "AC"
+},
+{
+"name": "Corumbaense",
+"state": "MS"
+},
+{
+"name": "Ivinhema",
+"state": "MS"
+},
+{
+"name": "Araguaína-MT",
+"state": "MT"
+},
+{
+"name": "Murici",
+"state": "AL"
+},
+{
+"name": "CSE",
+"state": "AL"
+},
+{
+"name": "Jacuipense AL",
+"state": "AL"
+},
+{
+"name": "Coruripe",
+"state": "AL"
+},
+{
+"name": "CEO",
+"state": "AL"
+},
+{
+"name": "Sport",
+"state": "PE"
+},
+{
+"name": "Ferroviário CE",
+"state": "CE"
+},
+{
+"name": "São Carlos",
+"state": "SP"
+},
+{
+"name": "Grêmio Prudente",
+"state": "SP"
+},
+{
+"name": "Batatais",
+"state": "SP"
+},
+{
+"name": "Nova Friburgo",
+"state": "RJ"
+},
+{
+"name": "Arapongas",
+"state": "PR"
+},
+{
+"name": "Apucarana",
+"state": "PR"
+},
+{
+"name": "Telêmaco Borba",
+"state": "PR"
+},
+{
+"name": "Paranavaí",
+"state": "PR"
+},
+{
+"name": "São José SC",
+"state": "SC"
+},
+{
+"name": "Palhoça",
+"state": "SC"
+},
+{
+"name": "Quixadá",
+"state": "CE"
+},
+{
+"name": "Juazeiro do Norte",
+"state": "CE"
+},
+{
+"name": "Barbalha",
+"state": "CE"
+},
+{
+"name": "Itabuna",
+"state": "BA"
+},
+{
+"name": "Jequié",
+"state": "BA"
+},
+{
+"name": "Guanambi",
+"state": "BA"
+},
+{
+"name": "Juazeiro",
+"state": "BA"
+},
+{
+"name": "Chã Grande",
+"state": "PE"
+},
+{
+"name": "Botafogo PB",
+"state": "PB"
+},
+{
+"name": "Mossoró",
+"state": "RN"
+},
+{
+"name": "Açu",
+"state": "RN"
+},
+{
+"name": "Pau dos Ferros",
+"state": "RN"
+},
+{
+"name": "Propriá",
+"state": "SE"
+},
+{
+"name": "Barras",
+"state": "PI"
+},
+{
+"name": "Cordino",
+"state": "MA"
+},
+{
+"name": "Imperatriz",
+"state": "MA"
+},
+{
+"name": "Paragominas",
+"state": "PA"
+},
+{
+"name": "Manauara",
+"state": "AM"
+},
+{
+"name": "Real RR",
+"state": "RR"
+},
+{
+"name": "Vilhena",
+"state": "RO"
+},
+{
+"name": "Cacoal",
+"state": "RO"
+},
+{
+"name": "Guaraí",
+"state": "TO"
+},
+{
+"name": "Sinop",
+"state": "MT"
+},
+{
+"name": "Taguatinga",
+"state": "DF"
+},
+{
+"name": "Linhares",
+"state": "ES"
+},
+{
+"name": "Serra",
+"state": "ES"
+},
+{
+"name": "Plácido de Castro",
+"state": "AC"
+}
+]

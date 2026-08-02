@@ -3,862 +3,905 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>World Lottery — Título de Capitalização</title>
+<title>Gold League</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-0:#060a12;
-    --bg-1:#0a1220;
-    --bg-2:#0f1b2e;
-    --panel:rgba(255,255,255,0.045);
-    --panel-brd:rgba(255,255,255,0.09);
-    --panel-solid:#101b2c;
-    --emerald:#17e29a;
-    --emerald-dim:#0f9d6c;
-    --gold:#f2c451;
-    --gold-dim:#c79a2e;
-    --crimson:#ff4d5e;
-    --ink:#eef3f2;
-    --muted:#8fa0ab;
-    --muted-dim:#5c6b78;
-    --paper:#121d2f;
-    --radius-lg:24px;
-    --radius-md:16px;
-    --radius-sm:10px;
-    --glow-emerald:0 0 0 1px rgba(23,226,154,0.25), 0 18px 50px -18px rgba(23,226,154,0.35);
-    --glow-gold:0 0 0 1px rgba(242,196,81,0.3), 0 18px 50px -18px rgba(242,196,81,0.35);
+    --pitch-dark:#06170f; --pitch-mid:#0c2a1a; --pitch-line:rgba(255,255,255,0.06);
+    --emerald:#17e29a; --emerald-dim:#0f9d6c; --gold:#f2c451; --gold-dim:#c79a2e;
+    --crimson:#ff4d5e; --ink:#eef3f2; --muted:#9db3ac;
+    --panel:rgba(6,20,13,0.55); --panel-brd:rgba(255,255,255,0.1);
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
+  html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; height:100dvh;}
   body{
-    font-family:'Inter',sans-serif;
-    color:var(--ink);
+    font-family:'Inter',sans-serif; color:var(--ink);
     background:
-      radial-gradient(900px 500px at 15% -8%, rgba(23,226,154,0.10), transparent 60%),
-      radial-gradient(900px 500px at 90% 10%, rgba(242,196,81,0.08), transparent 55%),
-      linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-2) 100%);
-    min-height:100vh;
-    background-attachment:fixed;
+      radial-gradient(1200px 700px at 50% 0%, rgba(23,226,154,0.10), transparent 60%),
+      radial-gradient(900px 600px at 85% 90%, rgba(242,196,81,0.08), transparent 55%),
+      repeating-linear-gradient(90deg, var(--pitch-mid) 0 90px, #0e3020 90px 180px),
+      linear-gradient(180deg, var(--pitch-dark), #071a11);
+    height:100vh; width:100vw; position:relative;
   }
-  h1,h2,h3,.display{font-family:'Oswald',sans-serif; letter-spacing:.01em;}
-  .num-display{font-family:'Anton',sans-serif; letter-spacing:.02em;}
+  h1,h2,h3,.display{font-family:'Oswald',sans-serif;}
   .mono{font-family:'JetBrains Mono',monospace;}
 
-  ::selection{background:rgba(23,226,154,0.3);}
-  :focus-visible{outline:2px solid var(--emerald); outline-offset:2px;}
-
-  /* ---------- ticker ---------- */
-  .ticker{
-    background:linear-gradient(90deg, #050a12, #0d1526 50%, #050a12);
-    border-bottom:1px solid rgba(255,255,255,0.06);
-    overflow:hidden; white-space:nowrap; padding:7px 0;
+  /* stadium glow corners for atmosphere */
+  body::before, body::after{
+    content:''; position:absolute; top:-20%; width:60%; height:70%; pointer-events:none;
+    background:radial-gradient(ellipse at top, rgba(255,255,255,0.05), transparent 70%);
   }
-  .ticker .track{display:inline-block; padding-left:100%; animation:scroll 28s linear infinite;}
-  .ticker span{font-family:'JetBrains Mono'; font-size:11.5px; letter-spacing:.06em; color:var(--muted); margin-right:46px;}
-  .ticker span b{color:var(--emerald);}
-  @keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-100%);}}
-  @media (prefers-reduced-motion: reduce){ .ticker .track{animation:none; padding-left:0;} }
+  body::before{left:-10%;} body::after{right:-10%;}
 
-  /* ---------- shell ---------- */
-  .shell{max-width:1020px; margin:0 auto; padding:22px 20px 90px;}
-  .topbar{display:flex; align-items:center; justify-content:space-between; padding:16px 4px 26px; gap:14px; flex-wrap:wrap;}
-  .brand{display:flex; align-items:center; gap:11px;}
-  .brand .crest{width:38px;height:38px; filter:drop-shadow(0 0 10px rgba(23,226,154,0.45));}
-  .brand .name{font-family:'Oswald',sans-serif; font-size:20px; font-weight:600; letter-spacing:.05em; color:var(--ink);}
-  .brand .name b{color:var(--gold); font-weight:700;}
-
-  .topbar-controls{display:flex; align-items:center; gap:10px;}
-  .pill-group{display:flex; align-items:center; gap:2px; background:var(--panel); border:1px solid var(--panel-brd); border-radius:999px; padding:4px;}
-  .pill-btn{border:none; background:transparent; color:var(--muted); font-family:'Inter'; font-weight:700; font-size:12px; letter-spacing:.03em; padding:7px 13px; border-radius:999px; cursor:pointer; transition:all .15s ease;}
-  .pill-btn.active{background:var(--emerald); color:#04140d;}
-  .viewmode select{
-    appearance:none; border:none; background:transparent; color:var(--ink); font-family:'Inter'; font-size:12.5px; font-weight:700;
-    padding:9px 28px 9px 14px; border-radius:999px; cursor:pointer;
+  /* ================= LIVE SCORE TICKER (atmosphere) ================= */
+  #liveTicker{
+    position:fixed; top:0; left:0; right:0; height:30px; z-index:55; overflow:hidden;
+    background:linear-gradient(90deg, #050a12, #0d2015 50%, #050a12); border-bottom:1px solid rgba(255,255,255,0.08);
   }
-  .viewmode{background:var(--panel); border:1px solid var(--panel-brd); border-radius:999px;}
-  .viewmode select option{background:#0f1b2e; color:var(--ink);}
+  #liveTicker .lt-track{display:flex; align-items:center; height:30px; white-space:nowrap; animation:ticker-scroll 22s linear infinite;}
+  #liveTicker .lt-item{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); padding:0 22px; border-right:1px solid rgba(255,255,255,0.08);}
+  #liveTicker .lt-item .lt-live{width:6px;height:6px;border-radius:50%; background:var(--crimson); animation:blink 1.1s ease-in-out infinite;}
+  #liveTicker .lt-item b{color:var(--ink);}
+  @keyframes ticker-scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+  @keyframes blink{0%,100%{opacity:1} 50%{opacity:.2}}
 
-  /* ---------- stepper ---------- */
-  .stepper{display:flex; gap:6px; margin-bottom:28px;}
-  .stepper .seg{flex:1; height:4px; border-radius:4px; background:rgba(255,255,255,0.08); position:relative; overflow:hidden;}
-  .stepper .seg.done{background:var(--emerald-dim);}
-  .stepper .seg.current{background:var(--emerald); box-shadow:0 0 12px rgba(23,226,154,0.7);}
-  .stepper .seg.current::after{content:''; position:absolute; inset:0; background:rgba(255,255,255,0.4); animation:pulse 1.5s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:.1} 50%{opacity:.6}}
+  .lang-toggle{position:fixed; top:44px; right:14px; z-index:50; display:flex; gap:2px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:4px;}
+  .lang-toggle button{border:none; background:transparent; color:var(--muted); font-weight:800; font-size:11px; padding:6px 12px; border-radius:999px; cursor:pointer;}
+  .lang-toggle button.active{background:var(--emerald); color:#04140d;}
 
-  /* ---------- card ---------- */
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-    border:1px solid var(--panel-brd);
-    border-radius:var(--radius-lg);
-    box-shadow:0 30px 70px -30px rgba(0,0,0,0.6);
-    backdrop-filter:blur(18px);
-    padding:36px 34px;
-    animation:rise .45s cubic-bezier(.2,.9,.25,1);
+  .session-chip{position:fixed; top:44px; left:14px; z-index:50; display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:6px 14px 6px 6px;}
+  .session-chip .av{width:24px;height:24px;border-radius:50%; background:linear-gradient(150deg,var(--emerald),var(--emerald-dim)); color:#04140d; font-weight:800; font-size:10px; display:flex; align-items:center; justify-content:center;}
+  .session-chip .amt{font-family:'JetBrains Mono'; font-weight:700; font-size:12.5px; color:var(--emerald);}
+
+  /* crowd noise equalizer (pure decoration) */
+  .crowd-eq{display:flex; align-items:flex-end; gap:3px; height:18px; margin:0 auto;}
+  .crowd-eq i{width:3px; background:var(--emerald); border-radius:2px; opacity:.7; animation:eq 0.9s ease-in-out infinite;}
+  .crowd-eq i:nth-child(1){height:40%; animation-delay:0s;}
+  .crowd-eq i:nth-child(2){height:100%; animation-delay:.15s;}
+  .crowd-eq i:nth-child(3){height:60%; animation-delay:.3s;}
+  .crowd-eq i:nth-child(4){height:90%; animation-delay:.1s;}
+  .crowd-eq i:nth-child(5){height:50%; animation-delay:.25s;}
+  @keyframes eq{0%,100%{transform:scaleY(.4);} 50%{transform:scaleY(1);}}
+
+  /* cutoff countdown */
+  .cutoff-chip{display:inline-flex; align-items:center; gap:8px; background:rgba(255,77,94,0.1); border:1px solid rgba(255,77,94,0.3); border-radius:999px; padding:7px 16px; font-size:12px; font-weight:700; color:var(--crimson); margin-bottom:22px;}
+  .cutoff-ring{width:22px; height:22px; flex:none; display:block;}
+  .cutoff-ring svg{width:100%; height:100%; transform:rotate(-90deg);}
+  .cutoff-ring .cr-bg{fill:none; stroke:rgba(255,255,255,0.15); stroke-width:5;}
+  .cutoff-ring .cr-fg{fill:none; stroke:var(--crimson); stroke-width:5; stroke-linecap:round; stroke-dasharray:100.5; stroke-dashoffset:0; transition:stroke-dashoffset 1s linear;}
+  .cutoff-chip.warn .cutoff-ring .cr-fg{stroke:var(--gold);}
+
+  /* custom numeric keypad */
+  #keypadOverlay{position:fixed; inset:0; z-index:38; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:flex-end; justify-content:center;}
+  #keypadOverlay.show{display:flex;}
+  .keypad-box{width:min(360px,100vw); background:#0c2018; border:1px solid var(--panel-brd); border-radius:22px 22px 0 0; padding:20px; padding-bottom:max(20px, env(safe-area-inset-bottom));}
+  .keypad-head{display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--emerald); margin-bottom:10px;}
+  .keypad-head button{background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer;}
+  .keypad-display{background:#0a1a14; border:1.5px solid var(--panel-brd); border-radius:12px; text-align:center; font-family:'JetBrains Mono'; font-size:32px; font-weight:700; padding:14px; margin-bottom:14px; color:var(--ink); transition:transform .1s ease;}
+  .keypad-display.bump{animation:kp-bump .18s ease;}
+  @keyframes kp-bump{0%{transform:scale(1);} 40%{transform:scale(1.08); color:var(--emerald);} 100%{transform:scale(1);}}
+
+  .confirm-btn.ready{animation:ready-pulse 1.3s ease-in-out infinite;}
+  @keyframes ready-pulse{0%,100%{box-shadow:0 16px 34px -10px rgba(23,226,154,0.55);} 50%{box-shadow:0 16px 44px -6px rgba(23,226,154,0.9);}}
+  .keypad-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:14px;}
+  .keypad-grid button{
+    height:58px; border-radius:14px; border:1px solid var(--panel-brd); background:rgba(255,255,255,0.05);
+    color:var(--ink); font-size:20px; font-weight:700; cursor:pointer; font-family:'JetBrains Mono';
   }
-  @keyframes rise{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
-  .eyebrow{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.16em; color:var(--emerald);}
-  .card h2{font-size:30px; margin:8px 0 5px; color:var(--ink);}
-  .card .sub{color:var(--muted); font-size:14.5px; margin:0 0 28px; max-width:62ch; line-height:1.6;}
+  .keypad-grid button:active{background:rgba(23,226,154,0.25); transform:scale(.92);}
+  .keypad-grid button{transition:transform .08s ease, background .08s ease;}
+  .keypad-grid .kp-clear{color:var(--crimson);}
+  .keypad-grid .kp-back{color:var(--gold);}
+  .keypad-ok{width:100%; height:52px; border:none; border-radius:999px; background:linear-gradient(150deg,var(--emerald),var(--emerald-dim)); color:#04140d; font-weight:800; font-size:15px; cursor:pointer;}
+  .cutoff-chip .cc-time{font-family:'JetBrains Mono'; font-size:13px;}
+  .cutoff-chip.warn{animation:cutoff-pulse 1s ease-in-out infinite;}
+  @keyframes cutoff-pulse{0%,100%{box-shadow:0 0 0 rgba(255,77,94,0.4);} 50%{box-shadow:0 0 16px rgba(255,77,94,0.5);}}
 
-  .screen{display:none;}
-  .screen.active{display:block;}
-
-  /* ---------- portada ---------- */
-  .fed-row{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:30px;}
-  .fed-badge{display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--panel-brd); border-radius:999px; padding:7px 15px 7px 7px;}
-  .fed-badge .dot{width:28px;height:28px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:10px; font-weight:800; color:#04140d; background:linear-gradient(160deg, var(--gold), var(--gold-dim));}
-  .fed-badge span{color:var(--ink); font-size:12.5px; font-weight:600;}
-
-  .hero{display:grid; grid-template-columns:1.15fr .85fr; gap:34px; align-items:center; margin-bottom:6px;}
-  .hero-copy h1{font-size:46px; line-height:1.03; margin:0 0 16px; max-width:15ch; color:var(--ink);}
-  .hero-copy h1 em{font-style:normal; background:linear-gradient(120deg, var(--emerald), var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  .hero-copy p{font-size:15.5px; line-height:1.75; color:var(--muted); max-width:56ch; margin:0 0 12px;}
-  .hero-copy p.pt{border-left:3px solid var(--gold); padding-left:16px; margin-top:22px; color:#c9d3d6;}
-
-  .hero-ticket{
-    background:linear-gradient(160deg, #14243a, #0a1420);
-    border:1px solid var(--panel-brd); border-radius:var(--radius-lg);
-    padding:24px; box-shadow:var(--glow-emerald);
-    position:relative;
+  /* responsible gaming footer */
+  #rgFooter{
+    position:fixed; bottom:0; left:0; right:0; z-index:45; height:30px;
+    background:rgba(4,10,7,0.75); border-top:1px solid var(--panel-brd);
+    display:flex; align-items:center; justify-content:center; gap:16px; font-size:10.5px; color:var(--muted);
   }
-  .hero-ticket .top-row{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
-  .hero-ticket .live{display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:800; letter-spacing:.08em; color:var(--crimson); text-transform:uppercase;}
-  .hero-ticket .live .dot{width:7px;height:7px;border-radius:50%; background:var(--crimson); animation:blink 1.2s ease-in-out infinite;}
-  @keyframes blink{0%,100%{opacity:1} 50%{opacity:.25}}
-  .hero-ticket .stat{display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px dashed rgba(255,255,255,0.1); font-size:13px; color:var(--muted);}
-  .hero-ticket .stat b{color:var(--ink); font-family:'JetBrains Mono';}
-  .hero-ticket .stat:last-child{border-bottom:none;}
+  #rgFooter b{color:var(--gold);}
 
-  .pyramid{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin:30px 0 32px;}
-  .pyramid .step{background:var(--panel); border:1px solid var(--panel-brd); border-radius:var(--radius-sm); padding:14px 10px; text-align:center; transition:transform .2s ease, border-color .2s ease;}
-  .pyramid .step:hover{transform:translateY(-3px); border-color:rgba(23,226,154,0.4);}
-  .pyramid .step .n{font-family:'JetBrains Mono'; color:var(--emerald); font-size:11px;}
-  .pyramid .step .t{color:var(--ink); font-size:12px; font-weight:600; margin-top:5px; line-height:1.35;}
-
-  .btn{
-    appearance:none; border:none; cursor:pointer; font-family:'Inter'; font-weight:800; font-size:14.5px;
-    padding:15px 28px; border-radius:999px; transition:transform .15s ease, box-shadow .15s ease; letter-spacing:.01em;
+  /* confetti for goal celebration */
+  #confettiWrap{position:fixed; inset:0; z-index:35; pointer-events:none; overflow:hidden;}
+  .confetti-piece{position:absolute; top:-10px; width:9px; height:14px; opacity:.9; animation:confetti-fall linear forwards;}
+  @keyframes confetti-fall{
+    0%{transform:translateY(0) rotate(0deg); opacity:1;}
+    100%{transform:translateY(105vh) rotate(720deg); opacity:.3;}
   }
-  .btn:active{transform:scale(.97);}
-  .btn-primary{background:linear-gradient(150deg, var(--emerald), var(--emerald-dim)); color:#04140d; box-shadow:0 14px 30px -10px rgba(23,226,154,0.55);}
-  .btn-primary:hover{box-shadow:0 18px 36px -10px rgba(23,226,154,0.75); transform:translateY(-1px);}
-  .btn-gold{background:linear-gradient(150deg, var(--gold), var(--gold-dim)); color:#241a02; box-shadow:0 14px 30px -10px rgba(242,196,81,0.5);}
-  .btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--panel-brd);}
-  .btn-ghost:hover{border-color:rgba(255,255,255,0.3);}
-  .btn-dark{background:rgba(255,255,255,0.06); color:var(--ink); border:1px solid var(--panel-brd);}
-  .btn-dark:hover{background:rgba(255,255,255,0.1);}
-  .btn[disabled]{opacity:.4; cursor:not-allowed;}
-  .btn-row{display:flex; gap:10px; margin-top:26px; flex-wrap:wrap;}
-
-  /* ---------- forms ---------- */
-  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
-  .field{margin-bottom:16px;}
-  .field label{display:block; font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--emerald); margin-bottom:7px;}
-  .field input, .field select{
-    width:100%; padding:13px 14px; border-radius:var(--radius-sm); border:1.5px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04);
-    font-family:'Inter'; font-size:14.5px; color:var(--ink); transition:border-color .15s ease, background .15s ease;
+  .goal-flash{position:fixed; inset:0; z-index:34; display:flex; align-items:center; justify-content:center; pointer-events:none;}
+  .goal-flash span{
+    font-family:'Anton'; font-size:min(18vw,120px); letter-spacing:.02em; color:transparent;
+    -webkit-text-stroke:3px var(--gold);
+    animation:goal-pop .7s cubic-bezier(.2,1.4,.4,1) forwards;
   }
-  .field input::placeholder{color:var(--muted-dim);}
-  .field input:focus, .field select:focus{outline:none; border-color:var(--emerald); background:rgba(255,255,255,0.07);}
-  .field .hint{font-size:11.5px; color:var(--muted); margin-top:6px;}
-  .field .err{font-size:11.5px; color:var(--crimson); margin-top:6px; display:none;}
-  .field.invalid input{border-color:var(--crimson);}
-  .field.invalid .err{display:block;}
-  .check-row{display:flex; align-items:center; gap:10px; margin:18px 0;}
-  .check-row input{width:18px;height:18px; accent-color:var(--emerald);}
-  .check-row label{font-size:13.5px; color:var(--ink);}
+  @keyframes goal-pop{0%{transform:scale(0.3) rotate(-8deg); opacity:0;} 60%{transform:scale(1.15) rotate(3deg); opacity:1;} 100%{transform:scale(1) rotate(0); opacity:1;}}
 
-  /* ---------- club selection ---------- */
-  .search-box{position:relative; margin-bottom:16px;}
-  .search-box input{width:100%; padding:13px 16px 13px 40px; border-radius:999px; border:1.5px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); font-size:14.5px; color:var(--ink);}
-  .search-box::before{content:'⚲'; position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:15px;}
-  .club-note{font-size:12px; color:var(--gold); margin-bottom:14px; background:rgba(242,196,81,0.08); border:1px solid rgba(242,196,81,0.25); padding:9px 13px; border-radius:var(--radius-sm);}
-  .club-list{max-height:360px; overflow-y:auto; border:1.5px solid var(--panel-brd); border-radius:var(--radius-md); padding:6px;}
-  .club-list::-webkit-scrollbar{width:8px;}
-  .club-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15); border-radius:8px;}
-  .fed-group-title{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.09em; color:var(--muted-dim); padding:12px 10px 5px;}
-  .club-item{display:flex; align-items:center; gap:13px; padding:11px 11px; border-radius:var(--radius-sm); cursor:pointer; transition:background .15s ease;}
-  .club-item:hover{background:rgba(255,255,255,0.05);}
-  .club-item.selected{background:rgba(23,226,154,0.09); outline:1.5px solid var(--emerald);}
-  .club-badge{width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-size:10.5px; font-weight:800; color:#fff; flex:none; box-shadow:0 0 0 2px rgba(255,255,255,0.08);}
-  .club-name{font-size:14px; font-weight:700; color:var(--ink);}
-  .club-state{font-size:11.5px; color:var(--muted);}
-  .club-radio{margin-left:auto; width:19px;height:19px; border-radius:50%; border:2px solid rgba(255,255,255,0.2);}
-  .club-item.selected .club-radio{border-color:var(--emerald); background:radial-gradient(circle, var(--emerald) 40%, transparent 42%);}
-  .selected-strip{display:none; align-items:center; gap:11px; background:rgba(23,226,154,0.09); border:1px solid rgba(23,226,154,0.3); border-radius:var(--radius-sm); padding:11px 15px; margin-top:14px; font-size:13.5px; color:var(--ink);}
-  .selected-strip.show{display:flex;}
-
-  /* ---------- game selection ---------- */
-  .games{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
-  .game-card{border:1.5px solid var(--panel-brd); background:rgba(255,255,255,0.03); border-radius:var(--radius-md); padding:20px 18px; cursor:pointer; position:relative; transition:all .18s ease;}
-  .game-card:hover{transform:translateY(-3px); border-color:rgba(23,226,154,0.35);}
-  .game-card.active{border-color:var(--emerald); box-shadow:var(--glow-emerald); background:rgba(23,226,154,0.06);}
-  .game-card h3{margin:10px 0 5px; font-size:18px; color:var(--ink);}
-  .game-card p{font-size:12.5px; color:var(--muted); margin:0; line-height:1.55;}
-  .badge-pending{position:absolute; top:14px; right:14px; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; background:rgba(242,196,81,0.15); color:var(--gold); padding:4px 9px; border-radius:999px;}
-  .badge-live{position:absolute; top:14px; right:14px; font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; background:rgba(23,226,154,0.15); color:var(--emerald); padding:4px 9px; border-radius:999px;}
-  .game-icon{width:40px;height:40px; border-radius:11px; background:linear-gradient(150deg, #1a3350, #0b1626); display:flex;align-items:center;justify-content:center; color:var(--gold); font-size:16px; font-weight:800; font-family:'Oswald'; border:1px solid rgba(255,255,255,0.08);}
-
-  /* ---------- wallet ---------- */
-  .wallet-hero{
-    display:flex; align-items:center; justify-content:space-between;
-    background:linear-gradient(135deg, #0e2a22, #0a1a2b 60%);
-    border:1px solid rgba(23,226,154,0.25);
-    border-radius:var(--radius-md); padding:24px 26px; margin-bottom:24px; color:var(--ink);
-    box-shadow:var(--glow-emerald);
+  /* toast (borrowed pattern: bottom-right slide-in, dark pill) */
+  .app-toast{
+    position:fixed; right:24px; bottom:46px; z-index:60; max-width:320px;
+    background:#0c2018; border:1px solid var(--panel-brd); color:var(--ink);
+    padding:14px 18px; border-radius:12px; font-size:13px; line-height:1.4;
+    box-shadow:0 18px 48px rgba(0,0,0,0.4); transform:translateY(20px); opacity:0; transition:.3s ease;
   }
-  .wallet-hero .lbl{font-size:11.5px; text-transform:uppercase; letter-spacing:.1em; color:var(--emerald);}
-  .wallet-hero .amt{font-family:'JetBrains Mono'; font-size:34px; font-weight:700; margin-top:5px;}
-  .pix-box{border:1.5px dashed rgba(255,255,255,0.18); border-radius:var(--radius-md); padding:22px; text-align:center; background:rgba(255,255,255,0.02);}
-  .pix-qr{width:126px;height:126px; margin:0 auto 14px; background:
-     repeating-conic-gradient(#eef3f2 0% 25%, transparent 0% 50%) 0 0/16px 16px;
-     border-radius:10px; border:6px solid #fff;}
-  .amount-chips{display:flex; gap:8px; justify-content:center; margin:16px 0; flex-wrap:wrap;}
-  .chip{border:1.5px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); color:var(--ink); border-radius:999px; padding:9px 18px; font-size:13px; font-weight:700; cursor:pointer; transition:all .15s ease;}
-  .chip.active{border-color:var(--emerald); background:rgba(23,226,154,0.12); color:var(--emerald);}
+  .app-toast.show{transform:none; opacity:1;}
 
-  table{width:100%; border-collapse:collapse; font-size:13.5px;}
-  th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); padding:9px 6px; border-bottom:1.5px solid var(--panel-brd);}
-  td{padding:12px 6px; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--ink);}
-  .tag{font-size:11px; padding:4px 10px; border-radius:999px; font-weight:800;}
-  .tag.pend{background:rgba(242,196,81,0.15); color:var(--gold);}
-  .tag.ok{background:rgba(23,226,154,0.15); color:var(--emerald);}
-  .empty-state{text-align:center; padding:44px 10px; color:var(--muted); font-size:13.5px;}
+  /* decorative concentric ring behind the ball logo */
+  .ss-logo{position:relative;}
+  .ss-logo::before{
+    content:''; position:absolute; left:50%; top:50%; width:180px; height:180px; transform:translate(-50%,-50%);
+    border:1px solid rgba(23,226,154,0.18); border-radius:50%;
+    box-shadow:0 0 0 34px rgba(23,226,154,0.035), 0 0 0 68px rgba(242,196,81,0.025);
+    pointer-events:none;
+  }
 
-  /* ---------- goal league demo ticket ---------- */
-  .goal-wrap{
-    border-radius:26px; padding:28px; position:relative;
+  /* impact-style note pill (board-foot note) */
+  .board-note-pill{display:flex; align-items:center; gap:10px; font-size:11px; color:var(--muted); background:rgba(255,255,255,0.03); border:1px solid var(--panel-brd); border-radius:999px; padding:8px 14px 8px 8px;}
+  .board-note-pill .bn-icon{width:22px;height:22px;border-radius:50%; background:var(--gold); color:#241a02; display:flex; align-items:center; justify-content:center; font-size:11px; flex:none;}
+
+  /* tighter, punchier display type (borrowed from reference: negative letter-spacing on big headings) */
+  .ss-title{letter-spacing:-.02em;}
+  .picker-title{letter-spacing:-.01em;}
+  .mode-card h3{letter-spacing:-.01em;}
+
+
+
+
+  /* ================= SCREENSAVER ================= */
+  @keyframes screenIn{ from{opacity:0; transform:translateY(14px) scale(.985);} to{opacity:1; transform:none;} }
+  #screensaver, #modeSelect, #dayPicker, #matchPicker, #gameScreen{ animation:screenIn .38s cubic-bezier(.2,.9,.25,1); }
+
+  #screensaver{
+    position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; cursor:pointer; z-index:10; padding:56px 30px 46px;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  .ss-logo{display:flex; align-items:center; gap:16px; margin-bottom:8px;}
+  .ss-ball{width:54px;height:54px;border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff, #cfd8dc 55%, #0e1b2e 58%); box-shadow:0 0 30px rgba(23,226,154,0.4); animation:spin 6s linear infinite;}
+  @keyframes spin{from{transform:rotate(0)} to{transform:rotate(360deg)}}
+  .ss-title{font-family:'Anton',sans-serif; font-size:64px; letter-spacing:.03em; line-height:1; margin:0;
+    background:linear-gradient(120deg, #fff, var(--gold) 60%, var(--gold-dim)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .ss-title small{display:block; font-family:'Oswald'; font-size:18px; letter-spacing:.3em; color:var(--emerald); font-weight:600; -webkit-text-fill-color:var(--emerald);}
+
+  .ss-slides{position:relative; width:min(700px, 90vw); height:150px; margin:34px 0 26px;}
+  .ss-slide{position:absolute; inset:0; opacity:0; transition:opacity .6s ease; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;}
+  .ss-slide.active{opacity:1;}
+  .ss-slide .eb{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.16em; color:var(--emerald);}
+  .ss-slide p{font-size:17px; line-height:1.55; color:#d8e6e1; margin:0; max-width:60ch;}
+  .ss-slide .prize-row{display:flex; gap:14px; flex-wrap:wrap; justify-content:center;}
+  .ss-slide .prize{background:var(--panel); border:1px solid var(--panel-brd); border-radius:12px; padding:12px 18px;}
+  .ss-slide .prize b{display:block; font-family:'JetBrains Mono'; color:var(--gold); font-size:15px;}
+  .ss-slide .prize span{font-size:11px; color:var(--muted);}
+
+  .ss-dots{display:flex; gap:7px; margin-bottom:30px;}
+  .ss-dots i{width:7px;height:7px;border-radius:50%; background:rgba(255,255,255,0.2);}
+  .ss-dots i.active{background:var(--emerald);}
+
+  .ss-cta{
+    font-family:'Oswald'; font-weight:700; font-size:20px; letter-spacing:.05em; color:#04140d;
+    background:linear-gradient(150deg, var(--emerald), var(--emerald-dim)); padding:18px 44px; border-radius:999px;
+    box-shadow:0 20px 50px -15px rgba(23,226,154,0.6); animation:pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1);} 50%{transform:scale(1.04);}}
+  .ss-foot{position:absolute; bottom:22px; font-size:11px; color:var(--muted); opacity:.7;}
+
+  /* ================= GAME SCREEN (full screen board) ================= */
+  #gameScreen{position:fixed; inset:0; display:none; flex-direction:column; z-index:20; padding:42px 22px 40px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  .gs-top{display:flex; align-items:center; justify-content:space-between; gap:8px 12px; flex-wrap:wrap; margin-bottom:10px;}
+  .gs-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  @media (max-width:560px){
+    .gs-round{display:none;}
+    .gs-logo{order:1; flex:1; justify-content:center;}
+    .gs-back{order:0;}
+    .gs-right{order:2; width:100%; justify-content:center;}
+  }
+  .gs-back{background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
+  .gs-logo{display:flex; align-items:center; gap:8px; font-family:'Oswald'; font-weight:700; font-size:20px;}
+  .gs-logo .ball2{width:22px;height:22px;border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff, #cfd8dc 55%, #0e1b2e 58%);}
+  .gs-round{font-size:11px; color:var(--muted); text-align:right;}
+  .gs-round b{color:var(--gold); font-family:'JetBrains Mono';}
+
+  .board-wrap{flex:1; display:flex; align-items:center; justify-content:center; min-height:0;}
+
+  .fixtures-strip{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;}
+  .fixtures-strip .fx{background:rgba(255,255,255,0.05); border:1px solid var(--panel-brd); border-radius:999px; padding:5px 14px; font-size:11.5px; font-family:'JetBrains Mono'; color:var(--muted);}
+  .fixtures-strip .fx b{color:var(--ink); font-weight:700;}
+  .board{
+    width:min(980px, 96vw); max-height:100%; position:relative;
     background:
-      radial-gradient(circle at 25% 15%, rgba(255,255,255,0.08), transparent 55%),
-      linear-gradient(155deg, #123a2a, #0a1f18 75%);
-    border:1px solid rgba(23,226,154,0.3);
-    box-shadow:var(--glow-emerald);
+      radial-gradient(circle at 30% 15%, rgba(255,255,255,0.10), transparent 55%),
+      linear-gradient(160deg, #123a2a, #071c14 80%);
+    border:2px solid rgba(23,226,154,0.35); border-radius:28px;
+    box-shadow:0 0 0 1px rgba(23,226,154,0.15), 0 30px 80px -20px rgba(0,0,0,0.7);
+    padding:clamp(16px,3vw,34px);
+    display:flex; flex-direction:column; gap:clamp(8px,1.6vh,16px);
   }
-  .goal-wrap::before, .goal-wrap::after{
-    content:''; position:absolute; width:22px; height:22px; border-radius:50%;
-    background:var(--bg-1); top:50%; transform:translateY(-50%);
+  .board .notches{position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:5px;}
+  .board .notches.left{left:14px;} .board .notches.right{right:14px;}
+  .board .notches i{width:14px; height:3px; border-radius:2px; background:rgba(242,196,81,0.5);}
+  @media (max-width:640px){ .board .notches{display:none;} }
+  .board-head{display:flex; justify-content:space-between; align-items:center;}
+  .board-head .tag{background:linear-gradient(150deg,var(--gold),var(--gold-dim)); color:#241a02; font-weight:800; font-size:11px; padding:5px 12px; border-radius:999px; letter-spacing:.05em;}
+
+  .num-row{display:flex; gap:10px; align-items:stretch;}
+  .num-badge{
+    width:clamp(30px,3.4vw,46px); border-radius:12px; display:flex; align-items:center; justify-content:center;
+    font-family:'Anton'; font-size:clamp(16px,2vw,24px); color:#04140d; flex:none;
   }
-  .goal-wrap::before{left:-11px;} .goal-wrap::after{right:-11px;}
-  .goal-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;}
-  .goal-row{display:grid; grid-template-columns:1fr 1fr 1fr; gap:11px; margin-bottom:11px;}
-  .goal-row.two{grid-template-columns:1fr 1fr;}
-  .goal-cell label{display:block; font-size:10.5px; font-weight:800; color:#04140d; background:linear-gradient(150deg, var(--gold), var(--gold-dim)); padding:7px 8px; border-radius:8px 8px 0 0; text-align:center; letter-spacing:.03em;}
-  .goal-cell input{width:100%; border:none; border-radius:0 0 10px 10px; padding:13px 8px; text-align:center; font-family:'JetBrains Mono'; font-size:17px; font-weight:700; background:#0b1a14; color:var(--ink);}
-  .goal-cell input:focus{outline:2px solid var(--emerald);}
-  .goal-foot{display:flex; align-items:center; justify-content:space-between; margin-top:16px;}
-  .goal-checks{display:flex; gap:16px; color:var(--ink); font-size:12.5px;}
-  .goal-checks label{display:flex; align-items:center; gap:7px;}
-  .goal-checks input{accent-color:var(--emerald);}
-  .goal-logo{display:flex; align-items:center; gap:9px; font-family:'Oswald'; font-weight:700; font-size:16px; color:var(--ink);}
-  .goal-logo .ball{width:26px;height:26px;border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff, #cfd8dc 60%, #0e1b2e 62%);}
+  .num-badge.n1{background:linear-gradient(160deg,#3ddc97,#0f9d6c);}
+  .num-badge.n2{background:linear-gradient(160deg,#ff7a86,var(--crimson));}
+  .num-badge.n3{background:linear-gradient(160deg,#6fb7ff,#2f7fd6);}
 
-  .summary-line{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:13.5px;}
-  .summary-line b{font-family:'JetBrains Mono';}
+  .cells{flex:1; display:grid; gap:clamp(8px,1.4vw,14px);}
+  .cells.c3{grid-template-columns:repeat(3,1fr);}
+  .cells.c2{grid-template-columns:repeat(2,1fr);}
 
-  /* ---------- dashboards ---------- */
-  .kpi-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px;}
-  .kpi{background:rgba(255,255,255,0.04); border:1px solid var(--panel-brd); border-radius:var(--radius-md); padding:18px;}
-  .kpi .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);}
-  .kpi .val{font-family:'JetBrains Mono'; font-size:23px; font-weight:700; color:var(--ink); margin-top:6px;}
-  .split-bar{display:flex; height:28px; border-radius:9px; overflow:hidden; margin:12px 0 16px; box-shadow:0 0 0 1px rgba(255,255,255,0.08);}
-  .split-bar span{display:block; height:100%;}
-  .legend{display:flex; flex-wrap:wrap; gap:10px 20px; font-size:12px; color:var(--muted);}
-  .legend i{display:inline-block; width:9px;height:9px;border-radius:2px; margin-right:6px; vertical-align:middle;}
-
-  /* ---------- user strip (persistent) ---------- */
-  .user-strip{
-    display:none; align-items:center; justify-content:space-between;
-    background:linear-gradient(135deg, rgba(23,226,154,0.08), rgba(255,255,255,0.03));
-    border:1px solid var(--panel-brd); border-radius:999px; padding:8px 18px 8px 8px; margin-bottom:20px;
+  .cell{display:flex; flex-direction:column; border-radius:14px; overflow:hidden; box-shadow:0 8px 22px -10px rgba(0,0,0,0.5);}
+  .cell label{
+    background:linear-gradient(150deg,#123a63,#0b2542); color:#fff; text-align:center; font-weight:800;
+    font-size:clamp(10px,1.1vw,13px); letter-spacing:.04em; padding:clamp(6px,0.9vh,10px) 6px;
+    display:flex; align-items:center; justify-content:center; gap:5px; position:relative;
   }
-  .user-strip.show{display:flex;}
-  .us-left{display:flex; align-items:center; gap:10px;}
-  .us-avatar{width:34px;height:34px;border-radius:50%; background:linear-gradient(150deg, var(--emerald), var(--emerald-dim)); color:#04140d; font-weight:800; font-family:'Oswald'; display:flex; align-items:center; justify-content:center; font-size:14px;}
-  .us-name{font-size:13.5px; font-weight:700; color:var(--ink);}
-  .us-club{font-size:11px; color:var(--muted);}
-  .us-lbl{font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); text-align:right;}
-  .us-amt{font-family:'JetBrains Mono'; font-weight:700; font-size:16px; color:var(--emerald); text-align:right;}
+  .lbl-info{
+    background:rgba(255,255,255,0.18); border:none; color:#fff; width:16px; height:16px; border-radius:50%;
+    font-size:9px; font-weight:800; cursor:pointer; flex:none; line-height:1; padding:0;
+  }
+  .lbl-info:hover{background:var(--emerald); color:#04140d;}
+  .cat-select{
+    background:transparent; border:none; color:#fff; font-weight:800; font-size:clamp(10px,1.1vw,13px);
+    letter-spacing:.04em; text-align:center; cursor:pointer; appearance:none; padding-right:2px;
+  }
+  .cat-select option{background:#0b2542; color:#fff;}
 
-  /* ---------- rules box (jogo screen) ---------- */
-  .rules-box{border:1px solid var(--panel-brd); border-radius:var(--radius-md); margin-top:20px; overflow:hidden; background:rgba(255,255,255,0.02);}
-  .rules-head{display:flex; justify-content:space-between; align-items:center; padding:14px 18px; cursor:pointer; font-weight:700; font-size:13.5px; color:var(--ink);}
-  .rules-chevron{transition:transform .2s ease; color:var(--emerald);}
-  .rules-box.open .rules-chevron{transform:rotate(180deg);}
-  .rules-body{max-height:0; overflow:hidden; transition:max-height .25s ease;}
-  .rules-box.open .rules-body{max-height:600px;}
-  .rules-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; padding:0 18px 18px;}
-  .rules-col-title{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--emerald); margin-bottom:10px;}
-  .rules-item{display:flex; gap:10px; font-size:12.5px; color:var(--muted); margin-bottom:9px; line-height:1.5;}
-  .rules-item b{flex:none; width:20px;height:20px; border-radius:5px; background:rgba(23,226,154,0.15); color:var(--emerald); font-size:11px; display:flex; align-items:center; justify-content:center;}
-  .rules-table{width:100%; border-collapse:collapse; font-size:12.5px;}
-  .rules-table td{padding:7px 8px; border-bottom:1px solid rgba(255,255,255,0.05); color:var(--ink);}
-  .rules-table td:first-child{width:34px;}
+  #fieldInfoModal{position:fixed; inset:0; z-index:43; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:20px;}
+  #fieldInfoModal.show{display:flex;}
+  .fi-box{width:min(380px,100%); background:#0c2018; border:1px solid var(--panel-brd); border-radius:18px; padding:22px; text-align:center;}
+  .fi-box h4{margin:0 0 10px; font-size:16px; color:var(--gold);}
+  .fi-box p{margin:0 0 16px; font-size:13.5px; color:#d8e6e1; line-height:1.6;}
+  .fi-box button{background:linear-gradient(150deg,var(--emerald),var(--emerald-dim)); border:none; color:#04140d; font-weight:800; padding:10px 26px; border-radius:999px; cursor:pointer;}
 
-  /* ---------- concept badge ---------- */
-  .concept-banner{background:rgba(242,196,81,0.1); border:1px solid rgba(242,196,81,0.3); color:var(--gold); font-size:12px; padding:10px 14px; border-radius:var(--radius-sm); margin-bottom:22px; line-height:1.5;}
+  .cell input{
+    flex:1; border:none; text-align:center; font-family:'JetBrains Mono'; font-weight:700;
+    font-size:clamp(20px,3.4vw,36px); background:#0a1a14; color:var(--ink); padding:clamp(8px,1.6vh,18px) 4px; width:100%;
+    cursor:pointer; caret-color:transparent;
+  }
+  .cell input:focus{outline:3px solid var(--emerald); outline-offset:-3px;}
 
-  /* ---------- senagol demo ---------- */
-  .sena-grid{display:grid; grid-template-columns:repeat(10,1fr); gap:8px; margin-bottom:20px;}
-  .sena-num{aspect-ratio:1; border-radius:8px; border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); color:var(--ink); font-family:'JetBrains Mono'; font-weight:700; font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .12s ease;}
-  .sena-num:hover{border-color:rgba(23,226,154,0.4);}
-  .sena-num.picked{background:var(--emerald); color:#04140d; border-color:var(--emerald);}
-  .sena-num.disabled{opacity:.3; cursor:not-allowed;}
-  .sena-result{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap;}
-  .sena-ball{width:34px;height:34px;border-radius:50%; display:flex;align-items:center;justify-content:center; font-family:'JetBrains Mono'; font-weight:700; font-size:13px;}
-  .sena-ball.hit{background:var(--emerald); color:#04140d;}
-  .sena-ball.miss{background:rgba(255,255,255,0.08); color:var(--muted);}
+  .chip-row{display:flex; gap:5px; padding:6px; background:#0a1a14; justify-content:center; flex-wrap:wrap;}
+  .chip-row .qchip{
+    border:1px solid rgba(255,255,255,0.14); background:rgba(255,255,255,0.04); color:var(--muted);
+    font-family:'JetBrains Mono'; font-size:11.5px; font-weight:700; padding:4px 9px; border-radius:7px; cursor:pointer;
+  }
+  .chip-row .qchip.active{background:var(--emerald); color:#04140d; border-color:var(--emerald);}
+  .half-hint{
+    text-align:center; font-size:11px; color:var(--muted); background:rgba(255,255,255,0.03);
+    border:1px dashed var(--panel-brd); border-radius:10px; padding:6px 10px; margin:-2px 0 2px;
+  }
+  .half-hint b{color:var(--gold); font-family:'JetBrains Mono';}
+  .cell input::-webkit-outer-spin-button, .cell input::-webkit-inner-spin-button{-webkit-appearance:none; margin:0;}
 
-  /* ---------- raspadinha demo ---------- */
-  .raspa-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; max-width:280px; margin:0 auto 20px;}
-  .raspa-cell{aspect-ratio:1; border-radius:14px; background:linear-gradient(150deg,#2a3b4d,#152230); border:1.5px solid rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; font-size:26px; cursor:pointer; user-select:none; transition:transform .15s ease;}
-  .raspa-cell.revealed{cursor:default; background:rgba(255,255,255,0.05); animation:pop .25s ease;}
-  @keyframes pop{from{transform:scale(.8);} to{transform:scale(1);}}
-  .raspa-status{text-align:center; font-weight:800; margin-top:6px; font-size:14px;}
+  .board-foot{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  .checks{display:flex; gap:18px;}
+  .checks label{display:flex; align-items:center; gap:8px; font-size:clamp(12px,1.3vw,14px); font-weight:600;}
+  .checks input{width:20px;height:20px; accent-color:var(--emerald);}
 
-  /* ---------- result buttons on historico ---------- */
-  .result-btns{display:flex; gap:6px;}
-  .btn-mini{border:none; border-radius:7px; padding:6px 10px; font-size:11px; font-weight:800; cursor:pointer;}
-  .btn-mini.win{background:rgba(23,226,154,0.15); color:var(--emerald);}
-  .btn-mini.win:hover{background:rgba(23,226,154,0.28);}
-  .btn-mini.lose{background:rgba(255,77,94,0.15); color:var(--crimson);}
-  .btn-mini.lose:hover{background:rgba(255,77,94,0.28);}
-  .tag.ok2{background:rgba(23,226,154,0.15); color:var(--emerald);}
-  .tag.lost{background:rgba(255,77,94,0.15); color:var(--crimson);}
+  .confirm-btn{
+    font-family:'Oswald'; font-weight:700; letter-spacing:.03em; font-size:clamp(15px,1.8vw,19px); color:#04140d;
+    background:linear-gradient(150deg, var(--emerald), var(--emerald-dim)); border:none; border-radius:999px;
+    padding:clamp(12px,1.8vh,18px) clamp(24px,3vw,40px); cursor:pointer; box-shadow:0 16px 34px -10px rgba(23,226,154,0.55);
+  }
+  .confirm-btn:active{transform:scale(.97);}
 
-  footer.disclaimer{margin-top:26px; font-size:11px; color:var(--muted-dim); text-align:center; line-height:1.6;}
+  .err-msg{color:var(--crimson); font-size:12.5px; text-align:center; display:none;}
 
-  @media(max-width:760px){
-    .hero{grid-template-columns:1fr;}
-    .grid2, .games, .pyramid, .kpi-grid{grid-template-columns:1fr;}
-    .card{padding:26px 20px;}
-    .hero-copy h1{font-size:32px;}
-    .topbar{flex-wrap:wrap; gap:12px;}
+  /* success overlay */
+  #successOverlay{
+    position:fixed; inset:0; z-index:30; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center; flex-direction:column; text-align:center; gap:14px;
+  }
+  #successOverlay .check{width:74px;height:74px;border-radius:50%; background:linear-gradient(150deg,var(--emerald),var(--emerald-dim)); display:flex; align-items:center; justify-content:center; font-size:36px; color:#04140d; animation:pop .3s ease;}
+  @keyframes pop{from{transform:scale(.5); opacity:0;} to{transform:scale(1); opacity:1;}}
+  #successOverlay h3{margin:0; font-size:26px;}
+  #successOverlay p{margin:0; color:var(--muted); font-size:14px;}
+  #successOverlay .recap{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; max-width:500px;}
+  #successOverlay .recap span{background:var(--panel); border:1px solid var(--panel-brd); border-radius:8px; padding:6px 12px; font-size:12px; font-family:'JetBrains Mono';}
+
+  /* ================= MODE SELECT / PICKERS ================= */
+  #modeSelect, #dayPicker, #matchPicker{
+    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:flex-start; z-index:15; padding:56px 30px 46px;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  #modeSelect{ justify-content:flex-start; padding-top:90px; }
+  .picker-back{position:absolute; top:16px; left:16px; background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
+  .picker-title{font-family:'Oswald'; font-size:28px; margin:0 0 6px; text-align:center;}
+  .picker-sub{color:var(--muted); font-size:14px; margin:0 0 30px; text-align:center; max-width:60ch;}
+
+  .mode-cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; max-width:1000px;}
+  .mode-card{
+    width:280px; background:var(--panel); border:1.5px solid var(--panel-brd); border-radius:20px; padding:26px 22px;
+    cursor:pointer; transition:transform .15s ease, border-color .15s ease; text-align:left;
+  }
+  .mode-card:hover{transform:translateY(-4px); border-color:rgba(23,226,154,0.4);}
+  .mode-card.closed{opacity:.4; pointer-events:none; filter:grayscale(.6);}
+  .rebet-btn{
+    display:flex; align-items:center; gap:10px; background:rgba(242,196,81,0.1); border:1.5px solid rgba(242,196,81,0.35);
+    color:var(--gold); font-weight:800; font-size:13px; padding:10px 20px; border-radius:999px; cursor:pointer; margin-bottom:22px;
+  }
+  .rebet-btn:hover{background:rgba(242,196,81,0.18);}
+  .rebet-btn b{font-family:'JetBrains Mono'; color:var(--ink);}
+  .mode-card .mc-icon{width:42px;height:42px;border-radius:12px; background:linear-gradient(150deg,var(--emerald),var(--emerald-dim)); display:flex; align-items:center; justify-content:center; font-family:'Anton'; font-size:18px; color:#04140d; margin-bottom:14px;}
+  .mode-card h3{margin:0 0 6px; font-size:19px;}
+  .mode-card p{margin:0 0 16px; font-size:12.5px; color:var(--muted); line-height:1.5; min-height:38px;}
+  .mode-card .mc-row{display:flex; justify-content:space-between; font-size:11.5px; border-top:1px solid var(--panel-brd); padding-top:12px; color:var(--muted);}
+  .mode-card .mc-row b{color:var(--gold); font-family:'JetBrains Mono';}
+
+  .pick-list{display:flex; flex-direction:column; gap:12px; width:min(560px,90vw);}
+  .pick-item{
+    background:var(--panel); border:1.5px solid var(--panel-brd); border-radius:16px; padding:12px 14px;
+    display:flex; justify-content:space-between; align-items:center; gap:10px; transition:border-color .15s ease, transform .15s ease;
+  }
+  .pick-item:hover{border-color:rgba(23,226,154,0.4); transform:translateY(-2px);}
+  .pick-item .pi-click{display:flex; align-items:center; gap:12px; cursor:pointer; flex:1; min-width:0;}
+  .pick-item .pi-main{font-weight:700; font-size:15px;}
+  .pick-item .pi-sub{font-size:11.5px; color:var(--muted); margin-top:3px;}
+  .pick-item .pi-tag{background:rgba(242,196,81,0.15); color:var(--gold); font-size:11px; font-weight:800; padding:5px 12px; border-radius:999px; white-space:nowrap; cursor:pointer;}
+  .pi-info-btn{background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--emerald); width:30px; height:30px; border-radius:50%; font-size:13px; font-weight:800; cursor:pointer; flex:none;}
+
+  .club-badge2{border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; color:#fff; flex:none; box-shadow:0 0 0 2px rgba(255,255,255,0.08);}
+
+  .fixtures-strip .fx{cursor:pointer; transition:border-color .15s ease;}
+  .fixtures-strip .fx:hover{border-color:rgba(23,226,154,0.4);}
+  .fx-info{color:var(--emerald); font-weight:800; margin-left:2px;}
+
+  #matchInfoModal{position:fixed; inset:0; z-index:42; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:20px;}
+  #matchInfoModal.show{display:flex;}
+  .mi-box{width:min(480px,100%); background:#0c2018; border:1px solid var(--panel-brd); border-radius:20px; padding:24px;}
+  .mi-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;}
+  .mi-head h3{margin:0; font-size:18px;}
+  .mi-head button{background:none; border:none; color:var(--muted); font-size:18px; cursor:pointer;}
+  .mi-team{display:flex; flex-direction:column; align-items:center; text-align:center; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06);}
+  .mi-team:last-child{border-bottom:none;}
+  .mi-team-name{font-weight:800; font-size:15px; margin:8px 0 10px;}
+  .mi-form-row{display:flex; gap:6px; margin-bottom:6px;}
+  .form-dot{width:26px;height:26px;border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#04140d;}
+  .mi-form-label{font-size:10.5px; color:var(--muted);}
+
+  /* ================= LEAGUE / TEAMS PANEL ================= */
+  .ss-secondary{
+    background:none; border:1px solid var(--panel-brd); color:var(--muted); font-size:12px; font-weight:700;
+    padding:9px 18px; border-radius:999px; cursor:pointer; margin-top:14px;
+  }
+  .ss-secondary:hover{color:var(--ink); border-color:rgba(255,255,255,0.3);}
+  #leaguePanel{
+    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; z-index:16; padding:56px 24px 46px;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+  }
+  #leaguePanel.show{display:flex;}
+  .league-select-row{display:flex; gap:10px; width:min(700px,100%); margin-bottom:18px; flex-wrap:wrap;}
+  .league-select-row select, .league-select-row input{
+    flex:1; min-width:140px; padding:11px 14px; border-radius:999px; border:1.5px solid var(--panel-brd);
+    background:rgba(255,255,255,0.04); color:var(--ink); font-family:'Inter'; font-size:13.5px;
+  }
+  .league-select-row select option{background:#0c2018;}
+  .league-teams-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; width:min(900px,100%); margin-bottom:30px;}
+  .team-chip{display:flex; align-items:center; gap:9px; background:var(--panel); border:1px solid var(--panel-brd); border-radius:12px; padding:9px 12px;}
+  .team-chip span{font-size:12.5px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+
+  #standingsWrap{width:min(900px,100%); margin-bottom:20px;}
+  .standings-title{font-size:12px; font-weight:800; color:var(--gold); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;}
+  .standings-scroll{overflow-x:auto; border:1px solid var(--panel-brd); border-radius:14px;}
+  .standings-table{width:100%; border-collapse:collapse; font-size:12.5px; min-width:520px;}
+  .standings-table th{background:rgba(255,255,255,0.04); color:var(--muted); font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; padding:9px 8px; text-align:left;}
+  .standings-table td{padding:8px; border-top:1px solid rgba(255,255,255,0.05);}
+  .standings-table td.pos{font-family:'JetBrains Mono'; color:var(--muted); width:26px;}
+  .standings-table td.team{font-weight:700; display:flex; align-items:center; gap:8px;}
+  .standings-table td.pts{font-family:'JetBrains Mono'; font-weight:800; color:var(--gold);}
+  .standings-table tr.zone-g6 td.pos{color:var(--emerald);}
+  .standings-table tr.zone-z4 td.pos{color:var(--crimson);}
+
+  /* ================= HISTORY ================= */
+  .gs-history-btn{background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:12px; padding:8px 14px; border-radius:999px; cursor:pointer;}
+  #historyModal{position:fixed; inset:0; z-index:40; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center;}
+  .history-box{width:min(560px,92vw); max-height:80vh; overflow-y:auto; background:var(--panel-brd-bg,#0c2018); border:1px solid var(--panel-brd); border-radius:20px; padding:24px;}
+  .history-box h3{margin:0 0 16px; font-family:'Oswald';}
+  .hist-item{border-bottom:1px solid rgba(255,255,255,0.06); padding:12px 0; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .hist-item .hi-scope{font-size:13px; font-weight:700;}
+  .hist-item .hi-mode{font-size:10px; font-weight:800; text-transform:uppercase; padding:3px 8px; border-radius:999px; margin-right:8px;}
+  .hi-mode.rodada{background:rgba(23,226,154,0.15); color:var(--emerald);}
+  .hi-mode.dia{background:rgba(242,196,81,0.15); color:var(--gold);}
+  .hi-mode.partido{background:rgba(255,77,94,0.15); color:var(--crimson);}
+  .hist-item .hi-price{font-family:'JetBrains Mono'; font-size:13px; color:var(--muted);}
+  .hist-empty{color:var(--muted); font-size:13px; text-align:center; padding:20px 0;}
+  .history-close{margin-top:16px; width:100%; background:rgba(255,255,255,0.08); border:none; color:var(--ink); font-weight:700; padding:12px; border-radius:999px; cursor:pointer;}
+
+  @media (max-width:640px){
+    .ss-title{font-size:42px;}
+    .num-badge{display:none;}
+    .mode-card{width:100%;}
   }
 </style>
 </head>
 <body>
 
-<div class="ticker"><div class="track">
-  <span data-i18n="ticker1">PRÓXIMA RODADA · CAMPEONATO ARGENTINO — inscrições abertas</span>
-  <span data-i18n="ticker2">SEU CLUBE GANHA A CADA JOGADA</span>
-  <span data-i18n="ticker3">PAGAMENTO 100% VIA PIX</span>
-  <span data-i18n="ticker4">TÍTULO DE CAPITALIZAÇÃO — não é aposta esportiva</span>
-  <span data-i18n="ticker1b">PRÓXIMA RODADA · CAMPEONATO ARGENTINO — inscrições abertas</span>
-  <span data-i18n="ticker2b">SEU CLUBE GANHA A CADA JOGADA</span>
-  <span data-i18n="ticker3b">PAGAMENTO 100% VIA PIX</span>
-</div></div>
+<div id="liveTicker"><div class="lt-track" id="tickerTrack"></div></div>
 
-<div class="shell">
+<div class="lang-toggle">
+  <button id="langPT" class="active" onclick="setLang('pt')">PT</button>
+  <button id="langES" onclick="setLang('es')">ES</button>
+</div>
+<div class="session-chip">
+  <div class="av">JC</div>
+  <div class="amt" id="sessionAmt">R$ 240,00</div>
+</div>
 
-  <div class="topbar">
-    <div class="brand">
-      <svg class="crest" viewBox="0 0 40 40"><path d="M20 2 L36 8 V20 C36 30 29 36 20 38 C11 36 4 30 4 20 V8 Z" fill="#0f2a20" stroke="#17e29a" stroke-width="1.6"/><circle cx="20" cy="18" r="6.5" fill="#eef3f2"/></svg>
-      <div class="name">WORLD <b>LOTTERY</b></div>
+<!-- ================= SCREENSAVER / ATTRACT MODE ================= -->
+<div id="screensaver" onclick="sfxClick(); goToModeSelect();">
+  <div class="ss-logo"><div class="ss-ball"></div></div>
+  <h1 class="ss-title">GOAL LEAGUE<small data-i18n="ss_sub">TÍTULO DE CAPITALIZAÇÃO</small></h1>
+  <div class="crowd-eq"><i></i><i></i><i></i><i></i><i></i></div>
+
+  <div class="ss-slides" id="ssSlides"></div>
+  <div class="ss-dots" id="ssDots"></div>
+
+  <div class="ss-cta" data-i18n="ss_cta">Toque para jogar</div>
+  <button class="ss-secondary" onclick="event.stopPropagation(); openLeaguePanel();" data-i18n="ss_teams">⚽ Ver equipes e tabela</button>
+  <div class="ss-foot" data-i18n="ss_foot">Jogada de R$ 10,00 · Brasileirão Série A · Ambiente de demonstração</div>
+</div>
+
+<!-- ================= LEAGUE / TEAMS PANEL ================= -->
+<div id="leaguePanel">
+  <button class="picker-back" onclick="closeLeaguePanel()" data-i18n="gs_back">← Sair</button>
+  <h2 class="picker-title" data-i18n="league_title">Equipes e tabela</h2>
+  <p class="picker-sub" data-i18n="league_sub">Times reais do futebol brasileiro. Insígnias genéricas — não são os escudos oficiais.</p>
+
+  <div class="league-select-row">
+    <select id="leagueSelect" onchange="renderLeaguePanel()">
+      <option value="A">Série A</option>
+      <option value="B">Série B</option>
+      <option value="C">Série C</option>
+      <option value="D">Série D</option>
+    </select>
+    <input type="text" id="leagueSearch" data-i18n-ph="league_search_ph" placeholder="Buscar time..." oninput="renderLeaguePanel()">
+  </div>
+
+  <div class="league-teams-grid" id="leagueTeamsGrid"></div>
+
+  <div id="standingsWrap">
+    <div class="standings-title" data-i18n="standings_title">Tabela Brasileirão Série A (ilustrativa)</div>
+    <div class="standings-scroll">
+      <table class="standings-table" id="standingsTable"></table>
     </div>
-    <div class="topbar-controls">
-      <div class="pill-group">
-        <button class="pill-btn active" id="langPT" onclick="setLang('pt')">PT</button>
-        <button class="pill-btn" id="langES" onclick="setLang('es')">ES</button>
-      </div>
-      <div class="viewmode">
-        <select id="viewmodeSelect" onchange="setViewMode(this.value)">
-          <option value="jogador" data-i18n="opt_jogador">Jogador</option>
-          <option value="freelancer" data-i18n="opt_freelancer">Freelancer</option>
-          <option value="clube" data-i18n="opt_clube">Clube</option>
-          <option value="federacao" data-i18n="opt_federacao">Federação Estadual</option>
-          <option value="admin" data-i18n="opt_admin">Administração</option>
-        </select>
-      </div>
+  </div>
+</div>
+
+<!-- ================= MODE SELECT ================= -->
+<div id="modeSelect">
+  <button class="picker-back" onclick="backToScreensaver()" data-i18n="gs_back">← Sair</button>
+  <div class="cutoff-chip" id="cutoffChipMode">
+    <span class="cutoff-ring" id="cutoffRingMode"><svg viewBox="0 0 40 40"><circle class="cr-bg" cx="20" cy="20" r="16"/><circle class="cr-fg" id="cr-fg-mode" cx="20" cy="20" r="16"/></svg></span>
+    <span data-i18n="cutoff_label">Rodada fecha em</span> <span class="cc-time" id="cutoffTimeMode" role="timer" aria-live="off">--:--:--</span>
+  </div>
+  <h2 class="picker-title" data-i18n="mode_title">Como você quer jogar?</h2>
+  <p class="picker-sub" data-i18n="mode_sub">4ª rodada · Brasileirão Série A 2026</p>
+  <button class="rebet-btn" id="rebetBtn" style="display:none" onclick="repeatLastBet()">
+    <span>🔁</span> <span data-i18n="rebet_label">Repetir última jogada</span> <b id="rebetPrice"></b>
+  </button>
+  <div class="mode-cards">
+    <div class="mode-card" onclick="chooseMode('rodada')">
+      <div class="mc-icon">5</div>
+      <h3 data-i18n="mode_rodada_t">Rodada completa</h3>
+      <p data-i18n="mode_rodada_p">Os 5 jogos da rodada. Maior prêmio, precisa acertar as 3 linhas.</p>
+      <div class="mc-row"><span data-i18n="mode_price">Jogada</span><b>R$ 10,00</b></div>
+    </div>
+    <div class="mode-card" onclick="chooseMode('dia')">
+      <div class="mc-icon">D</div>
+      <h3 data-i18n="mode_dia_t">Por dia</h3>
+      <p data-i18n="mode_dia_p">Escolha um dia da rodada (ex.: sábado, com 2 jogos) e jogue só sobre eles.</p>
+      <div class="mc-row"><span data-i18n="mode_price">Jogada</span><b id="modeDiaPrice">R$ 5–7</b></div>
+    </div>
+    <div class="mode-card" onclick="chooseMode('partido')">
+      <div class="mc-icon">1</div>
+      <h3 data-i18n="mode_partido_t">Partido único</h3>
+      <p data-i18n="mode_partido_p">Escolha 1 jogo específico da rodada. Entrada mais baixa, prêmio mais frequente.</p>
+      <div class="mc-row"><span data-i18n="mode_price">Jogada</span><b>R$ 3,00</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DAY PICKER ================= -->
+<div id="dayPicker">
+  <button class="picker-back" onclick="goToModeSelect()" data-i18n="gs_back">← Sair</button>
+  <h2 class="picker-title" data-i18n="day_title">Escolha o dia</h2>
+  <p class="picker-sub" data-i18n="day_sub">O valor da jogada varia conforme a quantidade de jogos do dia.</p>
+  <div class="pick-list" id="dayList"></div>
+</div>
+
+<!-- ================= MATCH PICKER ================= -->
+<div id="matchPicker">
+  <button class="picker-back" onclick="goToModeSelect()" data-i18n="gs_back">← Sair</button>
+  <h2 class="picker-title" data-i18n="match_title">Escolha o jogo</h2>
+  <p class="picker-sub" data-i18n="match_sub">Jogada de R$ 3,00 sobre este jogo específico.</p>
+  <div class="pick-list" id="matchList"></div>
+</div>
+
+<!-- ================= GAME SCREEN (full screen board) ================= -->
+<div id="gameScreen">
+  <div class="gs-top">
+    <button class="gs-back" onclick="goToModeSelect()" data-i18n="gs_back">← Sair</button>
+    <div class="gs-logo"><span class="ball2"></span>GOAL <span style="color:var(--gold)">LEAGUE</span></div>
+    <div class="gs-right">
+      <span class="cutoff-chip" id="cutoffChipBoard" style="margin-bottom:0; padding:4px 12px 4px 4px; font-size:11px;">
+        <span class="cutoff-ring" id="cutoffRingBoard"><svg viewBox="0 0 40 40"><circle class="cr-bg" cx="20" cy="20" r="16"/><circle class="cr-fg" id="cr-fg-board" cx="20" cy="20" r="16"/></svg></span>
+        <span class="cc-time" id="cutoffTimeBoard">--:--:--</span>
+      </span>
+      <button class="gs-history-btn" onclick="openHistory()" data-i18n="gs_history">Histórico</button>
+      <div class="gs-round"><span id="gsRoundLabel">4ª Rodada · Brasileirão Série A</span></div>
     </div>
   </div>
 
-  <div class="user-strip" id="userStrip">
-    <div class="us-left">
-      <div class="us-avatar" id="usAvatar">?</div>
-      <div>
-        <div class="us-name" id="usName">—</div>
-        <div class="us-club" id="usClub">—</div>
-      </div>
-    </div>
-    <div class="us-right">
-      <div class="us-lbl" data-i18n="us_saldo">Saldo</div>
-      <div class="us-amt" id="usAmt">R$ 0,00</div>
-    </div>
-  </div>
+  <div class="fixtures-strip" id="fixturesStrip"></div>
 
-  <div class="stepper" id="stepper"></div>
-
-  <!-- SCREEN: PORTADA -->
-  <div class="screen active" id="screen-portada">
-    <div class="fed-row" id="fedRow"></div>
-    <div class="hero">
-      <div class="hero-copy">
-        <h1 data-i18n="hero_h1">Seu clube pode <em>ganhar</em> a cada jogada</h1>
-        <p data-i18n="hero_p1">O World Lottery é uma plataforma de <b>títulos de capitalização</b> — o mesmo mecanismo do tradicional "Pé de Meia" ou sorteio "São Jorge" — reconhecida pela Federação de Clubes de Futebol do Brasil para que clubes arrecadem fundos através de jogos.</p>
-        <p class="pt" data-i18n="hero_p2">Não é uma casa de apostas: cada jogada compra um título de capitalização, parte concorre a prêmios e parte financia diretamente o clube, sua escolinha social e a rede que a Federação organiza.</p>
-        <div class="btn-row">
-          <button class="btn btn-primary" onclick="goTo('clube')" data-i18n="cta_cadastro">Escolha seu clube →</button>
-          <button class="btn btn-ghost" onclick="goTo('caixaExplicacao')" data-i18n="cta_caixa">Como funciona o dinheiro?</button>
-        </div>
-      </div>
-      <div class="hero-ticket">
-        <div class="top-row">
-          <div class="live"><span class="dot"></span><span data-i18n="ticket_live">RODADA ABERTA</span></div>
-          <div class="goal-logo"><span class="ball"></span></div>
-        </div>
-        <div class="stat"><span data-i18n="ticket_l1">Jogo em demonstração</span><b>Gold League</b></div>
-        <div class="stat"><span data-i18n="ticket_l2">Valor por cartão</span><b>R$ 10,00</b></div>
-        <div class="stat"><span data-i18n="ticket_l3">Prêmio bruto da rodada</span><b>20%</b></div>
-        <div class="stat"><span data-i18n="ticket_l4">Repasse ao clube + escolinha</span><b>15%</b></div>
-      </div>
-    </div>
-
-    <div class="pyramid">
-      <div class="step"><div class="n">01</div><div class="t" data-i18n="pyr1">Você escolhe o jogo</div></div>
-      <div class="step"><div class="n">02</div><div class="t" data-i18n="pyr2">Seu clube do coração</div></div>
-      <div class="step"><div class="n">03</div><div class="t" data-i18n="pyr3">Escolinha social do clube</div></div>
-      <div class="step"><div class="n">04</div><div class="t" data-i18n="pyr4">Federação estadual</div></div>
-      <div class="step"><div class="n">05</div><div class="t" data-i18n="pyr5">Federação Internacional</div></div>
-    </div>
-    <footer class="disclaimer" data-i18n="disclaimer_home">World Lottery opera títulos de capitalização regulados — não é uma casa de apostas esportivas. Ambiente 100% de demonstração.</footer>
-    <footer class="disclaimer" data-i18n="disclaimer_login" style="margin-top:6px;">O login é feito na plataforma do cassino — este módulo assume que você já está autenticado por lá.</footer>
-  </div>
-
-  <!-- SCREEN: EXPLICAÇÃO DA CAIXA -->
-  <div class="screen" id="screen-caixaExplicacao">
-    <div class="card">
-      <div class="eyebrow" data-i18n="eb_transp">Transparência</div>
-      <h2 data-i18n="h_caixa">Como funciona sua carteira</h2>
-      <p class="sub" data-i18n="sub_caixa">Toda carga de saldo é feita via Pix. Sua carteira tem dois compartimentos, sempre rastreáveis, conforme a lei antilavagem do Brasil.</p>
-      <div class="grid2">
-        <div class="field" style="background:rgba(23,226,154,0.08);border:1px solid rgba(23,226,154,0.25);border-radius:14px;padding:16px;">
-          <label data-i18n="lbl_seusaldo">Seu saldo</label>
-          <div class="hint" data-i18n="hint_seusaldo">É sempre seu. Pode ser usado em jogadas ou solicitado de volta pelo mesmo Pix de origem.</div>
-        </div>
-        <div class="field" style="background:rgba(242,196,81,0.08);border:1px solid rgba(242,196,81,0.25);border-radius:14px;padding:16px;">
-          <label style="color:var(--gold)" data-i18n="lbl_receita">Receita da plataforma</label>
-          <div class="hint" data-i18n="hint_receita">Comissões e taxas descontadas apenas quando você joga — nunca sobre o saldo parado.</div>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('portada')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" onclick="goTo('clube')" data-i18n="btn_continuar_cadastro">Escolher meu clube →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: CLUBE -->
-  <div class="screen" id="screen-clube">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step1of4">Passo 1 de 4</div>
-      <h2 data-i18n="h_clube">Escolha seu clube do coração</h2>
-      <p class="sub" data-i18n="sub_clube">Toda vez que você jogar, parte do valor vai para este clube e sua escolinha social.</p>
-
-      <div class="club-note" data-i18n="note_clube">Lista de amostra enquanto o levantamento oficial das 27 federações estaduais é concluído (pendente 2 assinaturas).</div>
-
-      <div class="search-box">
-        <input type="text" id="clubSearch" data-i18n-ph="ph_buscar" placeholder="Buscar clube ou estado..." oninput="renderClubs()">
-      </div>
-      <div id="clubCount" style="font-size:11.5px; color:var(--muted); margin-bottom:10px;"></div>
-      <div class="club-list" id="clubList"></div>
-      <div class="selected-strip" id="selectedStrip"></div>
-
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('portada')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" id="btnClubContinue" disabled onclick="goTo('jogo')" data-i18n="btn_continuar">Continuar →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: JOGO -->
-  <div class="screen" id="screen-jogo">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step2of4">Passo 2 de 4</div>
-      <h2 data-i18n="h_jogo">Escolha o jogo</h2>
-      <p class="sub" data-i18n="sub_jogo">A Federação ainda vai definir qual(is) jogo(s) usar. Gold League já está com demo completa; para Senagol e Raspadinha/Kini Gol não há especificação pública dos fornecedores, então montamos um modelo conceitual para você já visualizar o circuito.</p>
-
-      <div class="games">
-        <div class="game-card" data-game="gold" onclick="selectGame('gold')">
-          <span class="badge-live" data-i18n="badge_demo">Demo ativa</span>
-          <div class="game-icon">GL</div>
-          <h3>Gold League</h3>
-          <p data-i18n="game_gold_desc">Prognósticos de gols por rodada. Disponível em modo demonstração com o Campeonato Argentino.</p>
-        </div>
-        <div class="game-card" data-game="senagol" onclick="selectGame('senagol')">
-          <span class="badge-pending" data-i18n="badge_concept">Modelo conceitual</span>
-          <div class="game-icon">SN</div>
-          <h3>Senagol</h3>
-          <p data-i18n="game_senagol_desc">Loteria de números por rodada (modelo conceitual — sem especificação pública do fornecedor).</p>
-        </div>
-        <div class="game-card" data-game="raspa" onclick="selectGame('raspa')">
-          <span class="badge-pending" data-i18n="badge_concept">Modelo conceitual</span>
-          <div class="game-icon">RK</div>
-          <h3>Raspadinha / Kini Gol</h3>
-          <p data-i18n="game_raspa_desc">Cartela instantânea estilo raspadinha (modelo conceitual — sem especificação pública do fornecedor).</p>
-        </div>
+  <div class="board-wrap">
+    <div class="board">
+      <div class="notches left"><i></i><i></i><i></i></div>
+      <div class="notches right"><i></i><i></i><i></i></div>
+      <div class="board-head">
+        <span class="tag" id="boardPriceTag">JOGADA R$ 10,00</span>
+        <span class="tag" style="background:transparent;border:1px solid var(--panel-brd); color:var(--muted);" id="pickSummary"></span>
       </div>
 
-      <div class="rules-box" id="rulesBox">
-        <div class="rules-head" onclick="toggleRules()">
-          <span data-i18n="rules_title">Como jogar e ganhar — Gold League</span>
-          <span class="rules-chevron" id="rulesChevron">▾</span>
+      <div class="num-row">
+        <div class="num-badge n1">1</div>
+        <div class="cells c3">
+          <div class="cell"><label><span data-i18n="f_total">TOTAL</span><button class="lbl-info" onclick="openFieldInfo('total')">ℹ</button></label><input type="text" inputmode="none" readonly id="v-total" onclick="openKeypad('v-total')"></div>
+          <div class="cell"><label><span data-i18n="f_segundo">2º TEMPO</span><button class="lbl-info" onclick="openFieldInfo('segundo')">ℹ</button></label><input type="text" inputmode="none" readonly id="v-segundo" onclick="openKeypad('v-segundo')"></div>
+          <div class="cell"><label><span data-i18n="f_atacantes">ATACANTES</span><button class="lbl-info" onclick="openFieldInfo('atacantes')">ℹ</button></label><input type="text" inputmode="none" readonly id="v-atacantes" onclick="openKeypad('v-atacantes')"></div>
         </div>
-        <div class="rules-body" id="rulesBody">
-          <div class="rules-grid">
-            <div class="rules-col">
-              <div class="rules-col-title" data-i18n="rules_mecanica_t">Mecânica</div>
-              <div class="rules-item"><b>1</b><span data-i18n="rules_mecanica_1">Total, 2º tempo e atacantes: quantidade de gols em cada categoria, na rodada.</span></div>
-              <div class="rules-item"><b>2</b><span data-i18n="rules_mecanica_2">Cabeça e faltas: gols de cabeça e gols de falta/pênalti da rodada.</span></div>
-              <div class="rules-item"><b>3</b><span data-i18n="rules_mecanica_3">Primeiro gol: minuto em que sai o primeiro gol da rodada.</span></div>
-            </div>
-            <div class="rules-col">
-              <div class="rules-col-title" data-i18n="rules_premios_t">Faixas de prêmio</div>
-              <table class="rules-table">
-                <tr><td class="tag ok">1º</td><td data-i18n="rules_p1">6 acertos — Linha 1 + Linha 2 + Linha 3</td></tr>
-                <tr><td class="tag pend">2º</td><td data-i18n="rules_p2">4 ou 5 acertos entre as três linhas</td></tr>
-                <tr><td class="tag pend">3º</td><td data-i18n="rules_p3">Acerto exato da Linha 1 (Total)</td></tr>
-              </table>
-            </div>
+      </div>
+      <div class="half-hint" id="halfHint" data-i18n="half_hint_default">Preencha TOTAL e 2º TEMPO para ver o estimado do 1º tempo.</div>
+
+      <div class="num-row">
+        <div class="num-badge n2">2</div>
+        <div class="cells c2">
+          <div class="cell">
+            <label>
+              <select class="cat-select" id="catSelectCabeca" onchange="onCategoryChange('v-cabeca', this.value)">
+                <option value="cabeca" data-i18n="f_cabeca">CABEÇA</option>
+                <option value="penalti" data-i18n="cat_penalti">PÊNALTI</option>
+                <option value="foraarea" data-i18n="cat_foraarea">FORA DA ÁREA</option>
+                <option value="corners" data-i18n="cat_corners">ESCANTEIOS</option>
+              </select>
+              <button class="lbl-info" onclick="openFieldInfo(document.getElementById('catSelectCabeca').value)">ℹ</button>
+            </label>
+            <input type="text" inputmode="none" readonly id="v-cabeca" onclick="openKeypad('v-cabeca')">
+            <div class="chip-row" id="chipsCabeca"></div>
+          </div>
+          <div class="cell">
+            <label>
+              <select class="cat-select" id="catSelectFaltas" onchange="onCategoryChange('v-faltas', this.value)">
+                <option value="faltas" data-i18n="f_faltas">FALTAS</option>
+                <option value="penalti" data-i18n="cat_penalti">PÊNALTI</option>
+                <option value="foraarea" data-i18n="cat_foraarea">FORA DA ÁREA</option>
+                <option value="corners" data-i18n="cat_corners">ESCANTEIOS</option>
+              </select>
+              <button class="lbl-info" onclick="openFieldInfo(document.getElementById('catSelectFaltas').value)">ℹ</button>
+            </label>
+            <input type="text" inputmode="none" readonly id="v-faltas" onclick="openKeypad('v-faltas')">
+            <div class="chip-row" id="chipsFaltas"></div>
           </div>
         </div>
       </div>
 
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('clube')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" id="btnJogoContinue" disabled onclick="onGameContinue()" data-i18n="btn_continuar">Continuar →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: SENAGOL DEMO (modelo conceitual) -->
-  <div class="screen" id="screen-jogarSenagol">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step4of4b">Passo 4 de 4 · Modelo conceitual</div>
-      <h2>Senagol</h2>
-      <div class="concept-banner" data-i18n="concept_senagol">Não encontramos especificação pública deste jogo — este é um modelo conceitual (loteria de números) só para testar o circuito de cadastro → carteira → jogada → histórico. Substitua pela API real quando a Federação definir o fornecedor.</div>
-      <p class="sub" data-i18n="sub_senagol">Escolha 5 números de 1 a 50. Jogada de <b>R$ 10,00</b>.</p>
-
-      <div class="sena-grid" id="senaGrid"></div>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <span class="hint" id="senaPickCount"></span>
-      </div>
-      <div id="senaError" style="color:var(--crimson); font-size:12.5px; display:none;" data-i18n="goal_error">Preencha todos os campos e verifique se há saldo suficiente.</div>
-
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" onclick="submitSenagol()" data-i18n="btn_confirmarjogada2">Confirmar jogada — R$ 10,00 →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: RASPADINHA DEMO (modelo conceitual) -->
-  <div class="screen" id="screen-jogarRaspa">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step4of4b">Passo 4 de 4 · Modelo conceitual</div>
-      <h2>Raspadinha / Kini Gol</h2>
-      <div class="concept-banner" data-i18n="concept_raspa">Não encontramos especificação pública deste jogo — este é um modelo conceitual (cartela instantânea) só para testar o circuito. Substitua pela API real quando a Federação definir o fornecedor.</div>
-      <p class="sub" data-i18n="sub_raspa">Raspe as 9 células. Três bolas iguais em linha, coluna ou diagonal = prêmio. Cartela de <b>R$ 10,00</b>.</p>
-
-      <div class="raspa-grid" id="raspaGrid"></div>
-      <div class="raspa-status" id="raspaStatus"></div>
-
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" id="btnNovaCartela" onclick="startRaspa()" data-i18n="btn_novacartela">Comprar nova cartela — R$ 10,00</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: CARTEIRA -->
-  <div class="screen" id="screen-carteira">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step3of4">Passo 3 de 4</div>
-      <h2 data-i18n="h_carteira">Carregue sua carteira</h2>
-      <p class="sub" data-i18n="sub_carteira">Toda carga é feita via Pix (99,9% dos casos). Este é um ambiente de demonstração — nenhuma cobrança real é feita.</p>
-
-      <div class="wallet-hero">
-        <div>
-          <div class="lbl" data-i18n="lbl_saldodisp">Saldo disponível</div>
-          <div class="amt" id="saldoDisplay">R$ 0,00</div>
-        </div>
-        <div style="text-align:right">
-          <div class="lbl" data-i18n="lbl_clubesel">Clube selecionado</div>
-          <div style="font-weight:700;" id="clubeChipWallet">—</div>
-        </div>
-      </div>
-
-      <div class="pix-box">
-        <div class="pix-qr"></div>
-        <div style="font-weight:800; margin-bottom:10px;" data-i18n="pix_scan">Escaneie o QR Pix (simulado)</div>
-        <div class="amount-chips" id="amountChips"></div>
-        <button class="btn btn-gold" onclick="confirmPix()" data-i18n="pix_confirm">Confirmar pagamento simulado</button>
-      </div>
-
-      <div id="txWrap" style="margin-top:22px;">
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:8px;" data-i18n="tx_title">Últimas movimentações</div>
-        <table><tbody id="txBody"></tbody></table>
-      </div>
-
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('jogo')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" id="btnCarteiraContinue" disabled onclick="goToGameScreen()" data-i18n="btn_irjogo">Ir para o jogo →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCREEN: JOGAR (GOAL LEAGUE DEMO) -->
-  <div class="screen" id="screen-jogar">
-    <div class="card">
-      <div class="eyebrow" data-i18n="step4of4">Passo 4 de 4 · Demo · Campeonato Argentino</div>
-      <h2 data-i18n="h_jogar">Faça seu prognóstico</h2>
-      <p class="sub" data-i18n="sub_jogar">Jogada de <b>R$ 10,00</b> por cartão. O valor será descontado do seu saldo e distribuído conforme a tabela de repasse.</p>
-
-      <div class="goal-wrap">
-        <div class="goal-top">
-          <div class="goal-logo">GOAL <span style="color:var(--gold)">LEAGUE</span></div>
-          <span class="ball"></span>
-        </div>
-        <div class="goal-row">
-          <div class="goal-cell"><label data-i18n="g_total">TOTAL</label><input type="number" min="0" id="g-total" placeholder="0"></div>
-          <div class="goal-cell"><label data-i18n="g_segundo">2º TEMPO</label><input type="number" min="0" id="g-segundo" placeholder="0"></div>
-          <div class="goal-cell"><label data-i18n="g_atacantes">ATACANTES</label><input type="number" min="0" id="g-atacantes" placeholder="0"></div>
-        </div>
-        <div class="goal-row two">
-          <div class="goal-cell"><label data-i18n="g_cabeca">CABEÇA</label><input type="number" min="0" id="g-cabeca" placeholder="0"></div>
-          <div class="goal-cell"><label data-i18n="g_faltas">FALTAS</label><input type="number" min="0" id="g-faltas" placeholder="0"></div>
-        </div>
-        <div class="goal-row two">
-          <div class="goal-cell"><label data-i18n="g_primeiro">PRIMEIRO GOL</label><input type="number" min="0" id="g-primeiro" data-i18n-ph="g_min" placeholder="Min."></div>
-          <div></div>
-        </div>
-        <div class="goal-foot">
-          <div class="goal-checks">
-            <label><input type="checkbox" id="g-liga" checked> <span data-i18n="g_liga">Liga</span></label>
-            <label><input type="checkbox" id="g-ml"> <span data-i18n="g_ml">ML (Multiliga)</span></label>
+      <div class="num-row">
+        <div class="num-badge n3">3</div>
+        <div class="cells c2">
+          <div class="cell"><label><span data-i18n="f_primeiro">PRIMEIRO GOL (MIN.)</span><button class="lbl-info" onclick="openFieldInfo('primeiro')">ℹ</button></label><input type="text" inputmode="none" readonly id="v-primeiro" onclick="openKeypad('v-primeiro')"></div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:20px; background:rgba(255,255,255,0.03); border-radius:14px;">
+            <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:clamp(12px,1.3vw,14px);"><input type="checkbox" id="v-liga" checked style="width:20px;height:20px;accent-color:var(--emerald);"><span data-i18n="f_liga">Liga</span></label>
+            <label style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:clamp(12px,1.3vw,14px);"><input type="checkbox" id="v-ml" style="width:20px;height:20px;accent-color:var(--emerald);"><span data-i18n="f_ml">ML (Multiliga)</span></label>
           </div>
         </div>
       </div>
 
-      <div id="goalError" style="color:var(--crimson); font-size:12.5px; margin-top:12px; display:none;" data-i18n="goal_error">Preencha todos os campos e verifique se há saldo suficiente.</div>
+      <div class="err-msg" id="errMsg" data-i18n="err_fill">Preencha todos os campos para confirmar a jogada.</div>
 
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_voltar">← Voltar</button>
-        <button class="btn btn-primary" onclick="submitJogada()" data-i18n="btn_confirmarjogada">Confirmar jogada — R$ 10,00 →</button>
+      <div class="board-foot">
+        <div class="board-note-pill"><span class="bn-icon">♥</span><span data-i18n="board_note">Os valores são distribuídos entre clube, escolinha e federações.</span></div>
+        <button class="confirm-btn" onclick="confirmJogada()" id="confirmBtn">Confirmar jogada — R$ 10,00</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- SCREEN: HISTORICO -->
-  <div class="screen" id="screen-historico">
-    <div class="card">
-      <div class="eyebrow" data-i18n="eb_concluido">Concluído</div>
-      <h2 data-i18n="h_historico">Sua jogada foi registrada</h2>
-      <p class="sub" data-i18n="sub_historico">Isso é tudo que o módulo de jogo informa: se você ganhou ou perdeu e a cobrança correspondente. O repasse para clube, escolinha e federações é administrado pela plataforma.</p>
-
-      <table>
-        <thead><tr>
-          <th data-i18n="th_data">Data</th><th data-i18n="th_clube">Clube</th><th data-i18n="th_jogo">Jogo</th><th data-i18n="th_valor">Valor</th><th data-i18n="th_status">Status</th>
-        </tr></thead>
-        <tbody id="historicoBody"></tbody>
-      </table>
-
-      <div class="btn-row">
-        <button class="btn btn-dark" onclick="goTo('carteira')" data-i18n="btn_maissaldo">Carregar mais saldo</button>
-        <button class="btn btn-primary" onclick="goToGameScreen()" data-i18n="btn_jogarnovamente">Jogar novamente</button>
-      </div>
+<!-- custom on-screen numeric keypad (kiosk never relies on the OS keyboard) -->
+<div id="keypadOverlay">
+  <div class="keypad-box">
+    <div class="keypad-head"><span id="keypadFieldLabel">TOTAL</span><button onclick="closeKeypad()">✕</button></div>
+    <div class="keypad-display" id="keypadDisplay">0</div>
+    <div class="keypad-grid">
+      <button onclick="keypadPress('1')">1</button><button onclick="keypadPress('2')">2</button><button onclick="keypadPress('3')">3</button>
+      <button onclick="keypadPress('4')">4</button><button onclick="keypadPress('5')">5</button><button onclick="keypadPress('6')">6</button>
+      <button onclick="keypadPress('7')">7</button><button onclick="keypadPress('8')">8</button><button onclick="keypadPress('9')">9</button>
+      <button class="kp-clear" onclick="keypadClear()">C</button><button onclick="keypadPress('0')">0</button><button class="kp-back" onclick="keypadBack()">⌫</button>
     </div>
+    <button class="keypad-ok" onclick="closeKeypad()" data-i18n="kp_ok">OK</button>
   </div>
+</div>
 
-  <!-- SCREEN: DASHBOARD -->
-  <div class="screen" id="screen-dashboard">
-    <div class="card">
-      <div class="eyebrow" id="dashEyebrow">Painel</div>
-      <h2 id="dashTitulo">Painel</h2>
-      <p class="sub" id="dashSub"></p>
+<!-- success overlay -->
+<div id="successOverlay">
+  <div class="check">✓</div>
+  <h3 data-i18n="ok_title">Jogada confirmada!</h3>
+  <p data-i18n="ok_sub">Boa sorte na rodada. Voltando para a tela inicial...</p>
+  <div class="recap" id="okRecap"></div>
+</div>
 
-      <div class="kpi-grid" id="dashKpis"></div>
-
-      <div id="dashSplitWrap">
-        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:8px;" data-i18n="split_title">Distribuição da arrecadação (por jogada)</div>
-        <div class="split-bar" id="splitBar"></div>
-        <div class="legend" id="splitLegend"></div>
-      </div>
-    </div>
+<!-- match info modal (ficha do clube + form ilustrativo) -->
+<!-- field description modal -->
+<div id="fieldInfoModal">
+  <div class="fi-box">
+    <h4 id="fieldInfoTitle">—</h4>
+    <p id="fieldInfoDesc">—</p>
+    <button onclick="closeFieldInfo()" data-i18n="fi_ok">Entendi</button>
   </div>
+</div>
 
+<div id="matchInfoModal">
+  <div class="mi-box">
+    <div class="mi-head"><h3 id="matchInfoTitle">—</h3><button onclick="closeMatchInfo()">✕</button></div>
+    <div id="matchInfoBody"></div>
+  </div>
+</div>
+
+<!-- history modal -->
+<div id="historyModal">
+  <div class="history-box">
+    <h3 data-i18n="hist_title">Últimas jogadas</h3>
+    <div id="historyList"></div>
+    <button class="history-close" onclick="closeHistory()" data-i18n="hist_close">Fechar</button>
+  </div>
+</div>
+
+<div id="confettiWrap"></div>
+<div id="goalFlashWrap"></div>
+
+<div id="rgFooter">
+  <span>🛡️ <b data-i18n="rg_title">Jogo responsável</b></span>
+  <span data-i18n="rg_msg">Jogue com moderação · +18</span>
+  <span id="rgCount">0/5 <span data-i18n="rg_today">jogadas hoje</span></span>
 </div>
 
 <script>
-/* ======================= i18n ======================= */
 let LANG = 'pt';
 const T = {
-  pt: {
-    ticker1:'PRÓXIMA RODADA · CAMPEONATO ARGENTINO — inscrições abertas', ticker2:'SEU CLUBE GANHA A CADA JOGADA', ticker3:'PAGAMENTO 100% VIA PIX', ticker4:'TÍTULO DE CAPITALIZAÇÃO — não é aposta esportiva',
-    ticker1b:'PRÓXIMA RODADA · CAMPEONATO ARGENTINO — inscrições abertas', ticker2b:'SEU CLUBE GANHA A CADA JOGADA', ticker3b:'PAGAMENTO 100% VIA PIX',
-    opt_jogador:'Jogador', opt_freelancer:'Freelancer', opt_clube:'Clube', opt_federacao:'Federação Estadual', opt_admin:'Administração',
-    hero_h1:'Seu clube pode <em>ganhar</em> a cada jogada',
-    hero_p1:'O World Lottery é uma plataforma de <b>títulos de capitalização</b> — o mesmo mecanismo do tradicional "Pé de Meia" ou sorteio "São Jorge" — reconhecida pela Federação de Clubes de Futebol do Brasil para que clubes arrecadem fundos através de jogos.',
-    hero_p2:'Não é uma casa de apostas: cada jogada compra um título de capitalização, parte concorre a prêmios e parte financia diretamente o clube, sua escolinha social e a rede que a Federação organiza.',
-    cta_cadastro:'Escolha seu clube →', cta_caixa:'Como funciona o dinheiro?',
-    ticket_live:'RODADA ABERTA', ticket_l1:'Jogo em demonstração', ticket_l2:'Valor por cartão', ticket_l3:'Prêmio bruto da rodada', ticket_l4:'Repasse ao clube + escolinha',
-    pyr1:'Você escolhe o jogo', pyr2:'Seu clube do coração', pyr3:'Escolinha social do clube', pyr4:'Federação estadual', pyr5:'Federação Internacional',
-    disclaimer_home:'World Lottery opera títulos de capitalização regulados — não é uma casa de apostas esportivas. Ambiente 100% de demonstração.',
-    disclaimer_login:'O login é feito na plataforma do cassino — este módulo assume que você já está autenticado por lá.',
-    eb_transp:'Transparência', h_caixa:'Como funciona sua carteira', sub_caixa:'Toda carga de saldo é feita via Pix. Sua carteira tem dois compartimentos, sempre rastreáveis, conforme a lei antilavagem do Brasil.',
-    lbl_seusaldo:'Seu saldo', hint_seusaldo:'É sempre seu. Pode ser usado em jogadas ou solicitado de volta pelo mesmo Pix de origem.',
-    lbl_receita:'Receita da plataforma', hint_receita:'Comissões e taxas descontadas apenas quando você joga — nunca sobre o saldo parado.',
-    btn_voltar:'← Voltar', btn_continuar_cadastro:'Escolher meu clube →',
-    lbl_nome:'Nome completo', ph_nome:'Ex: João da Silva Santos', err_nome:'Informe seu nome completo.',
-    lbl_cpf:'CPF', err_cpf:'CPF inválido. Verifique os dígitos.',
-    lbl_nasc:'Data de nascimento', err_nasc:'Você precisa ter 18 anos ou mais.',
-    lbl_usuario:'Usuário', ph_usuario:'Escolha um nome de usuário', err_usuario:'Escolha um usuário com ao menos 4 caracteres.',
-    lbl_senha:'Senha', ph_senha:'Mínimo 8 caracteres', err_senha:'Senha muito curta.',
-    lbl_senha2:'Confirmar senha', ph_senha2:'Repita a senha', err_senha2:'As senhas não coincidem.',
-    lbl_2fa:'Ativar autenticação em duas etapas (recomendado)', lbl_2facode:'Código enviado por SMS (simulado)', hint_2fa:'Ambiente de demonstração: qualquer código de 6 dígitos é aceito.',
-    lbl_termos:'Li e aceito o regulamento do título de capitalização e a política de privacidade', err_termos:'Você precisa aceitar o regulamento para continuar.',
-    btn_continuar:'Continuar →',
-    step1of4:'Passo 1 de 4', h_clube:'Escolha seu clube do coração', sub_clube:'Toda vez que você jogar, parte do valor vai para este clube e sua escolinha social.',
-    note_clube:'Base com os clubes reais das Séries A, B, C e D do Brasileirão 2026 (CBF), cobrindo as 27 federações. Ainda não inclui as divisões estaduais amadoras — levantamento completo é tarefa separada.',
-    ph_buscar:'Buscar clube ou estado...', fed_word:'Federação',
-    step2of4:'Passo 2 de 4', h_jogo:'Escolha o jogo', sub_jogo:'A Federação ainda vai definir qual(is) jogo(s) usar. Gold League já está com demo completa; para Senagol e Raspadinha/Kini Gol não há especificação pública dos fornecedores, então montamos um modelo conceitual para você já visualizar o circuito.',
-    badge_demo:'Demo ativa', badge_pend:'Em definição', badge_concept:'Modelo conceitual',
-    game_gold_desc:'Prognósticos de gols por rodada. Disponível em modo demonstração com o Campeonato Argentino.',
-    game_pend_desc:'API ainda não desenvolvida — aguardando escolha da Federação.',
-    game_senagol_desc:'Loteria de números por rodada (modelo conceitual — sem especificação pública do fornecedor).',
-    game_raspa_desc:'Cartela instantânea estilo raspadinha (modelo conceitual — sem especificação pública do fornecedor).',
-    rules_title:'Como jogar e ganhar — Gold League', rules_mecanica_t:'Mecânica',
-    rules_mecanica_1:'Total, 2º tempo e atacantes: quantidade de gols em cada categoria, na rodada.',
-    rules_mecanica_2:'Cabeça e faltas: gols de cabeça e gols de falta/pênalti da rodada.',
-    rules_mecanica_3:'Primeiro gol: minuto em que sai o primeiro gol da rodada.',
-    rules_premios_t:'Faixas de prêmio', rules_p1:'6 acertos — Linha 1 + Linha 2 + Linha 3',
-    rules_p2:'4 ou 5 acertos entre as três linhas', rules_p3:'Acerto exato da Linha 1 (Total)',
-    eb_aguardando:'Aguardando Federação', h_pendente:'Jogo em definição',
-    sub_pendente:'Este módulo só será integrado quando a Federação confirmar qual(is) jogo(s) serão utilizados. O esqueleto da plataforma já está pronto para conectar a API assim que ela existir.',
-    btn_outrojogo:'← Escolher outro jogo',
-    step3of4:'Passo 3 de 4', h_carteira:'Carregue sua carteira', sub_carteira:'Toda carga é feita via Pix (99,9% dos casos). Este é um ambiente de demonstração — nenhuma cobrança real é feita.',
-    lbl_saldodisp:'Saldo disponível', lbl_clubesel:'Clube selecionado', pix_scan:'Escaneie o QR Pix (simulado)', pix_confirm:'Confirmar pagamento simulado', btn_irjogo:'Ir para o jogo →',
-    tx_title:'Últimas movimentações', tx_empty:'Nenhuma movimentação ainda.', tx_carga:'Carga via Pix', tx_jogada:'Jogada',
-    us_saldo:'Saldo',
-    step4of4:'Passo 4 de 4 · Demo · Campeonato Argentino', h_jogar:'Faça seu prognóstico',
-    step4of4b:'Passo 4 de 4 · Modelo conceitual',
-    concept_senagol:'Não encontramos especificação pública deste jogo — este é um modelo conceitual (loteria de números) só para testar o circuito de cadastro → carteira → jogada → histórico. Substitua pela API real quando a Federação definir o fornecedor.',
-    sub_senagol:'Escolha 5 números de 1 a 50. Jogada de <b>R$ 10,00</b>.',
-    sena_pick:'números escolhidos', btn_confirmarjogada2:'Confirmar jogada — R$ 10,00 →',
-    concept_raspa:'Não encontramos especificação pública deste jogo — este é um modelo conceitual (cartela instantânea) só para testar o circuito. Substitua pela API real quando a Federação definir o fornecedor.',
-    sub_raspa:'Raspe as 9 células. Três bolas iguais em linha, coluna ou diagonal = prêmio. Cartela de <b>R$ 10,00</b>.',
-    btn_novacartela:'Comprar nova cartela — R$ 10,00', raspa_ganhou:'🎉 Cartela premiada!', raspa_perdeu:'Não foi dessa vez.', raspa_saldo:'Saldo insuficiente para comprar a cartela.',
-    sub_jogar:'Jogada de <b>R$ 10,00</b> por cartão. O valor será descontado do seu saldo e distribuído conforme a tabela de repasse.',
-    g_total:'TOTAL', g_segundo:'2º TEMPO', g_atacantes:'ATACANTES', g_cabeca:'CABEÇA', g_faltas:'FALTAS', g_primeiro:'PRIMEIRO GOL', g_min:'Min.', g_liga:'Liga', g_ml:'ML (Multiliga)',
-    goal_error:'Preencha todos os campos e verifique se há saldo suficiente.', btn_confirmarjogada:'Confirmar jogada — R$ 10,00 →',
-    eb_concluido:'Concluído', h_historico:'Sua jogada foi registrada',
-    sub_historico:'Isso é tudo que o módulo de jogo informa: se você ganhou ou perdeu e a cobrança correspondente. O repasse para clube, escolinha e federações é administrado pela plataforma.',
-    th_data:'Data', th_clube:'Clube', th_jogo:'Jogo', th_valor:'Valor', th_status:'Status',
-    btn_maissaldo:'Carregar mais saldo', btn_jogarnovamente:'Jogar novamente',
-    status_pendente:'Aguardando resultado', status_ganhou:'Ganhou', status_perdeu:'Perdeu',
-    btn_marcarganhou:'Marcar ganhou', btn_marcarperdeu:'Marcar perdeu',
-    empty_clubs:'Nenhum clube encontrado.', empty_history:'Nenhuma jogada ainda.',
-    split_title:'Distribuição da arrecadação (por jogada)',
-    dash_freelancer_title:'Painel do Freelancer', dash_freelancer_eb:'Visão individual', dash_freelancer_sub:'Você vê apenas o que você mesmo gerou — nunca os dados de outros freelancers.',
-    dash_clube_title:'Painel do Clube', dash_clube_eb:'Visão do clube', dash_clube_sub:'Arrecadação trazida pelos freelancers e influencers do clube, e valor destinado à escolinha.',
-    dash_federacao_title:'Painel da Federação Estadual', dash_federacao_eb:'Visão consolidada', dash_federacao_sub:'Todos os clubes filiados a esta federação, consolidados.',
-    dash_admin_title:'Painel de Administração', dash_admin_eb:'Visão global · Caixa completa', dash_admin_sub:'Rastreabilidade total de fundos e conciliação semanal, conforme lei antilavagem.',
-    k_jogadaslink:'Jogadas via seu link', k_comissao5:'Comissão gerada (5%)', k_clubebenef:'Clube beneficiado', k_adefinir:'A definir',
-    k_jogadasclube:'Jogadas ligadas ao clube', k_comissaoclube:'Comissão do clube (10%)', k_repasseescol:'Repasse à escolinha (5%)',
-    k_clubesfiliados:'Clubes filiados', k_jogadasestado:'Jogadas no estado', k_faturamentoestado:'Faturamento do estado',
-    k_faturamentototal:'Faturamento total', k_semanaoperacional:'Semana operacional', k_reservabancaria:'Reserva bancária acumulada', k_semanaval:'3 de 8 (pré-lucro)',
-    split_pdv:'Pontos de venda (clubes)', split_freelancers:'Freelancers dos clubes', split_taxacap:'Taxa de capitalização', split_piscofins:'PIS/COFINS', split_auditoria:'Auditoria',
-    split_premio:'Prêmio bruto', split_reserva:'Reserva bancária', split_escolinha:'Instituição beneficiária (escolinha)', split_plataforma:'Plataforma própria', split_jogos:'Jogos (Senagol/Gold/Raspadinha)',
+  pt:{
+    ss_sub:'TÍTULO DE CAPITALIZAÇÃO', ss_cta:'Toque para jogar', ss_foot:'Jogada de R$ 10,00 · Brasileirão Série A · Ambiente de demonstração',
+    ss_teams:'⚽ Ver equipes e tabela', league_title:'Equipes e tabela', league_sub:'Times reais do futebol brasileiro. Insígnias genéricas — não são os escudos oficiais.',
+    league_search_ph:'Buscar time...', standings_title:'Tabela Brasileirão Série A · início da temporada 2026', st_team:'Time', mi_last5:'Últimos 5 jogos (ilustrativo)',
+    gs_back:'← Sair', gs_round:'Rodada', board_tag:'JOGADA R$ 10,00', board_note:'Os valores são distribuídos entre clube, escolinha e federações.',
+    board_confirm:'Confirmar jogada — R$ 10,00', err_fill:'Preencha todos os campos para confirmar a jogada.',
+    f_total:'TOTAL', f_segundo:'2º TEMPO', f_atacantes:'ATACANTES', f_cabeca:'CABEÇA', f_faltas:'FALTAS', f_primeiro:'PRIMEIRO GOL (MIN.)', f_liga:'Liga', f_ml:'ML (Multiliga)',
+    half_hint_default:'Preencha TOTAL e 2º TEMPO para ver o estimado do 1º tempo.', half_hint_filled:'1º tempo estimado: {n} gols · 2º tempo: {seg} gols',
+    fi_total:'Quantidade total de gols nos jogos desta jogada.', fi_segundo:'Gols marcados no segundo tempo dos jogos.', fi_atacantes:'Gols marcados por jogadores atacantes (posição de ataque).',
+    fi_cabeca:'Gols de cabeça que vão sair no(s) jogo(s).', fi_penalti:'Gols convertidos de pênalti.', fi_foraarea:'Gols marcados de fora da área.',
+    fi_corners:'Quantidade de escanteios (tiros de canto) no(s) jogo(s). Atenção: aqui não é gol, é a quantidade de escanteios cobrados.',
+    fi_faltas:'Gols marcados de falta (tiro livre direto).', fi_primeiro:'Minuto em que sai o primeiro gol da jogada.',
+    cat_penalti:'PÊNALTI', cat_foraarea:'FORA DA ÁREA', cat_corners:'ESCANTEIOS', fi_ok:'Entendi',
+    ok_title:'Jogada confirmada!', ok_sub:'Boa sorte na rodada. Voltando para a tela inicial...',
+    slide1_eb:'Mecânica', slide1_p:'Preveja os gols de 5 jogos de uma rodada do Brasileirão Série A: total, 2º tempo, gols de atacantes, de cabeça, de falta e o minuto do primeiro gol.',
+    slide2_eb:'Os 5 jogos desta rodada', slide2_p:'4ª rodada · Brasileirão Série A 2026',
+    slide3_eb:'Prêmios', slide3_l1:'6 acertos', slide3_l1s:'1º prêmio', slide3_l2:'4-5 acertos', slide3_l2s:'2º prêmio', slide3_l3:'Total exato', slide3_l3s:'3º prêmio',
+    mode_title:'Como você quer jogar?', mode_sub:'4ª rodada · Brasileirão Série A 2026', mode_price:'Jogada', rebet_label:'Repetir última jogada',
+    mode_rodada_t:'Rodada completa', mode_rodada_p:'Os 5 jogos da rodada. Maior prêmio, precisa acertar as 3 linhas.',
+    mode_dia_t:'Por dia', mode_dia_p:'Escolha um dia da rodada (ex.: sábado, com 2 jogos) e jogue só sobre eles.',
+    mode_partido_t:'Partido único', mode_partido_p:'Escolha 1 jogo específico da rodada. Entrada mais baixa, prêmio mais frequente.',
+    day_title:'Escolha o dia', day_sub:'O valor da jogada varia conforme a quantidade de jogos do dia.',
+    match_title:'Escolha o jogo', match_sub:'Jogada de R$ 3,00 sobre este jogo específico.',
+    day_sab:'Sábado', day_dom:'Domingo', day_games:'jogos',
+    gs_history:'Histórico', hist_title:'Últimas jogadas', hist_close:'Fechar', hist_empty:'Nenhuma jogada ainda.',
+    scope_rodada:'Rodada completa (5 jogos)', scope_dia:'jogos',
+    err_saldo:'Saldo insuficiente.',
+    cutoff_label:'Rodada fecha em', cutoff_closed:'Rodada encerrada', rg_title:'Jogo responsável', rg_msg:'Jogue com moderação · +18', rg_today:'jogadas hoje',
+    rg_limit_msg:'Você atingiu o limite de jogadas de hoje. Volte amanhã!', goal_word:'GOL!', kp_ok:'OK',
   },
-  es: {
-    ticker1:'PRÓXIMA FECHA · CAMPEONATO ARGENTINO — inscripciones abiertas', ticker2:'TU CLUB GANA EN CADA JUGADA', ticker3:'PAGO 100% VÍA PIX', ticker4:'TÍTULO DE CAPITALIZACIÓN — no es apuesta deportiva',
-    ticker1b:'PRÓXIMA FECHA · CAMPEONATO ARGENTINO — inscripciones abiertas', ticker2b:'TU CLUB GANA EN CADA JUGADA', ticker3b:'PAGO 100% VÍA PIX',
-    opt_jogador:'Jugador', opt_freelancer:'Freelancer', opt_clube:'Club', opt_federacao:'Federación Estadual', opt_admin:'Administración',
-    hero_h1:'Tu club puede <em>ganar</em> en cada jugada',
-    hero_p1:'World Lottery es una plataforma de <b>títulos de capitalización</b> — el mismo mecanismo del tradicional sorteo tipo "San Jorge" — reconocida por la Federación de Clubes de Fútbol de Brasil para que los clubes recauden fondos a través de juegos.',
-    hero_p2:'No es una casa de apuestas: cada jugada compra un título de capitalización, parte concursa por premios y parte financia directamente al club, su escuelita social y la red que organiza la Federación.',
-    cta_cadastro:'Elegí tu club →', cta_caixa:'¿Cómo funciona el dinero?',
-    ticket_live:'FECHA ABIERTA', ticket_l1:'Juego en demostración', ticket_l2:'Valor por cartón', ticket_l3:'Premio bruto de la fecha', ticket_l4:'Reparto a club + escuelita',
-    pyr1:'Elegís el juego', pyr2:'Tu club del corazón', pyr3:'Escuelita social del club', pyr4:'Federación estadual', pyr5:'Federación Internacional',
-    disclaimer_home:'World Lottery opera títulos de capitalización regulados — no es una casa de apuestas deportivas. Entorno 100% de demostración.',
-    disclaimer_login:'El login se hace en la plataforma del casino — este módulo asume que ya estás autenticado desde ahí.',
-    eb_transp:'Transparencia', h_caixa:'Cómo funciona tu billetera', sub_caixa:'Toda carga de saldo se hace vía Pix. Tu billetera tiene dos compartimentos, siempre trazables, según la ley antilavado de Brasil.',
-    lbl_seusaldo:'Tu saldo', hint_seusaldo:'Siempre es tuyo. Podés usarlo en jugadas o pedirlo de vuelta por el mismo Pix de origen.',
-    lbl_receita:'Ingresos de la plataforma', hint_receita:'Comisiones y tasas descontadas solo cuando jugás — nunca sobre el saldo parado.',
-    btn_voltar:'← Volver', btn_continuar_cadastro:'Elegir mi club →',
-    lbl_nome:'Nombre completo', ph_nome:'Ej: Juan Pérez González', err_nome:'Ingresá tu nombre completo.',
-    lbl_cpf:'CPF', err_cpf:'CPF inválido. Verificá los dígitos.',
-    lbl_nasc:'Fecha de nacimiento', err_nasc:'Necesitás tener 18 años o más.',
-    lbl_usuario:'Usuario', ph_usuario:'Elegí un nombre de usuario', err_usuario:'Elegí un usuario de al menos 4 caracteres.',
-    lbl_senha:'Contraseña', ph_senha:'Mínimo 8 caracteres', err_senha:'Contraseña muy corta.',
-    lbl_senha2:'Confirmar contraseña', ph_senha2:'Repetí la contraseña', err_senha2:'Las contraseñas no coinciden.',
-    lbl_2fa:'Activar autenticación en dos pasos (recomendado)', lbl_2facode:'Código enviado por SMS (simulado)', hint_2fa:'Entorno de demostración: cualquier código de 6 dígitos es aceptado.',
-    lbl_termos:'Leí y acepto el reglamento del título de capitalización y la política de privacidad', err_termos:'Necesitás aceptar el reglamento para continuar.',
-    btn_continuar:'Continuar →',
-    step1of4:'Paso 1 de 4', h_clube:'Elegí tu club del corazón', sub_clube:'Cada vez que juegues, parte del valor va para este club y su escuelita social.',
-    note_clube:'Base con los clubes reales de las Series A, B, C y D del Brasileirão 2026 (CBF), cubriendo las 27 federaciones. Todavía no incluye las divisiones estaduales amateur — el relevamiento completo es una tarea aparte.',
-    ph_buscar:'Buscar club o estado...', fed_word:'Federación',
-    step2of4:'Paso 2 de 4', h_jogo:'Elegí el juego', sub_jogo:'La Federación todavía va a definir qué juego(s) usar. Gold League ya tiene demo completa; para Senagol y Raspadinha/Kini Gol no hay especificación pública de los proveedores, así que armamos un modelo conceptual para que ya veas el circuito.',
-    badge_demo:'Demo activa', badge_pend:'En definición', badge_concept:'Modelo conceptual',
-    game_gold_desc:'Pronósticos de goles por fecha. Disponible en modo demostración con el Campeonato Argentino.',
-    game_pend_desc:'API todavía no desarrollada — esperando la elección de la Federación.',
-    game_senagol_desc:'Lotería de números por fecha (modelo conceptual — sin especificación pública del proveedor).',
-    game_raspa_desc:'Cartón instantáneo tipo raspadita (modelo conceptual — sin especificación pública del proveedor).',
-    rules_title:'Cómo jugar y ganar — Gold League', rules_mecanica_t:'Mecánica',
-    rules_mecanica_1:'Total, 2º tiempo y delanteros: cantidad de goles en cada categoría, en la fecha.',
-    rules_mecanica_2:'Cabeza y tiros libres: goles de cabeza y de tiro libre/penal de la fecha.',
-    rules_mecanica_3:'Primer gol: minuto en que llega el primer gol de la fecha.',
-    rules_premios_t:'Niveles de premio', rules_p1:'6 aciertos — Línea 1 + Línea 2 + Línea 3',
-    rules_p2:'4 o 5 aciertos entre las tres líneas', rules_p3:'Acierto exacto de la Línea 1 (Total)',
-    eb_aguardando:'Esperando a la Federación', h_pendente:'Juego en definición',
-    sub_pendente:'Este módulo solo se integrará cuando la Federación confirme qué juego(s) se van a usar. El esqueleto de la plataforma ya está listo para conectar la API en cuanto exista.',
-    btn_outrojogo:'← Elegir otro juego',
-    step3of4:'Paso 3 de 4', h_carteira:'Cargá tu billetera', sub_carteira:'Toda carga se hace vía Pix (99,9% de los casos). Este es un entorno de demostración — no se realiza ningún cobro real.',
-    lbl_saldodisp:'Saldo disponible', lbl_clubesel:'Club seleccionado', pix_scan:'Escaneá el QR Pix (simulado)', pix_confirm:'Confirmar pago simulado', btn_irjogo:'Ir al juego →',
-    tx_title:'Últimos movimientos', tx_empty:'Todavía no hay movimientos.', tx_carga:'Carga vía Pix', tx_jogada:'Jugada',
-    us_saldo:'Saldo',
-    step4of4:'Paso 4 de 4 · Demo · Campeonato Argentino', h_jogar:'Hacé tu pronóstico',
-    step4of4b:'Paso 4 de 4 · Modelo conceptual',
-    concept_senagol:'No encontramos especificación pública de este juego — este es un modelo conceptual (lotería de números) solo para probar el circuito de registro → billetera → jugada → historial. Reemplazalo por la API real cuando la Federación defina el proveedor.',
-    sub_senagol:'Elegí 5 números del 1 al 50. Jugada de <b>R$ 10,00</b>.',
-    sena_pick:'números elegidos', btn_confirmarjogada2:'Confirmar jugada — R$ 10,00 →',
-    concept_raspa:'No encontramos especificación pública de este juego — este es un modelo conceptual (cartón instantáneo) solo para probar el circuito. Reemplazalo por la API real cuando la Federación defina el proveedor.',
-    sub_raspa:'Raspá las 9 celdas. Tres bolas iguales en línea, columna o diagonal = premio. Cartón de <b>R$ 10,00</b>.',
-    btn_novacartela:'Comprar cartón nuevo — R$ 10,00', raspa_ganhou:'🎉 ¡Cartón premiado!', raspa_perdeu:'No fue esta vez.', raspa_saldo:'Saldo insuficiente para comprar el cartón.',
-    sub_jogar:'Jugada de <b>R$ 10,00</b> por cartón. El valor se descuenta de tu saldo y se distribuye según la tabla de reparto.',
-    g_total:'TOTAL', g_segundo:'2º TIEMPO', g_atacantes:'DELANTEROS', g_cabeca:'CABEZA', g_faltas:'TIROS LIBRES', g_primeiro:'PRIMER GOL', g_min:'Min.', g_liga:'Liga', g_ml:'ML (Multiliga)',
-    goal_error:'Completá todos los campos y verificá que haya saldo suficiente.', btn_confirmarjogada:'Confirmar jugada — R$ 10,00 →',
-    eb_concluido:'Completado', h_historico:'Tu jugada fue registrada',
-    sub_historico:'Esto es todo lo que informa el módulo del juego: si ganaste o perdiste y el cobro correspondiente. El reparto a club, escuelita y federaciones lo administra la plataforma.',
-    th_data:'Fecha', th_clube:'Club', th_jogo:'Juego', th_valor:'Valor', th_status:'Estado',
-    btn_maissaldo:'Cargar más saldo', btn_jogarnovamente:'Jugar de nuevo',
-    status_pendente:'Esperando resultado', status_ganhou:'Ganó', status_perdeu:'Perdió',
-    btn_marcarganhou:'Marcar ganó', btn_marcarperdeu:'Marcar perdió',
-    empty_clubs:'No se encontraron clubes.', empty_history:'Todavía no hay jugadas.',
-    split_title:'Distribución de la recaudación (por jugada)',
-    dash_freelancer_title:'Panel del Freelancer', dash_freelancer_eb:'Vista individual', dash_freelancer_sub:'Solo ves lo que vos mismo generaste — nunca los datos de otros freelancers.',
-    dash_clube_title:'Panel del Club', dash_clube_eb:'Vista del club', dash_clube_sub:'Recaudación traída por los freelancers e influencers del club, y monto destinado a la escuelita.',
-    dash_federacao_title:'Panel de la Federación Estadual', dash_federacao_eb:'Vista consolidada', dash_federacao_sub:'Todos los clubes afiliados a esta federación, consolidados.',
-    dash_admin_title:'Panel de Administración', dash_admin_eb:'Vista global · Caja completa', dash_admin_sub:'Trazabilidad total de fondos y conciliación semanal, según ley antilavado.',
-    k_jogadaslink:'Jugadas vía tu link', k_comissao5:'Comisión generada (5%)', k_clubebenef:'Club beneficiado', k_adefinir:'A definir',
-    k_jogadasclube:'Jugadas ligadas al club', k_comissaoclube:'Comisión del club (10%)', k_repasseescol:'Reparto a la escuelita (5%)',
-    k_clubesfiliados:'Clubes afiliados', k_jogadasestado:'Jugadas en el estado', k_faturamentoestado:'Facturación del estado',
-    k_faturamentototal:'Facturación total', k_semanaoperacional:'Semana operativa', k_reservabancaria:'Reserva bancaria acumulada', k_semanaval:'3 de 8 (pre-ganancia)',
-    split_pdv:'Puntos de venta (clubes)', split_freelancers:'Freelancers de los clubes', split_taxacap:'Tasa de capitalización', split_piscofins:'PIS/COFINS', split_auditoria:'Auditoría',
-    split_premio:'Premio bruto', split_reserva:'Reserva bancaria', split_escolinha:'Institución beneficiaria (escuelita)', split_plataforma:'Plataforma propia', split_jogos:'Juegos (Senagol/Gold/Raspadinha)',
+  es:{
+    ss_sub:'TÍTULO DE CAPITALIZACIÓN', ss_cta:'Tocá para jugar', ss_foot:'Jugada de R$ 10,00 · Brasileirão Serie A · Entorno de demostración',
+    ss_teams:'⚽ Ver equipos y tabla', league_title:'Equipos y tabla', league_sub:'Equipos reales del fútbol brasileño. Insignias genéricas — no son los escudos oficiales.',
+    league_search_ph:'Buscar equipo...', standings_title:'Tabla Brasileirão Serie A · inicio de temporada 2026', st_team:'Equipo', mi_last5:'Últimos 5 partidos (ilustrativo)',
+    gs_back:'← Salir', gs_round:'Fecha', board_tag:'JUGADA R$ 10,00', board_note:'Los valores se reparten entre club, escuelita y federaciones.',
+    board_confirm:'Confirmar jugada — R$ 10,00', err_fill:'Completá todos los campos para confirmar la jugada.',
+    f_total:'TOTAL', f_segundo:'2º TIEMPO', f_atacantes:'DELANTEROS', f_cabeca:'CABEZA', f_faltas:'TIROS LIBRES', f_primeiro:'PRIMER GOL (MIN.)', f_liga:'Liga', f_ml:'ML (Multiliga)',
+    half_hint_default:'Completá TOTAL y 2º TIEMPO para ver el estimado del 1er tiempo.', half_hint_filled:'1er tiempo estimado: {n} goles · 2º tiempo: {seg} goles',
+    fi_total:'Cantidad total de goles en los partidos de esta jugada.', fi_segundo:'Goles marcados en el segundo tiempo de los partidos.', fi_atacantes:'Goles marcados por jugadores delanteros.',
+    fi_cabeca:'Goles de cabeza que va a haber en el/los partido(s).', fi_penalti:'Goles convertidos de penal.', fi_foraarea:'Goles marcados desde fuera del área.',
+    fi_corners:'Cantidad de córners (tiros de esquina) en el/los partido(s). Atención: acá no es gol, es la cantidad de córners cobrados.',
+    fi_faltas:'Goles marcados de tiro libre directo.', fi_primeiro:'Minuto en el que llega el primer gol de la jugada.',
+    cat_penalti:'PENAL', cat_foraarea:'FUERA DEL ÁREA', cat_corners:'CÓRNERS', fi_ok:'Entendido',
+    ok_title:'¡Jugada confirmada!', ok_sub:'Suerte en la fecha. Volviendo a la pantalla inicial...',
+    slide1_eb:'Mecánica', slide1_p:'Predecí los goles de 5 partidos de una fecha del Brasileirão Serie A: total, 2º tiempo, goles de delanteros, de cabeza, de tiro libre y el minuto del primer gol.',
+    slide2_eb:'Los 5 partidos de esta fecha', slide2_p:'4ª fecha · Brasileirão Serie A 2026',
+    slide3_eb:'Premios', slide3_l1:'6 aciertos', slide3_l1s:'1er premio', slide3_l2:'4-5 aciertos', slide3_l2s:'2do premio', slide3_l3:'Total exacto', slide3_l3s:'3er premio',
+    mode_title:'¿Cómo querés jugar?', mode_sub:'4ª fecha · Brasileirão Serie A 2026', mode_price:'Jugada', rebet_label:'Repetir última jugada',
+    mode_rodada_t:'Fecha completa', mode_rodada_p:'Los 5 partidos de la fecha. Mayor premio, hay que acertar las 3 líneas.',
+    mode_dia_t:'Por día', mode_dia_p:'Elegí un día de la fecha (ej.: sábado, con 2 partidos) y jugá solo sobre esos.',
+    mode_partido_t:'Partido único', mode_partido_p:'Elegí 1 partido específico de la fecha. Entrada más baja, premio más frecuente.',
+    day_title:'Elegí el día', day_sub:'El valor de la jugada varía según la cantidad de partidos del día.',
+    match_title:'Elegí el partido', match_sub:'Jugada de R$ 3,00 sobre este partido específico.',
+    day_sab:'Sábado', day_dom:'Domingo', day_games:'partidos',
+    gs_history:'Historial', hist_title:'Últimas jugadas', hist_close:'Cerrar', hist_empty:'Todavía no hay jugadas.',
+    scope_rodada:'Fecha completa (5 partidos)', scope_dia:'partidos',
+    err_saldo:'Saldo insuficiente.',
+    cutoff_label:'La fecha cierra en', cutoff_closed:'Fecha cerrada', rg_title:'Juego responsable', rg_msg:'Jugá con moderación · +18', rg_today:'jugadas hoy',
+    rg_limit_msg:'Llegaste al límite de jugadas de hoy. ¡Volvé mañana!', goal_word:'¡GOL!', kp_ok:'OK',
   }
 };
-function t(key){ return (T[LANG] && T[LANG][key]) || key; }
+function t(k){ return T[LANG][k] || k; }
 
-function applyStaticI18n(){
+/* ---------------- decorative live score ticker ---------------- */
+const otherScores = [
+  {home:'Flamengo', away:'Vasco', hs:2, as:1, min:"67'"},
+  {home:'Palmeiras', away:'Santos', hs:1, as:1, min:"52'"},
+  {home:'Fluminense', away:'Botafogo', hs:0, as:0, min:"23'"},
+  {home:'Vitória', away:'Juventude', hs:3, as:0, min:"78'"},
+  {home:'Fortaleza', away:'Sport', hs:2, as:2, min:"81'"},
+];
+// ganadores recientes — mock, para dar sensación de casino grande (social proof estilo Stake).
+// Cuando exista backend real, reemplazar por el feed real de premios pagados.
+const recentWinners = [
+  {name:'joao_2847', amount:340, game:'Gold League'},
+  {name:'marcela_s', amount:75, game:'Gold League'},
+  {name:'pedro_rj', amount:1200, game:'Gold League'},
+  {name:'ana.futebol', amount:30, game:'Gold League'},
+  {name:'kaue_bh', amount:610, game:'Gold League'},
+];
+function renderTicker(){
+  const scoreItems = otherScores.map(m=>
+    `<span class="lt-item"><span class="lt-live"></span><b>${m.home} ${m.hs}-${m.as} ${m.away}</b> ${m.min}</span>`
+  );
+  const winnerItems = recentWinners.map(w=>
+    `<span class="lt-item"><span class="lt-live" style="background:var(--gold)"></span>🏆 <b>${w.name}</b> +R$ ${w.amount.toFixed(2).replace('.',',')}</span>`
+  );
+  // intercala resultados y ganadores para que no sea todo lo mismo
+  const mixed = [];
+  const max = Math.max(scoreItems.length, winnerItems.length);
+  for(let i=0;i<max;i++){
+    if(scoreItems[i]) mixed.push(scoreItems[i]);
+    if(winnerItems[i]) mixed.push(winnerItems[i]);
+  }
+  const items = mixed.join('');
+  document.getElementById('tickerTrack').innerHTML = items + items; // duplicated for seamless loop
+}
+
+// Rodada real do Brasileirão Série A 2026 (tabela básica oficial CBF, 4ª rodada).
+// Trocar por a rodada vigente quando a tabela detalhada da semana estiver confirmada.
+// "day" é uma distribuição sábado/domingo razoável — a tabela detalhada oficial confirma isso mais perto da data.
+const fixtures = [
+  {home:'Cruzeiro', away:'Corinthians', day:'sab'},
+  {home:'Grêmio', away:'Atlético-MG', day:'sab'},
+  {home:'Coritiba', away:'São Paulo', day:'dom'},
+  {home:'Bahia', away:'Chapecoense', day:'dom'},
+  {home:'Remo', away:'Internacional', day:'dom'},
+];
+
+/* ---------------- club badges (iniciais genéricas — sem escudos reais por marca) ---------------- */
+function clubColor(name){ let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))%360; return `hsl(${h},55%,42%)`; }
+function clubInitials(name){ return name.replace(/-/g,' ').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+function clubBadgeHTML(name, size){
+  size = size || 34;
+  return `<div class="club-badge2" style="width:${size}px;height:${size}px;background:${clubColor(name)};font-size:${Math.round(size*0.34)}px">${clubInitials(name)}</div>`;
+}
+
+// Form ilustrativo (mock) dos últimos 5 jogos de cada clube — NÃO são resultados reais.
+// G = ganhou (verde), E = empate (amarelo), P = perdeu (vermelho). Trocar por dados reais quando houver API de resultados.
+const teamForm = {
+  'Cruzeiro':['G','G','E','G','P'], 'Corinthians':['P','G','G','E','G'],
+  'Grêmio':['E','G','G','P','G'], 'Atlético-MG':['G','P','G','G','E'],
+  'Coritiba':['P','E','P','G','E'], 'São Paulo':['G','G','P','G','G'],
+  'Bahia':['G','E','G','G','P'], 'Chapecoense':['P','P','E','G','P'],
+  'Remo':['E','G','P','E','G'], 'Internacional':['G','G','G','P','E'],
+};
+function formDotsHTML(name){
+  const arr = teamForm[name] || [];
+  const map = {G:{c:'var(--emerald)', l:'G'}, E:{c:'var(--gold)', l:'E'}, P:{c:'var(--crimson)', l:'P'}};
+  return arr.map(r=>`<span class="form-dot" style="background:${map[r].c}">${map[r].l}</span>`).join('');
+}
+
+function renderFixtures(list){
+  const strip = document.getElementById('fixturesStrip');
+  const items = list || fixtures;
+  if(strip) strip.innerHTML = items.map(f=>{
+    const idx = fixtures.indexOf(f);
+    return `<div class="fx" onclick="openMatchInfo(${idx})"><b>${f.home}</b> x <b>${f.away}</b> <span class="fx-info">ℹ</span></div>`;
+  }).join('');
+}
+
+/* ---------------- match info modal (ficha do clube + form) ---------------- */
+/* ---------------- times por série (dados reais, CBF 2026) ---------------- */
+const serieClubs = {
+  A: ['Atlético-MG','Bahia','Botafogo','Bragantino','Corinthians','Cruzeiro','Flamengo','Fluminense','Grêmio','Internacional','Mirassol','Palmeiras','Santos','São Paulo','Vasco da Gama','Vitória','Athletico Paranaense','Chapecoense','Coritiba','Remo'],
+  B: ['Botafogo-SP','Novorizontino','Ponte Preta','São Bernardo','Atlético Goianiense','Goiás','Vila Nova','Ceará','Fortaleza','América Mineiro','Athletic','Londrina','Operário Ferroviário','Náutico','Sport Recife','Avaí','Criciúma','CRB','Juventude'],
+  C: ['Confiança','Ypiranga','Maringá','Ituano','Botafogo-PB','Figueirense','Anápolis','Itabaiana','Guarani','Floresta','Brusque','Caxias','Inter de Limeira','Barra','Maranhão','Santa Cruz','Paysandu','Volta Redonda','Amazonas','Ferroviária'],
+  D: ['Independência','Galvez','Humaitá','ASA','CSE','CSA','Trem','Oratório','Nacional','Manaus','Manauara','Jacuipense','Atlético de Alagoinhas','Porto','Juazeirense','Maracanã','Ferroviário','Tirol','Atlético Cearense','Iguatu','Gama','Capital','Ceilândia','Brasiliense','Rio Branco-ES','Vitória-ES','Real Noroeste','CRAC','ABECAT','Inhumas','Goiatuba','Aparecidense','Imperatriz','IAPE','Sampaio Corrêa','Moto Club','Primavera','Mixto','Luverdense','CEOV','União Rondonópolis','Operário (MS)','Ivinhema','Tombense','Uberlândia','Betim','Democrata GV','Pouso Alegre','Tuna Luso','Águia de Marabá','Sousa','Serra Branca','Treze','Cianorte','Azuriz','São Joseense','FC Cascavel','Retrô','Maguary','Decisão','Central','Piauí','Fluminense-PI','Altos','Parnahyba','Sampaio Corrêa-RJ','Madureira','America-RJ','Maricá','Nova Iguaçu','Portuguesa-RJ','ABC','América de Natal','Laguna','São Luiz','Guarany de Bagé','Brasil de Pelotas','São José','Porto Velho','Guaporé','GAS','Monte Roraima','São Raimundo','Santa Catarina','Joinville','Blumenau','Marcílio Dias','Velo Clube','Portuguesa','Noroeste','XV de Piracicaba','Água Santa','Sergipe','Lagarto','Araguaína','Tocantinópolis'],
+};
+
+// Tabela real do Brasileirão Série A 2026 — início de temporada (dados verificados via ESPN Deportes,
+// pontos/V/E/D/DIF conferem com os 20 clubes da Série A). Colunas: J(jogos) V E D DIF PTS.
+// Atualizar manualmente conforme avançam as rodadas — não há atualização automática nesta demo.
+const standingsA = [
+  ['Palmeiras',4,3,1,0,7,10],['São Paulo',4,3,1,0,4,10],['Corinthians',4,2,1,1,2,7],
+  ['Bahia',3,2,1,0,2,7],['Fluminense',4,2,1,1,1,7],['Athletico Paranaense',4,2,1,1,1,7],
+  ['Bragantino',4,2,1,1,0,7],['Grêmio',4,2,0,2,0,6],['Chapecoense',3,1,2,0,2,5],
+  ['Mirassol',3,1,2,0,1,5],['Flamengo',3,1,1,1,0,4],['Coritiba',4,1,1,2,-1,4],
+  ['Botafogo',3,1,0,2,1,3],['Vitória',3,1,0,2,-3,3],['Remo',4,0,3,1,-2,3],
+  ['Atlético-MG',4,0,2,2,-2,2],['Internacional',4,0,2,2,-3,2],['Cruzeiro',4,0,2,2,-5,2],
+  ['Vasco da Gama',3,0,1,2,-2,1],['Santos',3,0,1,2,-3,1],
+];
+
+function openLeaguePanel(){
+  sfxClick();
+  document.getElementById('leaguePanel').classList.add('show');
+  document.getElementById('screensaver').style.display = 'none';
+  clearInterval(slideTimer);
+  renderLeaguePanel();
+}
+function closeLeaguePanel(){
+  document.getElementById('leaguePanel').classList.remove('show');
+  document.getElementById('screensaver').style.display = 'flex';
+  slideTimer = setInterval(cycleSlides, 4200);
+}
+function renderLeaguePanel(){
+  const serie = document.getElementById('leagueSelect').value;
+  const q = document.getElementById('leagueSearch').value.trim().toLowerCase();
+  const list = serieClubs[serie].filter(n => n.toLowerCase().includes(q));
+  document.getElementById('leagueTeamsGrid').innerHTML = list.map(name =>
+    `<div class="team-chip">${clubBadgeHTML(name,28)}<span>${name}</span></div>`
+  ).join('') || `<div class="empty-state">${t('empty_clubs')}</div>`;
+
+  const standingsWrap = document.getElementById('standingsWrap');
+  if(serie === 'A'){
+    standingsWrap.style.display = 'block';
+    const rows = standingsA.map((r,i)=>{
+      const [name,j,v,e,d,dif,pts] = r;
+      const zone = i < 6 ? 'zone-g6' : (i >= standingsA.length-4 ? 'zone-z4' : '');
+      const difTxt = dif > 0 ? '+'+dif : dif;
+      return `<tr class="${zone}">
+        <td class="pos">${i+1}</td>
+        <td class="team">${clubBadgeHTML(name,22)}${name}</td>
+        <td>${j}</td><td>${v}</td><td>${e}</td><td>${d}</td><td>${difTxt}</td><td class="pts">${pts}</td>
+      </tr>`;
+    }).join('');
+    document.getElementById('standingsTable').innerHTML = `
+      <thead><tr><th>#</th><th data-i18n="st_team">Time</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>DIF</th><th>Pts</th></tr></thead>
+      <tbody>${rows}</tbody>`;
+  } else {
+    standingsWrap.style.display = 'none';
+  }
+}
+
+function openMatchInfo(idx){
+  sfxClick();
+  const f = fixtures[idx];
+  document.getElementById('matchInfoTitle').textContent = `${f.home} x ${f.away}`;
+  document.getElementById('matchInfoBody').innerHTML = [f.home, f.away].map(name => `
+    <div class="mi-team">
+      ${clubBadgeHTML(name, 46)}
+      <div class="mi-team-name">${name}</div>
+      <div class="mi-form-row">${formDotsHTML(name)}</div>
+      <div class="mi-form-label" data-i18n="mi_last5">Últimos 5 jogos (ilustrativo)</div>
+    </div>
+  `).join('');
+  document.getElementById('matchInfoModal').classList.add('show');
+}
+function closeMatchInfo(){ document.getElementById('matchInfoModal').classList.remove('show'); }
+
+function applyI18n(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
-    const key = el.getAttribute('data-i18n');
-    if(T[LANG][key] !== undefined) el.innerHTML = T[LANG][key];
-  });
-  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
-    const key = el.getAttribute('data-i18n-ph');
-    if(T[LANG][key] !== undefined) el.placeholder = T[LANG][key];
+    const k = el.getAttribute('data-i18n');
+    if(T[LANG][k] !== undefined) el.textContent = T[LANG][k];
   });
   document.documentElement.lang = LANG === 'pt' ? 'pt-BR' : 'es-AR';
 }
@@ -866,427 +909,585 @@ function setLang(lang){
   LANG = lang;
   document.getElementById('langPT').classList.toggle('active', lang==='pt');
   document.getElementById('langES').classList.toggle('active', lang==='es');
-  applyStaticI18n();
-  renderClubs();
-  renderHistorico();
-  renderTx();
-  renderUserStrip();
-  if(state.viewMode !== 'jogador') renderDashboard(state.viewMode);
-  renderWallet();
-  if(state.step === 'jogarSenagol') renderSenaGrid();
-}
-
-/* ---------------- state ---------------- */
-// O login acontece na plataforma do cassino. Este módulo assume a sessão já autenticada
-// (em produção, isso viria do token/contexto que o cassino injeta no módulo do jogo).
-const state = {
-  step: 'portada', user: {usuario:'jogador_cassino'}, club: null, game: null,
-  wallet: 0, entryValue: 10, history: [], tx: [], viewMode: 'jogador',
-  senaPicks: []
-};
-const playerFlow = ['portada','clube','jogo','carteira','jogar','jogarSenagol','jogarRaspa','historico'];
-const stepScreens = ['clube','jogo','carteira','jogar'];
-
-/* ---------------- federations badges ---------------- */
-const feds = ['CBF','RJ','SP','MG','RS'];
-document.getElementById('fedRow').innerHTML = feds.map(f=>`<div class="fed-badge"><div class="dot">${f}</div><span>${t('fed_word')||'Federação'} ${f}</span></div>`).join('');
-
-/* ---------------- club data ---------------- */
-// Base real de clubes: Séries A, B, C e D do Brasileirão 2026 (CBF), cobrindo as 27 unidades federativas.
-// ~155 clubes verificados. A lista oficial completa de filiados (incluindo divisões amadoras) é tarefa
-// separada pendente com a Federação (conforme minuta) — esta base já cobre todos os estados com clubes reais.
-const clubs = [
-  // Série A 2026 (20)
-  {name:'Atlético Mineiro', state:'MG'}, {name:'Bahia', state:'BA'}, {name:'Botafogo', state:'RJ'},
-  {name:'Bragantino', state:'SP'}, {name:'Corinthians', state:'SP'}, {name:'Cruzeiro', state:'MG'},
-  {name:'Flamengo', state:'RJ'}, {name:'Fluminense', state:'RJ'}, {name:'Grêmio', state:'RS'},
-  {name:'Internacional', state:'RS'}, {name:'Mirassol', state:'SP'}, {name:'Palmeiras', state:'SP'},
-  {name:'Santos', state:'SP'}, {name:'São Paulo', state:'SP'}, {name:'Vasco da Gama', state:'RJ'},
-  {name:'Vitória', state:'BA'}, {name:'Athletico Paranaense', state:'PR'}, {name:'Chapecoense', state:'SC'},
-  {name:'Coritiba', state:'PR'}, {name:'Remo', state:'PA'},
-  // Série B 2026
-  {name:'Botafogo-SP', state:'SP'}, {name:'Novorizontino', state:'SP'}, {name:'Ponte Preta', state:'SP'}, {name:'São Bernardo', state:'SP'},
-  {name:'Atlético Goianiense', state:'GO'}, {name:'Goiás', state:'GO'}, {name:'Vila Nova', state:'GO'},
-  {name:'Ceará', state:'CE'}, {name:'Fortaleza', state:'CE'},
-  {name:'América Mineiro', state:'MG'}, {name:'Athletic', state:'MG'},
-  {name:'Londrina', state:'PR'}, {name:'Operário Ferroviário', state:'PR'},
-  {name:'Náutico', state:'PE'}, {name:'Sport Recife', state:'PE'},
-  {name:'Avaí', state:'SC'}, {name:'Criciúma', state:'SC'},
-  {name:'CRB', state:'AL'}, {name:'Juventude', state:'RS'},
-  // Série C 2026
-  {name:'Confiança', state:'SE'}, {name:'Ypiranga', state:'RS'}, {name:'Maringá', state:'PR'}, {name:'Ituano', state:'SP'},
-  {name:'Botafogo-PB', state:'PB'}, {name:'Figueirense', state:'SC'}, {name:'Anápolis', state:'GO'}, {name:'Itabaiana', state:'SE'},
-  {name:'Guarani', state:'SP'}, {name:'Floresta', state:'CE'}, {name:'Brusque', state:'SC'}, {name:'Caxias', state:'RS'},
-  {name:'Inter de Limeira', state:'SP'}, {name:'Barra', state:'SC'}, {name:'Maranhão', state:'MA'}, {name:'Santa Cruz', state:'PE'},
-  {name:'Paysandu', state:'PA'}, {name:'Volta Redonda', state:'RJ'}, {name:'Amazonas', state:'AM'}, {name:'Ferroviária', state:'SP'},
-  // Série D 2026 — Acre
-  {name:'Independência', state:'AC'}, {name:'Galvez', state:'AC'}, {name:'Humaitá', state:'AC'},
-  // Alagoas
-  {name:'ASA', state:'AL'}, {name:'CSE', state:'AL'}, {name:'CSA', state:'AL'},
-  // Amapá
-  {name:'Trem', state:'AP'}, {name:'Oratório', state:'AP'},
-  // Amazonas
-  {name:'Nacional', state:'AM'}, {name:'Manaus', state:'AM'}, {name:'Manauara', state:'AM'},
-  // Bahia
-  {name:'Jacuipense', state:'BA'}, {name:'Atlético de Alagoinhas', state:'BA'}, {name:'Porto', state:'BA'}, {name:'Juazeirense', state:'BA'},
-  // Ceará
-  {name:'Maracanã', state:'CE'}, {name:'Ferroviário', state:'CE'}, {name:'Tirol', state:'CE'}, {name:'Atlético Cearense', state:'CE'}, {name:'Iguatu', state:'CE'},
-  // Distrito Federal
-  {name:'Gama', state:'DF'}, {name:'Capital', state:'DF'}, {name:'Ceilândia', state:'DF'}, {name:'Brasiliense', state:'DF'},
-  // Espírito Santo
-  {name:'Rio Branco-ES', state:'ES'}, {name:'Vitória-ES', state:'ES'}, {name:'Real Noroeste', state:'ES'},
-  // Goiás
-  {name:'CRAC', state:'GO'}, {name:'ABECAT', state:'GO'}, {name:'Inhumas', state:'GO'}, {name:'Goiatuba', state:'GO'}, {name:'Aparecidense', state:'GO'},
-  // Maranhão
-  {name:'Imperatriz', state:'MA'}, {name:'IAPE', state:'MA'}, {name:'Sampaio Corrêa', state:'MA'}, {name:'Moto Club', state:'MA'},
-  // Mato Grosso
-  {name:'Primavera', state:'MT'}, {name:'Mixto', state:'MT'}, {name:'Luverdense', state:'MT'}, {name:'CEOV', state:'MT'}, {name:'União Rondonópolis', state:'MT'},
-  // Mato Grosso do Sul
-  {name:'Operário (MS)', state:'MS'}, {name:'Ivinhema', state:'MS'},
-  // Minas Gerais
-  {name:'Tombense', state:'MG'}, {name:'Uberlândia', state:'MG'}, {name:'Betim', state:'MG'}, {name:'Democrata GV', state:'MG'}, {name:'Pouso Alegre', state:'MG'},
-  // Pará
-  {name:'Tuna Luso', state:'PA'}, {name:'Águia de Marabá', state:'PA'},
-  // Paraíba
-  {name:'Sousa', state:'PB'}, {name:'Serra Branca', state:'PB'}, {name:'Treze', state:'PB'},
-  // Paraná
-  {name:'Cianorte', state:'PR'}, {name:'Azuriz', state:'PR'}, {name:'São Joseense', state:'PR'}, {name:'FC Cascavel', state:'PR'},
-  // Pernambuco
-  {name:'Retrô', state:'PE'}, {name:'Maguary', state:'PE'}, {name:'Decisão', state:'PE'}, {name:'Central', state:'PE'},
-  // Piauí
-  {name:'Piauí', state:'PI'}, {name:'Fluminense-PI', state:'PI'}, {name:'Altos', state:'PI'}, {name:'Parnahyba', state:'PI'},
-  // Rio de Janeiro
-  {name:'Sampaio Corrêa-RJ', state:'RJ'}, {name:'Madureira', state:'RJ'}, {name:'America-RJ', state:'RJ'}, {name:'Maricá', state:'RJ'}, {name:'Nova Iguaçu', state:'RJ'}, {name:'Portuguesa-RJ', state:'RJ'},
-  // Rio Grande do Norte
-  {name:'ABC', state:'RN'}, {name:'América de Natal', state:'RN'}, {name:'Laguna', state:'RN'},
-  // Rio Grande do Sul
-  {name:'São Luiz', state:'RS'}, {name:'Guarany de Bagé', state:'RS'}, {name:'Brasil de Pelotas', state:'RS'}, {name:'São José', state:'RS'},
-  // Rondônia
-  {name:'Porto Velho', state:'RO'}, {name:'Guaporé', state:'RO'},
-  // Roraima
-  {name:'GAS', state:'RR'}, {name:'Monte Roraima', state:'RR'}, {name:'São Raimundo', state:'RR'},
-  // Santa Catarina
-  {name:'Santa Catarina', state:'SC'}, {name:'Joinville', state:'SC'}, {name:'Blumenau', state:'SC'}, {name:'Marcílio Dias', state:'SC'},
-  // São Paulo
-  {name:'Velo Clube', state:'SP'}, {name:'Portuguesa', state:'SP'}, {name:'Noroeste', state:'SP'}, {name:'XV de Piracicaba', state:'SP'}, {name:'Água Santa', state:'SP'},
-  // Sergipe
-  {name:'Sergipe', state:'SE'}, {name:'Lagarto', state:'SE'},
-  // Tocantins
-  {name:'Araguaína', state:'TO'}, {name:'Tocantinópolis', state:'TO'}
-];
-function clubColor(name){ let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))%360; return `hsl(${h},55%,42%)`; }
-function initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
-
-function renderClubs(){
-  const q = document.getElementById('clubSearch').value.trim().toLowerCase();
-  const filtered = clubs.filter(c => c.name.toLowerCase().includes(q) || c.state.toLowerCase().includes(q));
-  const groups = {};
-  filtered.forEach(c=>{ (groups[c.state] = groups[c.state]||[]).push(c); });
-  let html = '';
-  Object.keys(groups).sort().forEach(st=>{
-    html += `<div class="fed-group-title">${t('fed_word')} ${st}</div>`;
-    groups[st].forEach(c=>{
-      const sel = state.club === c.name ? 'selected' : '';
-      html += `<div class="club-item ${sel}" onclick="pickClub('${c.name.replace(/'/g,"\\'")}')">
-        <div class="club-badge" style="background:${clubColor(c.name)}">${initials(c.name)}</div>
-        <div><div class="club-name">${c.name}</div><div class="club-state">${t('fed_word')} ${st}</div></div>
-        <div class="club-radio"></div>
-      </div>`;
-    });
-  });
-  document.getElementById('clubList').innerHTML = html || `<div class="empty-state">${t('empty_clubs')}</div>`;
-  document.getElementById('clubCount').textContent =
-    (LANG==='pt' ? `Mostrando ${filtered.length} de ${clubs.length} clubes (Séries A-D 2026, 27 federações)`
-                 : `Mostrando ${filtered.length} de ${clubs.length} clubes (Series A-D 2026, 27 federaciones)`);
-  if(state.club){
-    const strip = document.getElementById('selectedStrip');
-    strip.classList.add('show');
-    strip.innerHTML = `<div class="club-badge" style="background:${clubColor(state.club)}">${initials(state.club)}</div><span>${LANG==='pt'?'Clube selecionado':'Club seleccionado'}: <b>${state.club}</b></span>`;
+  applyI18n();
+  renderSlides();
+  if(mode){
+    document.getElementById('gsRoundLabel').textContent = activeScopeLabel();
+    document.getElementById('boardPriceTag').textContent = (LANG==='pt'?'JOGADA':'JUGADA') + ' R$ ' + activePrice().toFixed(2).replace('.',',');
+  } else {
+    document.getElementById('gsRoundLabel').textContent = LANG==='pt' ? '4ª Rodada · Brasileirão Série A' : '4ª Fecha · Brasileirão Serie A';
   }
 }
-function pickClub(name){
-  state.club = name;
-  renderClubs();
-  document.getElementById('btnClubContinue').disabled = false;
+
+/* ---------------- screensaver slides ---------------- */
+let slideIdx = 0, slideTimer = null;
+function slidesData(){
+  return [
+    `<div class="ss-slide"><div class="eb">${t('slide1_eb')}</div><p>${t('slide1_p')}</p></div>`,
+    `<div class="ss-slide"><div class="eb">${t('slide2_eb')}</div>
+      <div class="eb" style="color:var(--gold); font-weight:600; letter-spacing:0; text-transform:none; font-size:13px;">${t('slide2_p')}</div>
+      <div class="prize-row">${fixtures.map(f=>`<div class="prize"><b style="font-size:12.5px;">${f.home} x ${f.away}</b></div>`).join('')}</div>
+    </div>`,
+    `<div class="ss-slide"><div class="eb">${t('slide3_eb')}</div>
+      <div class="prize-row">
+        <div class="prize"><b>${t('slide3_l1')}</b><span>${t('slide3_l1s')}</span></div>
+        <div class="prize"><b>${t('slide3_l2')}</b><span>${t('slide3_l2s')}</span></div>
+        <div class="prize"><b>${t('slide3_l3')}</b><span>${t('slide3_l3s')}</span></div>
+      </div>
+    </div>`
+  ];
+}
+function renderSlides(){
+  const wrap = document.getElementById('ssSlides');
+  const dots = document.getElementById('ssDots');
+  const slides = slidesData();
+  wrap.innerHTML = slides.join('');
+  dots.innerHTML = slides.map((_,i)=>`<i></i>`).join('');
+  slideIdx = 0;
+  showSlide(0);
+}
+function showSlide(i){
+  const els = document.querySelectorAll('.ss-slide');
+  const dots = document.querySelectorAll('.ss-dots i');
+  els.forEach((el,idx)=>el.classList.toggle('active', idx===i));
+  dots.forEach((el,idx)=>el.classList.toggle('active', idx===i));
+}
+function cycleSlides(){
+  const total = document.querySelectorAll('.ss-slide').length;
+  slideIdx = (slideIdx+1) % total;
+  showSlide(slideIdx);
 }
 
-function setInvalid(id, invalid){ document.getElementById(id).classList.toggle('invalid', invalid); }
+/* ---------------- game mode state ---------------- */
+let mode = null;          // 'rodada' | 'dia' | 'partido'
+let selectedDay = null;   // 'sab' | 'dom'
+let selectedMatchIdx = null;
+let history = [];         // {mode, scopeLabel, price, values, date}
+let lastBet = null;       // última jogada confirmada, para o atalho "repetir"
 
-/* ---------------- game selection ---------------- */
-function selectGame(g){
-  document.querySelectorAll('.game-card').forEach(el=>el.classList.remove('active'));
-  document.querySelector(`.game-card[data-game="${g}"]`).classList.add('active');
-  state.game = g;
-  document.getElementById('btnJogoContinue').disabled = false;
+const dayPriceTable = {1:3, 2:5, 3:7, 4:8, 5:10};
+
+function activeFixtures(){
+  if(mode === 'rodada') return fixtures;
+  if(mode === 'dia') return fixtures.filter(f => f.day === selectedDay);
+  if(mode === 'partido') return [fixtures[selectedMatchIdx]];
+  return fixtures;
 }
-function onGameContinue(){
-  goTo('carteira');
-  renderWallet();
+function activePrice(){
+  if(mode === 'rodada') return 10;
+  if(mode === 'partido') return 3;
+  const n = activeFixtures().length;
+  return dayPriceTable[n] || 10;
 }
-function goToGameScreen(){
-  const map = { gold:'jogar', senagol:'jogarSenagol', raspa:'jogarRaspa' };
-  const screen = map[state.game] || 'jogar';
-  goTo(screen);
-  if(screen === 'jogarSenagol') renderSenaGrid();
-  if(screen === 'jogarRaspa') startRaspa();
+function activeScopeLabel(){
+  if(mode === 'rodada') return t('scope_rodada');
+  if(mode === 'partido'){ const f = fixtures[selectedMatchIdx]; return `${f.home} x ${f.away}`; }
+  const dayName = selectedDay === 'sab' ? t('day_sab') : t('day_dom');
+  return `${dayName} (${activeFixtures().length} ${t('scope_dia')})`;
+}
+function inputMax(){ return mode === 'partido' ? 8 : 25; }
+
+/* ---------------- custom on-screen keypad ---------------- */
+const fieldLabels = { 'v-total':'f_total', 'v-segundo':'f_segundo', 'v-atacantes':'f_atacantes', 'v-cabeca':'f_cabeca', 'v-faltas':'f_faltas', 'v-primeiro':'f_primeiro' };
+let keypadField = null;
+/* ---------------- descrições dos campos + categorias intercambiáveis ---------------- */
+const fieldInfoKeys = {
+  total:'fi_total', segundo:'fi_segundo', atacantes:'fi_atacantes',
+  cabeca:'fi_cabeca', penalti:'fi_penalti', foraarea:'fi_foraarea', corners:'fi_corners',
+  faltas:'fi_faltas', primeiro:'fi_primeiro',
+};
+const catFieldLabelKey = { cabeca:'f_cabeca', penalti:'cat_penalti', foraarea:'cat_foraarea', corners:'cat_corners', faltas:'f_faltas' };
+const activeCategory = { 'v-cabeca':'cabeca', 'v-faltas':'faltas' };
+
+function openFieldInfo(key){
+  sfxClick();
+  const titleKey = catFieldLabelKey[key] || fieldLabels['v-'+key] || key;
+  document.getElementById('fieldInfoTitle').textContent = t(titleKey) || key;
+  document.getElementById('fieldInfoDesc').textContent = t(fieldInfoKeys[key] || '');
+  document.getElementById('fieldInfoModal').classList.add('show');
+}
+function closeFieldInfo(){ document.getElementById('fieldInfoModal').classList.remove('show'); }
+
+function onCategoryChange(fieldId, cat){
+  sfxClick();
+  activeCategory[fieldId] = cat;
+  // sincroniza os dois <select> se algum dia forem a mesma categoria — cada campo é independente,
+  // mas guardamos o texto do rótulo pra usar no botão de info e no resumo.
+  document.getElementById(fieldId).value = '';
+  refreshBoardDerived();
 }
 
-/* ---------------- toggle rules panel ---------------- */
-function toggleRules(){ document.getElementById('rulesBox').classList.toggle('open'); }
+function openKeypad(fieldId){
+  keypadField = fieldId;
+  const input = document.getElementById(fieldId);
+  document.getElementById('keypadFieldLabel').textContent = t(fieldLabels[fieldId] || '');
+  document.getElementById('keypadDisplay').textContent = input.value || '0';
+  document.getElementById('keypadOverlay').classList.add('show');
+  resetIdleTimer();
+}
+function closeKeypad(){
+  document.getElementById('keypadOverlay').classList.remove('show');
+  keypadField = null;
+}
+function keypadPress(digit){
+  if(!keypadField) return;
+  sfxClick();
+  const input = document.getElementById(keypadField);
+  let val = input.value === '0' ? '' : input.value;
+  val += digit;
+  const max = parseInt(input.dataset.max || 25, 10);
+  if(parseInt(val, 10) > max) { val = String(max); sfxBack(); }
+  input.value = val;
+  const disp = document.getElementById('keypadDisplay');
+  disp.textContent = val;
+  disp.classList.remove('bump'); void disp.offsetWidth; disp.classList.add('bump');
+  refreshBoardDerived();
+  resetIdleTimer();
+}
+function keypadBack(){
+  if(!keypadField) return;
+  sfxBack();
+  const input = document.getElementById(keypadField);
+  input.value = input.value.slice(0, -1);
+  document.getElementById('keypadDisplay').textContent = input.value || '0';
+  refreshBoardDerived();
+  resetIdleTimer();
+}
+function keypadClear(){
+  if(!keypadField) return;
+  sfxBack();
+  document.getElementById(keypadField).value = '';
+  document.getElementById('keypadDisplay').textContent = '0';
+  refreshBoardDerived();
+  resetIdleTimer();
+}
 
-/* ---------------- persistent user strip ---------------- */
-function renderUserStrip(){
-  const strip = document.getElementById('userStrip');
-  if(!state.user.usuario){ strip.classList.remove('show'); return; }
-  strip.classList.add('show');
-  document.getElementById('usAvatar').textContent = state.user.usuario.slice(0,2).toUpperCase();
-  document.getElementById('usName').textContent = state.user.usuario;
-  document.getElementById('usClub').textContent = state.club || (LANG==='pt'?'Sem clube ainda':'Sin club todavía');
-  document.getElementById('usAmt').textContent = 'R$ ' + state.wallet.toFixed(2).replace('.',',');
+/* ---------------- quick chips + derived 1st-half hint ---------------- */
+const CHIP_OPTIONS = ['0','1','2','3','4+'];
+function renderChips(){
+  ['v-cabeca','v-faltas'].forEach(fieldId=>{
+    const wrapId = fieldId === 'v-cabeca' ? 'chipsCabeca' : 'chipsFaltas';
+    const wrap = document.getElementById(wrapId);
+    if(!wrap) return;
+    wrap.innerHTML = CHIP_OPTIONS.map(opt=>`<span class="qchip" data-val="${opt}" onclick="pickChip('${fieldId}','${opt}')">${opt}</span>`).join('');
+  });
+  syncChipsActive();
+}
+function pickChip(fieldId, opt){
+  sfxClick();
+  const val = opt === '4+' ? '4' : opt;
+  document.getElementById(fieldId).value = val;
+  refreshBoardDerived();
+  resetIdleTimer();
+}
+function syncChipsActive(){
+  ['v-cabeca','v-faltas'].forEach(fieldId=>{
+    const wrapId = fieldId === 'v-cabeca' ? 'chipsCabeca' : 'chipsFaltas';
+    const wrap = document.getElementById(wrapId);
+    if(!wrap) return;
+    const current = document.getElementById(fieldId).value;
+    const matchVal = (parseInt(current,10) >= 4) ? '4+' : current;
+    [...wrap.children].forEach(c => c.classList.toggle('active', c.dataset.val === matchVal));
+  });
+}
+function refreshBoardDerived(){
+  syncChipsActive();
+  const fieldIds = ['v-total','v-segundo','v-atacantes','v-cabeca','v-faltas','v-primeiro'];
+  const allFilled = fieldIds.every(id => document.getElementById(id).value !== '');
+  const confirmBtn = document.getElementById('confirmBtn');
+  if(confirmBtn) confirmBtn.classList.toggle('ready', allFilled);
+
+  const total = document.getElementById('v-total').value;
+  const seg = document.getElementById('v-segundo').value;
+  const hint = document.getElementById('halfHint');
+  if(!hint) return;
+  if(total === '' || seg === ''){
+    hint.innerHTML = t('half_hint_default');
+    return;
+  }
+  const primeiro = Math.max(0, parseInt(total,10) - parseInt(seg,10));
+  hint.innerHTML = t('half_hint_filled').replace('{n}', `<b>${primeiro}</b>`).replace('{seg}', `<b>${seg}</b>`);
 }
 
 /* ---------------- wallet ---------------- */
-const chipValues = [10,20,50,100];
-function renderWallet(){
-  document.getElementById('saldoDisplay').textContent = 'R$ ' + state.wallet.toFixed(2).replace('.',',');
-  document.getElementById('clubeChipWallet').textContent = state.club || '—';
-  document.getElementById('amountChips').innerHTML = chipValues.map(v=>
-    `<div class="chip ${v===pixSelected?'active':''}" data-v="${v}" onclick="selectChip(${v})">R$ ${v}</div>`).join('');
-  document.getElementById('btnCarteiraContinue').disabled = state.wallet < state.entryValue;
-  renderUserStrip();
+let wallet = 240;
+function updateWalletDisplay(){
+  document.getElementById('sessionAmt').textContent = 'R$ ' + wallet.toFixed(2).replace('.',',');
 }
-let pixSelected = 20;
-function selectChip(v){ pixSelected = v; renderWallet(); }
-function pushTx(type, value){
-  state.tx.unshift({date:new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'), type, value});
-  renderTx();
+
+/* ---------------- cutoff (absolute deadline, not relative to page load) ---------------- */
+// Kickoff real da rodada. Em produção isso vem da API de fixtures (hora exata do 1º jogo).
+// Aqui calculamos de forma determinística "o próximo sábado às 16h" a partir do calendário,
+// para que o valor NÃO mude se o kiosk recarregar a página no meio do dia.
+function computeCutoff(){
+  const now = new Date();
+  const target = new Date(now);
+  const daysUntilSat = (6 - now.getDay() + 7) % 7;
+  target.setDate(now.getDate() + daysUntilSat);
+  target.setHours(16, 0, 0, 0);
+  if(target.getTime() <= now.getTime()) target.setDate(target.getDate() + 7);
+  return target.getTime();
 }
-function renderTx(){
-  const body = document.getElementById('txBody');
-  if(!body) return;
-  body.innerHTML = state.tx.slice(0,6).map(x=>`
-    <tr><td>${x.date}</td><td>${x.type==='carga'?t('tx_carga'):t('tx_jogada')}</td>
-    <td class="mono" style="color:${x.value>0?'var(--emerald)':'var(--crimson)'}">${x.value>0?'+':''}R$ ${x.value.toFixed(2).replace('.',',')}</td></tr>
-  `).join('') || `<tr><td class="empty-state" style="padding:20px 0;">${t('tx_empty')}</td></tr>`;
+const cutoffTime = computeCutoff();
+const cutoffWindowStart = cutoffTime - 3 * 60 * 60 * 1000; // janela de exibição do anel: últimas 3h antes do fechamento
+const RING_CIRC = 2 * Math.PI * 16; // r=16
+function isCutoffPassed(){ return Date.now() >= cutoffTime; }
+function formatCountdown(ms){
+  if(ms <= 0) return null;
+  const h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000);
+  return [h,m,s].map(n=>String(n).padStart(2,'0')).join(':');
 }
-function confirmPix(){ state.wallet += pixSelected; pushTx('carga', pixSelected); renderWallet(); }
-
-/* ---------------- jogar / goal league demo ---------------- */
-function submitJogada(){
-  const fields = ['g-total','g-segundo','g-atacantes','g-cabeca','g-faltas','g-primeiro'];
-  const vals = fields.map(id=>document.getElementById(id).value);
-  const allFilled = vals.every(v=>v!=='' && v!==null);
-  const errBox = document.getElementById('goalError');
-
-  if(!allFilled || state.wallet < state.entryValue){ errBox.style.display = 'block'; return; }
-  errBox.style.display = 'none';
-
-  state.wallet -= state.entryValue;
-  pushTx('jogada', -state.entryValue);
-  state.history.unshift({
-    date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'),
-    club: state.club, game: 'Gold League', value: state.entryValue, status:'pendente'
+function tickCutoff(){
+  checkDailyReset();
+  const remain = cutoffTime - Date.now();
+  const txt = formatCountdown(remain);
+  ['cutoffTimeMode','cutoffTimeBoard'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.textContent = txt || t('cutoff_closed');
   });
-  renderHistorico();
-  renderWallet();
-  goTo('historico');
-}
-
-/* ---------------- senagol demo (modelo conceitual) ---------------- */
-function renderSenaGrid(){
-  const grid = document.getElementById('senaGrid');
-  grid.innerHTML = '';
-  for(let n=1; n<=50; n++){
-    const picked = state.senaPicks.includes(n);
-    const disabled = !picked && state.senaPicks.length >= 5;
-    const el = document.createElement('div');
-    el.className = 'sena-num' + (picked?' picked':'') + (disabled?' disabled':'');
-    el.textContent = n;
-    el.onclick = () => toggleSenaNum(n);
-    grid.appendChild(el);
+  const warn = remain > 0 && remain < 10*60*1000;
+  ['cutoffChipMode','cutoffChipBoard'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('warn', warn);
+  });
+  const windowTotal = cutoffTime - cutoffWindowStart;
+  const fraction = Math.max(0, Math.min(1, remain / windowTotal));
+  const offset = RING_CIRC * (1 - fraction);
+  ['cr-fg-mode','cr-fg-board'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.strokeDashoffset = offset;
+  });
+  // se o cutoff passou enquanto a pessoa estava no meio do fluxo, expulsa pro screensaver
+  if(isCutoffPassed() && mode && document.getElementById('gameScreen').style.display === 'flex'){
+    showToast(t('cutoff_closed'));
+    backToScreensaver();
   }
-  document.getElementById('senaPickCount').textContent =
-    `${state.senaPicks.length}/5 ${t('sena_pick')}`;
+  document.querySelectorAll('.mode-card').forEach(el => el.classList.toggle('closed', isCutoffPassed()));
 }
-function toggleSenaNum(n){
-  const i = state.senaPicks.indexOf(n);
-  if(i>-1) state.senaPicks.splice(i,1);
-  else if(state.senaPicks.length < 5) state.senaPicks.push(n);
-  renderSenaGrid();
+setInterval(tickCutoff, 1000);
+
+/* ---------------- idle timeout (auto-return to screensaver) ---------------- */
+let idleTimer = null;
+const IDLE_LIMIT_MS = 45000;
+function resetIdleTimer(){
+  clearTimeout(idleTimer);
+  if(document.getElementById('screensaver').style.display === 'flex') return; // already idle
+  idleTimer = setTimeout(()=>{ backToScreensaver(); }, IDLE_LIMIT_MS);
 }
-function submitSenagol(){
-  const errBox = document.getElementById('senaError');
-  if(state.senaPicks.length !== 5 || state.wallet < state.entryValue){ errBox.style.display='block'; return; }
-  errBox.style.display = 'none';
-  state.wallet -= state.entryValue;
-  pushTx('jogada', -state.entryValue);
-  state.history.unshift({
-    date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'),
-    club: state.club, game: 'Senagol (conceitual)', value: state.entryValue, status:'pendente'
-  });
-  state.senaPicks = [];
-  renderHistorico();
-  renderWallet();
-  goTo('historico');
+['pointerdown','keydown'].forEach(evt => document.addEventListener(evt, resetIdleTimer));
+
+/* ---------------- daily play limit (jogo responsável) ---------------- */
+const DAILY_LIMIT = 5;
+let playsToday = 0;
+let lastPlayDateKey = new Date().toDateString();
+function checkDailyReset(){
+  const todayKey = new Date().toDateString();
+  if(todayKey !== lastPlayDateKey){
+    playsToday = 0;
+    lastPlayDateKey = todayKey;
+    updateRgCounter();
+  }
+}
+function updateRgCounter(){
+  document.getElementById('rgCount').innerHTML = `${playsToday}/${DAILY_LIMIT} <span data-i18n="rg_today">${t('rg_today')}</span>`;
 }
 
-/* ---------------- raspadinha demo (modelo conceitual) ---------------- */
-const raspaIcons = ['⚽','🏆','⭐','🎯','🔥'];
-let raspaBoard = []; let raspaRevealed = []; let raspaActive = false;
-function startRaspa(){
-  if(state.wallet < state.entryValue){
-    document.getElementById('raspaStatus').textContent = t('raspa_saldo');
-    document.getElementById('raspaStatus').style.color = 'var(--crimson)';
+/* ---------------- screen switching ---------------- */
+function hideAllScreens(){
+  sfxWhoosh();
+  ['screensaver','modeSelect','dayPicker','matchPicker','gameScreen'].forEach(id=>{
+    document.getElementById(id).style.display = 'none';
+  });
+}
+function goToModeSelect(){
+  hideAllScreens();
+  document.getElementById('modeSelect').style.display = 'flex';
+  clearInterval(slideTimer);
+  resetIdleTimer();
+  const rebetBtn = document.getElementById('rebetBtn');
+  if(lastBet){
+    rebetBtn.style.display = 'flex';
+    document.getElementById('rebetPrice').textContent = 'R$ ' + lastBet.price.toFixed(2).replace('.',',');
+  } else {
+    rebetBtn.style.display = 'none';
+  }
+}
+function repeatLastBet(){
+  if(!lastBet || isCutoffPassed()){ sfxError(); return; }
+  sfxClick();
+  mode = lastBet.mode; selectedDay = lastBet.selectedDay; selectedMatchIdx = lastBet.selectedMatchIdx;
+  goToBoard();
+  Object.entries(lastBet.values).forEach(([id, val]) => { document.getElementById(id).value = val; });
+  document.getElementById('v-liga').checked = lastBet.liga;
+  document.getElementById('v-ml').checked = lastBet.ml;
+  refreshBoardDerived();
+}
+function backToScreensaver(){
+  mode = null; selectedDay = null; selectedMatchIdx = null;
+  hideAllScreens();
+  document.getElementById('screensaver').style.display = 'flex';
+  slideTimer = setInterval(cycleSlides, 4200);
+  clearTimeout(idleTimer);
+}
+/* ---------------- synthesized sound effects (no audio files — Web Audio API) ---------------- */
+let actx = null;
+function getActx(){
+  if(!actx){ const AC = window.AudioContext || window.webkitAudioContext; actx = new AC(); }
+  if(actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function playTone(freq, duration, type, gainVal, delay){
+  try{
+    const ctx = getActx();
+    const start = ctx.currentTime + (delay || 0);
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, start);
+    gain.gain.setValueAtTime(gainVal || 0.1, start);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + duration + 0.02);
+  }catch(e){ /* audio not available — fail silently, never block gameplay */ }
+}
+function sfxClick(){ playTone(680, 0.05, 'square', 0.05, 0); }
+function sfxBack(){ playTone(320, 0.06, 'square', 0.05, 0); }
+function sfxError(){ playTone(180, 0.18, 'sawtooth', 0.07, 0); }
+function sfxConfirm(){
+  // arpegio ascendente tipo "jackpot" de casino, não só 3 notas planas
+  const notes = [523, 659, 784, 988, 1175];
+  notes.forEach((f,i) => playTone(f, 0.14, 'triangle', 0.1, i*0.075));
+}
+function sfxCoin(){
+  // cascata de moedas: várias notas curtas e rápidas, como fichas caindo numa bandeja
+  const coinNotes = [1318, 1568, 1318, 1760, 1568, 1976];
+  coinNotes.forEach((f,i) => playTone(f, 0.09, 'triangle', 0.075, 0.28 + i*0.045));
+}
+function sfxWhoosh(){
+  try{
+    const ctx = getActx();
+    const bufSize = ctx.sampleRate * 0.25;
+    const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufSize);
+    const src = ctx.createBufferSource(); src.buffer = buf;
+    const filter = ctx.createBiquadFilter(); filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(900, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(2200, ctx.currentTime + 0.22);
+    const gain = ctx.createGain(); gain.gain.setValueAtTime(0.12, ctx.currentTime); gain.gain.linearRampToValueAtTime(0, ctx.currentTime+0.25);
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    src.start();
+  }catch(e){}
+}
+function sfxCardSelect(){ playTone(440, 0.05, 'triangle', 0.06, 0); playTone(880, 0.07, 'triangle', 0.06, 0.05); }
+function sfxChip(){ playTone(760, 0.035, 'square', 0.045, 0); }
+
+function chooseMode(m){
+  if(isCutoffPassed()){
+    sfxError();
+    showToast(t('cutoff_closed'));
     return;
   }
-  state.wallet -= state.entryValue;
-  pushTx('jogada', -state.entryValue);
-  renderWallet();
-
-  raspaBoard = [];
-  // build a board that guarantees a coherent random outcome
-  for(let i=0;i<9;i++) raspaBoard.push(raspaIcons[Math.floor(Math.random()*raspaIcons.length)]);
-  raspaRevealed = new Array(9).fill(false);
-  raspaActive = true;
-  document.getElementById('raspaStatus').textContent = '';
-  document.getElementById('btnNovaCartela').disabled = true;
-  renderRaspaGrid();
-}
-function renderRaspaGrid(){
-  const grid = document.getElementById('raspaGrid');
-  grid.innerHTML = '';
-  for(let i=0;i<9;i++){
-    const cell = document.createElement('div');
-    cell.className = 'raspa-cell' + (raspaRevealed[i] ? ' revealed' : '');
-    cell.textContent = raspaRevealed[i] ? raspaBoard[i] : '?';
-    cell.onclick = () => revealRaspa(i);
-    grid.appendChild(cell);
+  checkDailyReset();
+  if(playsToday >= DAILY_LIMIT){
+    sfxError();
+    showToast(t('rg_limit_msg'));
+    return;
   }
+  sfxClick();
+  mode = m;
+  if(m === 'rodada'){ goToBoard(); }
+  else if(m === 'dia'){ renderDayPicker(); hideAllScreens(); document.getElementById('dayPicker').style.display = 'flex'; resetIdleTimer(); }
+  else if(m === 'partido'){ renderMatchPicker(); hideAllScreens(); document.getElementById('matchPicker').style.display = 'flex'; resetIdleTimer(); }
 }
-function revealRaspa(i){
-  if(!raspaActive || raspaRevealed[i]) return;
-  raspaRevealed[i] = true;
-  renderRaspaGrid();
-  if(raspaRevealed.every(r=>r)) finishRaspa();
-}
-function finishRaspa(){
-  raspaActive = false;
-  document.getElementById('btnNovaCartela').disabled = false;
-  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-  const won = lines.some(([a,b,c]) => raspaBoard[a]===raspaBoard[b] && raspaBoard[b]===raspaBoard[c]);
-  const statusEl = document.getElementById('raspaStatus');
-  if(won){
-    const premio = state.entryValue * 3;
-    state.wallet += premio;
-    pushTx('jogada', premio);
-    statusEl.textContent = t('raspa_ganhou') + ' +R$ ' + premio.toFixed(2).replace('.',',');
-    statusEl.style.color = 'var(--emerald)';
-  } else {
-    statusEl.textContent = t('raspa_perdeu');
-    statusEl.style.color = 'var(--muted)';
-  }
-  state.history.unshift({
-    date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR'),
-    club: state.club, game: 'Raspadinha/Kini Gol (conceitual)', value: state.entryValue,
-    status: won ? 'ganhou' : 'perdeu'
-  });
-  renderWallet();
-  renderHistorico();
-}
-
-/* ---------------- historico ---------------- */
-function resolveHistory(idx, result){
-  const h = state.history[idx];
-  h.status = result;
-  if(result === 'ganhou'){
-    const premio = h.value * 3;
-    state.wallet += premio;
-    pushTx('jogada', premio);
-    renderWallet();
-  }
-  renderHistorico();
-}
-function statusTag(h, idx){
-  if(h.status === 'ganhou') return `<span class="tag ok2">${t('status_ganhou')}</span>`;
-  if(h.status === 'perdeu') return `<span class="tag lost">${t('status_perdeu')}</span>`;
-  return `<div class="result-btns">
-    <button class="btn-mini win" onclick="resolveHistory(${idx},'ganhou')">${t('btn_marcarganhou')}</button>
-    <button class="btn-mini lose" onclick="resolveHistory(${idx},'perdeu')">${t('btn_marcarperdeu')}</button>
-  </div>`;
-}
-
-function renderHistorico(){
-  document.getElementById('historicoBody').innerHTML = state.history.map((h,idx)=>`
-    <tr>
-      <td>${h.date}</td><td>${h.club}</td><td>${h.game}</td>
-      <td class="mono">R$ ${h.value.toFixed(2).replace('.',',')}</td>
-      <td>${statusTag(h, idx)}</td>
-    </tr>`).join('') || `<tr><td colspan="5" class="empty-state">${t('empty_history')}</td></tr>`;
-}
-
-/* ---------------- navigation ---------------- */
-function goTo(name){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+name).classList.add('active');
-  state.step = name;
-  renderStepper();
-  renderUserStrip();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-function renderStepper(){
-  const idx = stepScreens.indexOf(state.step);
-  document.getElementById('stepper').innerHTML = stepScreens.map((s,i)=>{
-    let cls = 'seg';
-    if(idx !== -1){ if(i < idx) cls += ' done'; else if(i === idx) cls += ' current'; }
-    return `<div class="${cls}"></div>`;
+function renderDayPicker(){
+  const days = ['sab','dom'].map(d => ({ key:d, games: fixtures.filter(f=>f.day===d) })).filter(d=>d.games.length);
+  document.getElementById('dayList').innerHTML = days.map(d=>{
+    const label = d.key==='sab' ? t('day_sab') : t('day_dom');
+    const price = dayPriceTable[d.games.length] || 10;
+    const matchesTxt = d.games.map(f=>`${f.home} x ${f.away}`).join(' · ');
+    return `<div class="pick-item" onclick="pickDay('${d.key}')">
+      <div><div class="pi-main">${label} · ${d.games.length} ${t('scope_dia')}</div><div class="pi-sub">${matchesTxt}</div></div>
+      <div class="pi-tag">R$ ${price.toFixed(2).replace('.',',')}</div>
+    </div>`;
   }).join('');
 }
+function pickDay(d){
+  if(isCutoffPassed()){ sfxError(); showToast(t('cutoff_closed')); backToScreensaver(); return; }
+  sfxClick();
+  selectedDay = d; goToBoard();
+}
+function renderMatchPicker(){
+  document.getElementById('matchList').innerHTML = fixtures.map((f,i)=>{
+    const dayLabel = f.day === 'sab' ? t('day_sab') : t('day_dom');
+    return `<div class="pick-item">
+      <div class="pi-click" onclick="pickMatch(${i})">
+        <div>${clubBadgeHTML(f.home,28)}</div>
+        <div><div class="pi-main">${f.home} x ${f.away}</div><div class="pi-sub">${dayLabel}</div></div>
+      </div>
+      <button class="pi-info-btn" onclick="event.stopPropagation(); openMatchInfo(${i})">ℹ</button>
+      <div class="pi-tag" onclick="pickMatch(${i})">R$ 3,00</div>
+    </div>`;
+  }).join('');
+}
+function pickMatch(i){
+  if(isCutoffPassed()){ sfxError(); showToast(t('cutoff_closed')); backToScreensaver(); return; }
+  sfxClick();
+  selectedMatchIdx = i; goToBoard();
+}
 
-/* ---------------- view mode / dashboards ---------------- */
-const splitKeys = [
-  ['split_pdv',10,'#0f9d6c'], ['split_freelancers',5,'#17e29a'], ['split_taxacap',5,'#7fb3a3'],
-  ['split_piscofins',2.5,'#3a4a56'], ['split_auditoria',0.1,'#5c6b78'], ['split_premio',20,'#f2c451'],
-  ['split_reserva',36,'#12213a'], ['split_escolinha',5,'#ff4d5e'], ['split_plataforma',2,'#c79a2e'], ['split_jogos',3,'#8fa0ab'],
-];
-function renderSplitBar(){
-  document.getElementById('splitBar').innerHTML = splitKeys.map(([k,pct,c])=>`<span style="width:${pct}%;background:${c}"></span>`).join('');
-  document.getElementById('splitLegend').innerHTML = splitKeys.map(([k,pct,c])=>`<div><i style="background:${c}"></i>${t(k)} — ${pct}%</div>`).join('');
+function goToBoard(){
+  hideAllScreens();
+  document.getElementById('gameScreen').style.display = 'flex';
+  clearInterval(slideTimer);
+
+  const price = activePrice();
+  renderFixtures(activeFixtures());
+  document.getElementById('gsRoundLabel').textContent = activeScopeLabel();
+  document.getElementById('boardPriceTag').textContent =
+    (LANG==='pt'?'JOGADA':'JUGADA') + ' R$ ' + price.toFixed(2).replace('.',',');
+  document.getElementById('confirmBtn').textContent =
+    t('board_confirm').replace(/R\$ ?\d+[.,]\d+/, 'R$ ' + price.toFixed(2).replace('.',','));
+  document.getElementById('pickSummary').textContent = '';
+  ['v-total','v-segundo','v-atacantes','v-cabeca','v-faltas','v-primeiro'].forEach(id=>{
+    document.getElementById(id).dataset.max = inputMax();
+  });
+  clearBoard();
+  renderChips();
+  resetIdleTimer();
 }
-function setViewMode(mode){
-  state.viewMode = mode;
-  if(mode === 'jogador'){ goTo(playerFlow.includes(state.step) ? state.step : 'portada'); return; }
-  renderDashboard(mode);
-  goTo('dashboard');
+
+function clearBoard(){
+  ['v-total','v-segundo','v-atacantes','v-cabeca','v-faltas','v-primeiro'].forEach(id=>document.getElementById(id).value = '');
+  document.getElementById('v-liga').checked = true;
+  document.getElementById('v-ml').checked = false;
+  document.getElementById('errMsg').style.display = 'none';
+  refreshBoardDerived();
 }
-function renderDashboard(mode){
-  const totalJogadas = 12480;
-  const faturamento = totalJogadas * state.entryValue;
-  const fmt = n => 'R$ ' + n.toLocaleString(LANG==='pt'?'pt-BR':'es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
-  const cfg = {
-    freelancer: { title:t('dash_freelancer_title'), eyebrow:t('dash_freelancer_eb'), sub:t('dash_freelancer_sub'),
-      kpis:[[t('k_jogadaslink'),'342'], [t('k_comissao5'), fmt(342*state.entryValue*0.05)], [t('k_clubebenef'), state.club || t('k_adefinir')]] },
-    clube: { title:t('dash_clube_title'), eyebrow:t('dash_clube_eb'), sub:t('dash_clube_sub'),
-      kpis:[[t('k_jogadasclube'),'1.860'], [t('k_comissaoclube'), fmt(1860*state.entryValue*0.10)], [t('k_repasseescol'), fmt(1860*state.entryValue*0.05)]] },
-    federacao: { title:t('dash_federacao_title'), eyebrow:t('dash_federacao_eb'), sub:t('dash_federacao_sub'),
-      kpis:[[t('k_clubesfiliados'),'18'], [t('k_jogadasestado'), totalJogadas.toLocaleString(LANG==='pt'?'pt-BR':'es-AR')], [t('k_faturamentoestado'), fmt(faturamento)]] },
-    admin: { title:t('dash_admin_title'), eyebrow:t('dash_admin_eb'), sub:t('dash_admin_sub'),
-      kpis:[[t('k_faturamentototal'), fmt(faturamento)], [t('k_semanaoperacional'), t('k_semanaval')], [t('k_reservabancaria'), fmt(faturamento*0.36)]] },
-  }[mode];
-  document.getElementById('dashEyebrow').textContent = cfg.eyebrow;
-  document.getElementById('dashTitulo').textContent = cfg.title;
-  document.getElementById('dashSub').textContent = cfg.sub;
-  document.getElementById('dashKpis').innerHTML = cfg.kpis.map(([lbl,val])=>
-    `<div class="kpi"><div class="lbl">${lbl}</div><div class="val">${val}</div></div>`).join('');
-  renderSplitBar();
+function confirmJogada(){
+  if(isCutoffPassed()){
+    sfxError();
+    showToast(t('cutoff_closed'));
+    backToScreensaver();
+    return;
+  }
+  const fields = ['v-total','v-segundo','v-atacantes','v-cabeca','v-faltas','v-primeiro'];
+  const vals = fields.map(id=>document.getElementById(id).value);
+  const errBox = document.getElementById('errMsg');
+  if(vals.some(v=>v==='' || v===null)){
+    sfxError();
+    errBox.textContent = t('err_fill');
+    errBox.style.display = 'block';
+    return;
+  }
+  const price = activePrice();
+  if(wallet < price){
+    sfxError();
+    errBox.textContent = t('err_saldo');
+    errBox.style.display = 'block';
+    return;
+  }
+  errBox.style.display = 'none';
+  wallet -= price;
+  updateWalletDisplay();
+  playsToday++;
+  updateRgCounter();
+  sfxConfirm();
+  setTimeout(sfxCoin, 250);
+
+  history.unshift({ mode, scopeLabel: activeScopeLabel(), price, date: new Date().toLocaleDateString(LANG==='pt'?'pt-BR':'es-AR') });
+
+  // guarda esta jogada para o atalho "repetir última jogada"
+  lastBet = {
+    mode, selectedDay, selectedMatchIdx,
+    values: Object.fromEntries(fields.map(id => [id, document.getElementById(id).value])),
+    liga: document.getElementById('v-liga').checked,
+    ml: document.getElementById('v-ml').checked,
+    price
+  };
+
+  const labels = [t('f_total'), t('f_segundo'), t('f_atacantes'), t('f_cabeca'), t('f_faltas'), t('f_primeiro')];
+  document.getElementById('okRecap').innerHTML = labels.map((l,i)=>`<span>${l}: ${vals[i]}</span>`).join('');
+  document.getElementById('successOverlay').style.display = 'flex';
+  // Nota: NÃO disparamos confete/"GOL!" aqui — o resultado ainda não existe neste momento,
+  // é só o registro da jogada. Festejar como se fosse vitória na hora de apostar é um padrão
+  // que reguladores de jogo responsável observam (confunde "jogou" com "ganhou"). O confete
+  // fica reservado para uma futura tela real de resultado, quando o jogo tiver sido decidido.
+
+  setTimeout(()=>{
+    document.getElementById('successOverlay').style.display = 'none';
+    backToScreensaver();
+  }, 2600);
+}
+
+/* ---------------- goal celebration: confetti + flash ---------------- */
+function launchCelebration(){
+  const flashWrap = document.getElementById('goalFlashWrap');
+  flashWrap.innerHTML = `<div class="goal-flash"><span>${t('goal_word')}</span></div>`;
+  setTimeout(()=>{ flashWrap.innerHTML = ''; }, 1400);
+
+  const colors = ['#17e29a','#f2c451','#ff4d5e','#ffffff'];
+  const wrap = document.getElementById('confettiWrap');
+  wrap.innerHTML = '';
+  for(let i=0; i<70; i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDuration = (1.8 + Math.random()*1.4) + 's';
+    p.style.animationDelay = (Math.random()*0.4) + 's';
+    p.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    wrap.appendChild(p);
+  }
+  setTimeout(()=>{ wrap.innerHTML = ''; }, 3200);
+}
+
+/* ---------------- history modal ---------------- */
+function openHistory(){
+  const list = document.getElementById('historyList');
+  list.innerHTML = history.length ? history.map(h=>`
+    <div class="hist-item">
+      <div>
+        <span class="hi-mode ${h.mode}">${h.mode}</span>
+        <span class="hi-scope">${h.scopeLabel}</span>
+        <div class="pi-sub">${h.date}</div>
+      </div>
+      <div class="hi-price">R$ ${h.price.toFixed(2).replace('.',',')}</div>
+    </div>
+  `).join('') : `<div class="hist-empty">${t('hist_empty')}</div>`;
+  document.getElementById('historyModal').style.display = 'flex';
+}
+function closeHistory(){ document.getElementById('historyModal').style.display = 'none'; }
+
+/* ---------------- toast ---------------- */
+let toastTimer = null;
+function showToast(msg){
+  let el = document.getElementById('appToast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'appToast';
+    el.className = 'app-toast';
+    el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.classList.remove('show'), 3200);
 }
 
 /* ---------------- init ---------------- */
-applyStaticI18n();
-renderClubs();
-renderStepper();
-renderWallet();
-renderTx();
-renderUserStrip();
+applyI18n();
+renderSlides();
+renderFixtures();
+renderTicker();
+updateWalletDisplay();
+updateRgCounter();
+tickCutoff();
+slideTimer = setInterval(cycleSlides, 4200);
 </script>
 </body>
 </html>

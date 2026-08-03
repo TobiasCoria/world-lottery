@@ -46,13 +46,44 @@
   @keyframes ticker-scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
   @keyframes blink{0%,100%{opacity:1} 50%{opacity:.2}}
 
-  .lang-toggle{position:fixed; top:44px; right:14px; z-index:50; display:flex; gap:2px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:4px;}
+  /* ================= TOP BAR (single flex container — avoids the overflow bug) ================= */
+  .top-bar{
+    position:fixed; top:30px; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:8px 12px; padding:10px 14px; background:linear-gradient(180deg, rgba(4,10,7,0.55), transparent);
+  }
+  .tb-left, .tb-right{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+
+  .top-logo{
+    background:rgba(0,0,0,0.3); border:1px solid var(--panel-brd); border-radius:999px; padding:7px 16px;
+    display:flex; align-items:center; gap:7px; font-family:'Oswald'; font-weight:700; font-size:15px; color:#fff;
+    cursor:pointer; order:0;
+  }
+  .top-logo:hover{border-color:rgba(23,226,154,0.4);}
+  .top-logo .ball2{width:18px;height:18px;border-radius:50%; background:radial-gradient(circle at 35% 30%, #fff, #cfd8dc 55%, #0e1b2e 58%); flex:none;}
+
+  .my-bets-btn{
+    background:rgba(242,196,81,0.12); border:1px solid rgba(242,196,81,0.3); color:var(--gold); font-weight:800;
+    font-size:11.5px; padding:8px 14px; border-radius:999px; cursor:pointer; white-space:nowrap;
+  }
+  .my-bets-btn:hover{background:rgba(242,196,81,0.2);}
+
+  .sound-ctrl{display:flex; align-items:center; gap:6px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:6px 12px;}
+  .sound-btn{background:none; border:none; color:var(--ink); font-size:14px; cursor:pointer; padding:0;}
+  .sound-ctrl input[type="range"]{width:60px; accent-color:var(--emerald); cursor:pointer;}
+
+  .lang-toggle{display:flex; gap:2px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:4px;}
   .lang-toggle button{border:none; background:transparent; color:var(--muted); font-weight:800; font-size:11px; padding:6px 12px; border-radius:999px; cursor:pointer;}
   .lang-toggle button.active{background:var(--emerald); color:#04140d;}
 
-  .session-chip{position:fixed; top:44px; left:14px; z-index:50; display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:6px 14px 6px 6px;}
+  .session-chip{display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.35); border:1px solid var(--panel-brd); border-radius:999px; padding:6px 14px 6px 6px;}
   .session-chip .av{width:24px;height:24px;border-radius:50%; background:linear-gradient(150deg,var(--emerald),var(--emerald-dim)); color:#04140d; font-weight:800; font-size:10px; display:flex; align-items:center; justify-content:center;}
   .session-chip .amt{font-family:'JetBrains Mono'; font-weight:700; font-size:12.5px; color:var(--emerald);}
+
+  @media (max-width:640px){
+    .top-bar{position:sticky; justify-content:center;}
+    .top-logo{order:-1; width:100%; justify-content:center;}
+    .sound-ctrl input[type="range"]{width:44px;}
+  }
 
   /* crowd noise equalizer (pure decoration) */
   .crowd-eq{display:flex; align-items:flex-end; gap:3px; height:18px; margin:0 auto;}
@@ -157,7 +188,7 @@
 
   #screensaver{
     position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; cursor:pointer; z-index:10; padding:56px 30px 46px;
+    text-align:center; cursor:pointer; z-index:10; padding:88px 30px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   .ss-logo{display:flex; align-items:center; gap:16px; margin-bottom:8px;}
@@ -190,7 +221,7 @@
   .ss-foot{position:absolute; bottom:22px; font-size:11px; color:var(--muted); opacity:.7;}
 
   /* ================= GAME SCREEN (full screen board) ================= */
-  #gameScreen{position:fixed; inset:0; display:none; flex-direction:column; z-index:20; padding:42px 22px 40px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  #gameScreen{position:fixed; inset:0; display:none; flex-direction:column; z-index:20; padding:88px 22px 40px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .gs-top{display:flex; align-items:center; justify-content:space-between; gap:8px 12px; flex-wrap:wrap; margin-bottom:10px;}
   .gs-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
   @media (max-width:560px){
@@ -251,11 +282,32 @@
     font-size:9px; font-weight:800; cursor:pointer; flex:none; line-height:1; padding:0;
   }
   .lbl-info:hover{background:var(--emerald); color:#04140d;}
-  .cat-select{
-    background:transparent; border:none; color:#fff; font-weight:800; font-size:clamp(10px,1.1vw,13px);
-    letter-spacing:.04em; text-align:center; cursor:pointer; appearance:none; padding-right:2px;
+  .cat-select-btn{
+    background:transparent; border:none; border-bottom:1.5px dashed rgba(255,255,255,0.55); color:#fff; font-weight:800; font-size:clamp(10px,1.1vw,13px);
+    letter-spacing:.04em; text-align:center; cursor:pointer; padding:0 14px 2px 0; position:relative;
+    display:flex; align-items:center; gap:5px; font-family:'Inter';
   }
-  .cat-select option{background:#0b2542; color:#fff;}
+  .cat-select-btn::after{
+    content:''; width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent;
+    border-top:5px solid #fff; margin-left:1px;
+  }
+  .cat-select-btn:hover, .cat-select-btn:focus-visible{border-bottom-color:var(--emerald);}
+  .cat-select-btn:hover::after{border-top-color:var(--emerald);}
+
+  #categoryModal{position:fixed; inset:0; z-index:39; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:flex-end; justify-content:center;}
+  #categoryModal.show{display:flex;}
+  .cat-box{width:min(380px,100vw); background:#0c2018; border:1px solid var(--panel-brd); border-radius:22px 22px 0 0; padding:20px; padding-bottom:max(20px, env(safe-area-inset-bottom));}
+  .cat-box-head{display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px;}
+  .cat-box-head button{background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer;}
+  .cat-opt-list{display:flex; flex-direction:column; gap:8px;}
+  .cat-opt{
+    display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.05); border:1.5px solid var(--panel-brd);
+    border-radius:12px; padding:14px 16px; cursor:pointer; font-weight:700; font-size:14px; color:var(--ink);
+  }
+  .cat-opt:active{background:rgba(23,226,154,0.15);}
+  .cat-opt.selected{border-color:var(--emerald); background:rgba(23,226,154,0.12);}
+  .cat-opt .co-check{color:var(--emerald); font-weight:800; visibility:hidden;}
+  .cat-opt.selected .co-check{visibility:visible;}
 
   #fieldInfoModal{position:fixed; inset:0; z-index:43; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:20px;}
   #fieldInfoModal.show{display:flex;}
@@ -312,11 +364,11 @@
 
   /* ================= MODE SELECT / PICKERS ================= */
   #modeSelect, #dayPicker, #matchPicker{
-    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:flex-start; z-index:15; padding:56px 30px 46px;
+    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:flex-start; z-index:15; padding:88px 30px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   #modeSelect{ justify-content:flex-start; padding-top:90px; }
-  .picker-back{position:absolute; top:16px; left:16px; background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
+  .picker-back{position:absolute; top:96px; left:16px; background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
   .picker-title{font-family:'Oswald'; font-size:28px; margin:0 0 6px; text-align:center;}
   .picker-sub{color:var(--muted); font-size:14px; margin:0 0 30px; text-align:center; max-width:60ch;}
 
@@ -377,7 +429,7 @@
   }
   .ss-secondary:hover{color:var(--ink); border-color:rgba(255,255,255,0.3);}
   #leaguePanel{
-    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; z-index:16; padding:56px 24px 46px;
+    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; z-index:16; padding:88px 24px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   #leaguePanel.show{display:flex;}
@@ -429,13 +481,29 @@
 
 <div id="liveTicker"><div class="lt-track" id="tickerTrack"></div></div>
 
-<div class="lang-toggle">
-  <button id="langPT" class="active" onclick="setLang('pt')">PT</button>
-  <button id="langES" onclick="setLang('es')">ES</button>
-</div>
-<div class="session-chip">
-  <div class="av">JC</div>
-  <div class="amt" id="sessionAmt">R$ 240,00</div>
+<div class="top-bar">
+  <div class="tb-left">
+    <div class="session-chip">
+      <div class="av">JC</div>
+      <div class="amt" id="sessionAmt">R$ 240,00</div>
+    </div>
+    <button class="my-bets-btn" onclick="openHistory()" data-i18n="my_bets">🎟 Minhas jogadas</button>
+  </div>
+
+  <button class="top-logo" onclick="sfxClick(); backToScreensaver();">
+    <span class="ball2"></span>GOAL <span style="color:var(--gold)">LEAGUE</span>
+  </button>
+
+  <div class="tb-right">
+    <div class="sound-ctrl" id="soundCtrl">
+      <button class="sound-btn" id="soundToggleBtn" onclick="toggleMute()">🔇</button>
+      <input type="range" id="volumeSlider" min="0" max="100" value="0" oninput="setVolume(this.value)">
+    </div>
+    <div class="lang-toggle">
+      <button id="langPT" class="active" onclick="setLang('pt')">PT</button>
+      <button id="langES" onclick="setLang('es')">ES</button>
+    </div>
+  </div>
 </div>
 
 <!-- ================= SCREENSAVER / ATTRACT MODE ================= -->
@@ -532,13 +600,11 @@
 <div id="gameScreen">
   <div class="gs-top">
     <button class="gs-back" onclick="goToModeSelect()" data-i18n="gs_back">← Sair</button>
-    <div class="gs-logo"><span class="ball2"></span>GOAL <span style="color:var(--gold)">LEAGUE</span></div>
     <div class="gs-right">
       <span class="cutoff-chip" id="cutoffChipBoard" style="margin-bottom:0; padding:4px 12px 4px 4px; font-size:11px;">
         <span class="cutoff-ring" id="cutoffRingBoard"><svg viewBox="0 0 40 40"><circle class="cr-bg" cx="20" cy="20" r="16"/><circle class="cr-fg" id="cr-fg-board" cx="20" cy="20" r="16"/></svg></span>
         <span class="cc-time" id="cutoffTimeBoard">--:--:--</span>
       </span>
-      <button class="gs-history-btn" onclick="openHistory()" data-i18n="gs_history">Histórico</button>
       <div class="gs-round"><span id="gsRoundLabel">4ª Rodada · Brasileirão Série A</span></div>
     </div>
   </div>
@@ -569,26 +635,16 @@
         <div class="cells c2">
           <div class="cell">
             <label>
-              <select class="cat-select" id="catSelectCabeca" onchange="onCategoryChange('v-cabeca', this.value)">
-                <option value="cabeca" data-i18n="f_cabeca">CABEÇA</option>
-                <option value="penalti" data-i18n="cat_penalti">PÊNALTI</option>
-                <option value="foraarea" data-i18n="cat_foraarea">FORA DA ÁREA</option>
-                <option value="corners" data-i18n="cat_corners">ESCANTEIOS</option>
-              </select>
-              <button class="lbl-info" onclick="openFieldInfo(document.getElementById('catSelectCabeca').value)">ℹ</button>
+              <button type="button" class="cat-select-btn" id="catBtnCabeca" onclick="openCategoryModal('v-cabeca')"><span id="catBtnCabecaLabel" data-i18n="f_cabeca">CABEÇA</span></button>
+              <button class="lbl-info" onclick="openFieldInfo(activeCategory['v-cabeca'])">ℹ</button>
             </label>
             <input type="text" inputmode="none" readonly id="v-cabeca" onclick="openKeypad('v-cabeca')">
             <div class="chip-row" id="chipsCabeca"></div>
           </div>
           <div class="cell">
             <label>
-              <select class="cat-select" id="catSelectFaltas" onchange="onCategoryChange('v-faltas', this.value)">
-                <option value="faltas" data-i18n="f_faltas">FALTAS</option>
-                <option value="penalti" data-i18n="cat_penalti">PÊNALTI</option>
-                <option value="foraarea" data-i18n="cat_foraarea">FORA DA ÁREA</option>
-                <option value="corners" data-i18n="cat_corners">ESCANTEIOS</option>
-              </select>
-              <button class="lbl-info" onclick="openFieldInfo(document.getElementById('catSelectFaltas').value)">ℹ</button>
+              <button type="button" class="cat-select-btn" id="catBtnFaltas" onclick="openCategoryModal('v-faltas')"><span id="catBtnFaltasLabel" data-i18n="f_faltas">FALTAS</span></button>
+              <button class="lbl-info" onclick="openFieldInfo(activeCategory['v-faltas'])">ℹ</button>
             </label>
             <input type="text" inputmode="none" readonly id="v-faltas" onclick="openKeypad('v-faltas')">
             <div class="chip-row" id="chipsFaltas"></div>
@@ -614,6 +670,14 @@
         <button class="confirm-btn" onclick="confirmJogada()" id="confirmBtn">Confirmar jogada — R$ 10,00</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- category picker (cabeça/faltas ↔ pênalti/fora da área/escanteios) -->
+<div id="categoryModal">
+  <div class="cat-box">
+    <div class="cat-box-head"><span id="catBoxTitle">CATEGORIA</span><button onclick="closeCategoryModal()">✕</button></div>
+    <div class="cat-opt-list" id="catOptList"></div>
   </div>
 </div>
 
@@ -691,6 +755,7 @@ const T = {
     fi_corners:'Quantidade de escanteios (tiros de canto) no(s) jogo(s). Atenção: aqui não é gol, é a quantidade de escanteios cobrados.',
     fi_faltas:'Gols marcados de falta (tiro livre direto).', fi_primeiro:'Minuto em que sai o primeiro gol da jogada.',
     cat_penalti:'PÊNALTI', cat_foraarea:'FORA DA ÁREA', cat_corners:'ESCANTEIOS', fi_ok:'Entendi',
+    cat_title_cabeca:'ESCOLHA A CATEGORIA', cat_title_faltas:'ESCOLHA A CATEGORIA',
     ok_title:'Jogada confirmada!', ok_sub:'Boa sorte na rodada. Voltando para a tela inicial...',
     slide1_eb:'Mecânica', slide1_p:'Preveja os gols de 5 jogos de uma rodada do Brasileirão Série A: total, 2º tempo, gols de atacantes, de cabeça, de falta e o minuto do primeiro gol.',
     slide2_eb:'Os 5 jogos desta rodada', slide2_p:'4ª rodada · Brasileirão Série A 2026',
@@ -721,6 +786,7 @@ const T = {
     fi_corners:'Cantidad de córners (tiros de esquina) en el/los partido(s). Atención: acá no es gol, es la cantidad de córners cobrados.',
     fi_faltas:'Goles marcados de tiro libre directo.', fi_primeiro:'Minuto en el que llega el primer gol de la jugada.',
     cat_penalti:'PENAL', cat_foraarea:'FUERA DEL ÁREA', cat_corners:'CÓRNERS', fi_ok:'Entendido',
+    cat_title_cabeca:'ELEGÍ LA CATEGORÍA', cat_title_faltas:'ELEGÍ LA CATEGORÍA',
     ok_title:'¡Jugada confirmada!', ok_sub:'Suerte en la fecha. Volviendo a la pantalla inicial...',
     slide1_eb:'Mecánica', slide1_p:'Predecí los goles de 5 partidos de una fecha del Brasileirão Serie A: total, 2º tiempo, goles de delanteros, de cabeza, de tiro libre y el minuto del primer gol.',
     slide2_eb:'Los 5 partidos de esta fecha', slide2_p:'4ª fecha · Brasileirão Serie A 2026',
@@ -998,6 +1064,7 @@ const fieldInfoKeys = {
 };
 const catFieldLabelKey = { cabeca:'f_cabeca', penalti:'cat_penalti', foraarea:'cat_foraarea', corners:'cat_corners', faltas:'f_faltas' };
 const activeCategory = { 'v-cabeca':'cabeca', 'v-faltas':'faltas' };
+const catOptionsFor = { 'v-cabeca':['cabeca','penalti','foraarea','corners'], 'v-faltas':['faltas','penalti','foraarea','corners'] };
 
 function openFieldInfo(key){
   sfxClick();
@@ -1008,11 +1075,38 @@ function openFieldInfo(key){
 }
 function closeFieldInfo(){ document.getElementById('fieldInfoModal').classList.remove('show'); }
 
-function onCategoryChange(fieldId, cat){
+/* ---------------- custom category picker (replaces native <select>) ---------------- */
+let categoryField = null;
+function openCategoryModal(fieldId){
   sfxClick();
+  categoryField = fieldId;
+  const titleKey = fieldId === 'v-cabeca' ? 'cat_title_cabeca' : 'cat_title_faltas';
+  document.getElementById('catBoxTitle').textContent = t(titleKey);
+  const current = activeCategory[fieldId];
+  document.getElementById('catOptList').innerHTML = catOptionsFor[fieldId].map(cat=>{
+    const sel = cat === current ? 'selected' : '';
+    return `<div class="cat-opt ${sel}" onclick="pickCategory('${cat}')">
+      <span>${t(catFieldLabelKey[cat])}</span><span class="co-check">✓</span>
+    </div>`;
+  }).join('');
+  document.getElementById('categoryModal').classList.add('show');
+  resetIdleTimer();
+}
+function closeCategoryModal(){
+  document.getElementById('categoryModal').classList.remove('show');
+  categoryField = null;
+}
+function pickCategory(cat){
+  if(!categoryField) return;
+  sfxClick();
+  onCategoryChange(categoryField, cat);
+  closeCategoryModal();
+}
+
+function onCategoryChange(fieldId, cat){
   activeCategory[fieldId] = cat;
-  // sincroniza os dois <select> se algum dia forem a mesma categoria — cada campo é independente,
-  // mas guardamos o texto do rótulo pra usar no botão de info e no resumo.
+  const labelId = fieldId === 'v-cabeca' ? 'catBtnCabecaLabel' : 'catBtnFaltasLabel';
+  document.getElementById(labelId).textContent = t(catFieldLabelKey[cat]);
   document.getElementById(fieldId).value = '';
   refreshBoardDerived();
 }
@@ -1230,10 +1324,19 @@ function backToScreensaver(){
   slideTimer = setInterval(cycleSlides, 4200);
   clearTimeout(idleTimer);
 }
-/* ---------------- synthesized sound effects (no audio files — Web Audio API) ---------------- */
+/* ---------------- synthesized sound effects + background music (no audio files — Web Audio API) ---------------- */
 let actx = null;
+let masterGain = null;      // everything (sfx + music) routes through this — one slider controls both
+let isMuted = true;         // matches the slider's initial value="0" in the markup
+let masterVolume = 0;       // 0-100, mirrors the slider
 function getActx(){
-  if(!actx){ const AC = window.AudioContext || window.webkitAudioContext; actx = new AC(); }
+  if(!actx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    actx = new AC();
+    masterGain = actx.createGain();
+    masterGain.gain.value = (isMuted ? 0 : masterVolume/100);
+    masterGain.connect(actx.destination);
+  }
   if(actx.state === 'suspended') actx.resume();
   return actx;
 }
@@ -1247,7 +1350,7 @@ function playTone(freq, duration, type, gainVal, delay){
     osc.frequency.setValueAtTime(freq, start);
     gain.gain.setValueAtTime(gainVal || 0.1, start);
     gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
-    osc.connect(gain); gain.connect(ctx.destination);
+    osc.connect(gain); gain.connect(masterGain);
     osc.start(start);
     osc.stop(start + duration + 0.02);
   }catch(e){ /* audio not available — fail silently, never block gameplay */ }
@@ -1277,12 +1380,133 @@ function sfxWhoosh(){
     filter.frequency.setValueAtTime(900, ctx.currentTime);
     filter.frequency.exponentialRampToValueAtTime(2200, ctx.currentTime + 0.22);
     const gain = ctx.createGain(); gain.gain.setValueAtTime(0.12, ctx.currentTime); gain.gain.linearRampToValueAtTime(0, ctx.currentTime+0.25);
-    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    src.connect(filter); filter.connect(gain); gain.connect(masterGain);
     src.start();
   }catch(e){}
 }
 function sfxCardSelect(){ playTone(440, 0.05, 'triangle', 0.06, 0); playTone(880, 0.07, 'triangle', 0.06, 0.05); }
 function sfxChip(){ playTone(760, 0.035, 'square', 0.045, 0); }
+
+/* ---------------- background music: original synthesized "stadium batucada" loop ----------------
+   No usamos audio de terceros (por derechos de autor) — esto es un loop propio de percusión de
+   torcida + bajo tipo samba, generado 100% con osciladores/ruido, en el mismo estilo que los sfx. */
+let musicPlaying = false;
+let musicSchedulerId = null;
+let musicNextNoteTime = 0;
+let musicStep = 0;
+const MUSIC_BPM = 104;
+const MUSIC_STEP_SEC = 60 / MUSIC_BPM / 2; // 8th notes
+const MUSIC_LOOKAHEAD = 0.12; // schedule this far ahead each tick (seconds)
+
+function noiseBurst(time, duration, gainVal, filterFreq){
+  const ctx = getActx();
+  const bufSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
+  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufSize);
+  const src = ctx.createBufferSource(); src.buffer = buf;
+  const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = filterFreq || 1400;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(gainVal, time);
+  gain.gain.exponentialRampToValueAtTime(0.0008, time + duration);
+  src.connect(filter); filter.connect(gain); gain.connect(musicBus);
+  src.start(time); src.stop(time + duration + 0.02);
+}
+function musicTone(freq, time, duration, type, gainVal){
+  const ctx = getActx();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type || 'sine';
+  osc.frequency.setValueAtTime(freq, time);
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.linearRampToValueAtTime(gainVal, time + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0006, time + duration);
+  osc.connect(gain); gain.connect(musicBus);
+  osc.start(time); osc.stop(time + duration + 0.03);
+}
+let musicBus = null; // sub-mix for music, feeds into masterGain, kept quieter than sfx
+function ensureMusicBus(){
+  const ctx = getActx();
+  if(!musicBus){
+    musicBus = ctx.createGain();
+    musicBus.gain.value = 0.55; // keeps the loop subtle relative to sfx
+    musicBus.connect(masterGain);
+  }
+}
+// batucada de 16 passos: bumbo (grave), caixa/palma no contratempo, e um baixo tipo samba
+const KICK_STEPS  = [0,0,0,1,0,0,0,0, 0,0,0,1,0,0,0,0].map((v,i)=> i%8===0 ? 1 : v);
+const CLAP_STEPS  = [0,0,0,0,1,0,0,0, 0,0,0,0,1,0,0,0];
+const SHAKER_STEPS= [1,0,1,0,1,0,1,0, 1,0,1,0,1,0,1,0];
+const BASS_NOTES  = [98,null,110,null,98,null,130.8,null, 98,null,110,null,146.8,130.8,110,98]; // samba-ish walking bass (Hz)
+
+function scheduleMusicNote(step, time){
+  if(KICK_STEPS[step])   noiseBurst(time, 0.09, 0.14, 160);
+  if(CLAP_STEPS[step])   noiseBurst(time, 0.05, 0.09, 2200);
+  if(SHAKER_STEPS[step]) noiseBurst(time, 0.03, 0.035, 6500);
+  const bassFreq = BASS_NOTES[step];
+  if(bassFreq) musicTone(bassFreq, time, MUSIC_STEP_SEC*1.7, 'triangle', 0.05);
+  // stab festivo tipo "olé" cada 2 compassos, para dar identidade de torcida
+  if(step === 0 && (musicLoopCount % 2 === 0)) musicTone(523.3, time, 0.5, 'square', 0.02);
+}
+let musicLoopCount = 0;
+function musicSchedulerTick(){
+  const ctx = getActx();
+  while(musicNextNoteTime < ctx.currentTime + MUSIC_LOOKAHEAD){
+    scheduleMusicNote(musicStep, musicNextNoteTime);
+    musicNextNoteTime += MUSIC_STEP_SEC;
+    musicStep++;
+    if(musicStep >= 16){ musicStep = 0; musicLoopCount++; }
+  }
+}
+function startBgMusic(){
+  if(musicPlaying) return;
+  ensureMusicBus();
+  const ctx = getActx();
+  musicNextNoteTime = ctx.currentTime + 0.05;
+  musicStep = 0;
+  musicPlaying = true;
+  musicSchedulerId = setInterval(musicSchedulerTick, 50);
+}
+function stopBgMusic(){
+  musicPlaying = false;
+  if(musicSchedulerId){ clearInterval(musicSchedulerId); musicSchedulerId = null; }
+}
+
+/* ---------------- master volume / mute controls (top bar) ---------------- */
+function applyMasterGain(){
+  if(!masterGain) return;
+  const target = isMuted ? 0 : masterVolume/100;
+  masterGain.gain.setTargetAtTime(target, actx.currentTime, 0.05);
+}
+function updateSoundIcon(){
+  const btn = document.getElementById('soundToggleBtn');
+  if(!btn) return;
+  if(isMuted || masterVolume === 0) btn.textContent = '🔇';
+  else if(masterVolume < 55) btn.textContent = '🔉';
+  else btn.textContent = '🔊';
+  const slider = document.getElementById('volumeSlider');
+  if(slider) slider.value = isMuted ? 0 : masterVolume;
+}
+function toggleMute(){
+  getActx(); // AudioContext só pode iniciar/retomar num gesto do usuário — este clique conta
+  if(isMuted){
+    isMuted = false;
+    if(masterVolume === 0) masterVolume = 35; // primeiro "ligar" já dá um volume audível
+  } else {
+    isMuted = true;
+  }
+  applyMasterGain();
+  updateSoundIcon();
+  if(!isMuted) startBgMusic(); else stopBgMusic();
+}
+function setVolume(val){
+  getActx();
+  masterVolume = parseInt(val, 10) || 0;
+  isMuted = masterVolume === 0;
+  applyMasterGain();
+  updateSoundIcon();
+  if(!isMuted) startBgMusic(); else stopBgMusic();
+}
 
 function chooseMode(m){
   if(isCutoffPassed()){
@@ -1486,6 +1710,7 @@ renderFixtures();
 renderTicker();
 updateWalletDisplay();
 updateRgCounter();
+updateSoundIcon();
 tickCutoff();
 slideTimer = setInterval(cycleSlides, 4200);
 </script>

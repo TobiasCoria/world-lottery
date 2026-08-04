@@ -349,7 +349,7 @@
     position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:flex-start; z-index:15; padding:calc(var(--topbar-h) + 16px) 30px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
-  #modeSelect{ justify-content:flex-start; padding-top:90px; }
+  #modeSelect{ justify-content:flex-start; padding-top:calc(var(--topbar-h) + 16px); }
   .picker-back{position:absolute; top:calc(var(--topbar-h) + 8px); left:16px; background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
   .picker-title{font-family:'Oswald'; font-size:28px; margin:0 0 6px; text-align:center;}
   .picker-sub{color:var(--muted); font-size:14px; margin:0 0 30px; text-align:center; max-width:60ch;}
@@ -414,7 +414,7 @@
   }
   .ss-secondary:hover{color:var(--ink); border-color:rgba(255,255,255,0.3);}
   #leaguePanel{
-    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; z-index:16; padding:88px 24px 46px;
+    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; z-index:16; padding:calc(var(--topbar-h) + 16px) 24px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   #leaguePanel.show{display:flex;}
@@ -521,6 +521,7 @@
       <option value="B">Série B</option>
       <option value="C">Série C</option>
       <option value="D">Série D</option>
+      <option value="COPA">Copa do Brasil</option>
     </select>
     <input type="text" id="leagueSearch" data-i18n-ph="league_search_ph" placeholder="Buscar time..." oninput="renderLeaguePanel()">
   </div>
@@ -532,6 +533,11 @@
     <div class="standings-scroll">
       <table class="standings-table" id="standingsTable"></table>
     </div>
+  </div>
+
+  <div id="copaFixturesWrap" style="display:none; width:min(700px,100%);">
+    <div class="standings-title" data-i18n="copa_fixtures_title">Copa do Brasil · Oitavas de final</div>
+    <div class="pick-list" id="copaFixturesList"></div>
   </div>
 </div>
 
@@ -742,6 +748,7 @@ const T = {
     ss_teams:'⚽ Ver equipes e tabela', league_title:'Equipes e tabela', league_sub:'Times reais do futebol brasileiro. Insígnias genéricas — não são os escudos oficiais.',
     my_bets:'🎟 Minhas jogadas', comp_serieA:'Brasileirão Série A', comp_copa:'Copa do Brasil', comp_label:'Competição',
     league_search_ph:'Buscar time...', standings_title:'Tabela Brasileirão Série A · início da temporada 2026', st_team:'Time', mi_last5:'Últimos 5 jogos (ilustrativo)',
+    copa_fixtures_title:'Copa do Brasil · Oitavas de final (confrontos reais)',
     gs_back:'← Sair', gs_round:'Rodada', board_tag:'JOGADA R$ 10,00', board_note:'Os valores são distribuídos entre clube, escolinha e federações.',
     board_confirm:'Confirmar jogada — R$ 10,00', err_fill:'Preencha todos os campos para confirmar a jogada.',
     f_total:'TOTAL', f_segundo:'2º TEMPO', f_atacantes:'ATACANTES', f_cabeca:'CABEÇA', f_faltas:'FALTAS', f_primeiro:'PRIMEIRO GOL (MIN.)', f_liga:'Liga', f_ml:'ML (Multiliga)',
@@ -775,6 +782,7 @@ const T = {
     ss_teams:'⚽ Ver equipos y tabla', league_title:'Equipos y tabla', league_sub:'Equipos reales del fútbol brasileño. Insignias genéricas — no son los escudos oficiales.',
     my_bets:'🎟 Mis jugadas', comp_serieA:'Brasileirão Serie A', comp_copa:'Copa do Brasil', comp_label:'Competición',
     league_search_ph:'Buscar equipo...', standings_title:'Tabla Brasileirão Serie A · inicio de temporada 2026', st_team:'Equipo', mi_last5:'Últimos 5 partidos (ilustrativo)',
+    copa_fixtures_title:'Copa do Brasil · Octavos de final (cruces reales)',
     gs_back:'← Salir', gs_round:'Fecha', board_tag:'JUGADA R$ 10,00', board_note:'Los valores se reparten entre club, escuelita y federaciones.',
     board_confirm:'Confirmar jugada — R$ 10,00', err_fill:'Completá todos los campos para confirmar la jugada.',
     f_total:'TOTAL', f_segundo:'2º TIEMPO', f_atacantes:'DELANTEROS', f_cabeca:'CABEZA', f_faltas:'TIROS LIBRES', f_primeiro:'PRIMER GOL (MIN.)', f_liga:'Liga', f_ml:'ML (Multiliga)',
@@ -951,17 +959,25 @@ function closeLeaguePanel(){
   document.getElementById('screensaver').style.display = 'flex';
   slideTimer = setInterval(cycleSlides, 4200);
 }
+function copaTeams(){
+  const set = new Set();
+  copaFixtures.forEach(f => { set.add(f.home); set.add(f.away); });
+  return [...set];
+}
 function renderLeaguePanel(){
   const serie = document.getElementById('leagueSelect').value;
   const q = document.getElementById('leagueSearch').value.trim().toLowerCase();
-  const list = serieClubs[serie].filter(n => n.toLowerCase().includes(q));
+  const pool = serie === 'COPA' ? copaTeams() : serieClubs[serie];
+  const list = pool.filter(n => n.toLowerCase().includes(q));
   document.getElementById('leagueTeamsGrid').innerHTML = list.map(name =>
     `<div class="team-chip">${clubBadgeHTML(name,28)}<span>${name}</span></div>`
   ).join('') || `<div class="empty-state">${t('empty_clubs')}</div>`;
 
   const standingsWrap = document.getElementById('standingsWrap');
+  const copaWrap = document.getElementById('copaFixturesWrap');
   if(serie === 'A'){
     standingsWrap.style.display = 'block';
+    copaWrap.style.display = 'none';
     const rows = standingsA.map((r,i)=>{
       const [name,j,v,e,d,dif,pts] = r;
       const zone = i < 6 ? 'zone-g6' : (i >= standingsA.length-4 ? 'zone-z4' : '');
@@ -975,8 +991,22 @@ function renderLeaguePanel(){
     document.getElementById('standingsTable').innerHTML = `
       <thead><tr><th>#</th><th data-i18n="st_team">Time</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>DIF</th><th>Pts</th></tr></thead>
       <tbody>${rows}</tbody>`;
+  } else if(serie === 'COPA'){
+    // mata-mata não tem tabela de pontos — mostramos os 8 confrontos reais das oitavas em vez disso
+    standingsWrap.style.display = 'none';
+    copaWrap.style.display = 'block';
+    document.getElementById('copaFixturesList').innerHTML = copaFixtures.map(f => `
+      <div class="pick-item" style="cursor:default;">
+        <div class="pi-click" style="cursor:default;">
+          <div>${clubBadgeHTML(f.home,28)}</div>
+          <div class="pi-main">${f.home} <span style="color:var(--muted);font-weight:400;">x</span> ${f.away}</div>
+          <div>${clubBadgeHTML(f.away,28)}</div>
+        </div>
+      </div>
+    `).join('');
   } else {
     standingsWrap.style.display = 'none';
+    copaWrap.style.display = 'none';
   }
 }
 
@@ -1015,6 +1045,7 @@ function setLang(lang){
   } else {
     document.getElementById('gsRoundLabel').textContent = LANG==='pt' ? '4ª Rodada · Brasileirão Série A' : '4ª Fecha · Brasileirão Serie A';
   }
+  setTimeout(syncTopbarHeight, 50);
 }
 
 /* ---------------- screensaver slides ---------------- */
@@ -1671,6 +1702,19 @@ function showToast(msg){
   toastTimer = setTimeout(()=> el.classList.remove('show'), 3200);
 }
 
+/* ---------------- ajusta o padding-top de todas as telas conforme a altura real do top-bar ----------------
+   O top-bar quebra em várias linhas em telas estreitas (session-chip, botão de jogadas, logo, som, idioma) —
+   um valor fixo de padding não acompanha isso e as telas ficavam tapadas. Medimos de verdade. */
+function syncTopbarHeight(){
+  const bar = document.querySelector('.top-bar');
+  const ticker = document.getElementById('liveTicker');
+  if(!bar) return;
+  const h = bar.getBoundingClientRect().bottom + (ticker ? 0 : 0); // bar já é posicionado abaixo do ticker (top:30px)
+  document.documentElement.style.setProperty('--topbar-h', Math.ceil(h) + 'px');
+}
+window.addEventListener('resize', syncTopbarHeight);
+window.addEventListener('orientationchange', syncTopbarHeight);
+
 /* ---------------- init ---------------- */
 applyI18n();
 renderSlides();
@@ -1680,6 +1724,8 @@ updateWalletDisplay();
 updateRgCounter();
 tickCutoff();
 slideTimer = setInterval(cycleSlides, 4200);
+syncTopbarHeight();
+setTimeout(syncTopbarHeight, 250); // reconfere depois que fontes/ícones terminam de carregar e podem mudar a altura
 </script>
 </body>
 </html>

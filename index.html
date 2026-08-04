@@ -12,6 +12,7 @@
     --emerald:#17e29a; --emerald-dim:#0f9d6c; --gold:#f2c451; --gold-dim:#c79a2e;
     --crimson:#ff4d5e; --ink:#eef3f2; --muted:#9db3ac;
     --panel:rgba(6,20,13,0.55); --panel-brd:rgba(255,255,255,0.1);
+    --topbar-h:172px; /* fallback antes do JS medir a altura real (evita "flash" sem gap no 1º frame) */
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none;}
   html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; height:100dvh;}
@@ -188,7 +189,7 @@
 
   #screensaver{
     position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    text-align:center; cursor:pointer; z-index:10; padding:88px 30px 46px;
+    text-align:center; cursor:pointer; z-index:10; padding:calc(var(--topbar-h) + 16px) 30px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   .ss-logo{display:flex; align-items:center; gap:16px; margin-bottom:8px;}
@@ -221,7 +222,7 @@
   .ss-foot{position:absolute; bottom:22px; font-size:11px; color:var(--muted); opacity:.7;}
 
   /* ================= GAME SCREEN (full screen board) ================= */
-  #gameScreen{position:fixed; inset:0; display:none; flex-direction:column; z-index:20; padding:88px 22px 40px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+  #gameScreen{position:fixed; inset:0; display:none; flex-direction:column; z-index:20; padding:calc(var(--topbar-h) + 16px) 22px 40px; overflow-y:auto; -webkit-overflow-scrolling:touch;}
   .gs-top{display:flex; align-items:center; justify-content:space-between; gap:8px 12px; flex-wrap:wrap; margin-bottom:10px;}
   .gs-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
   @media (max-width:560px){
@@ -282,32 +283,13 @@
     font-size:9px; font-weight:800; cursor:pointer; flex:none; line-height:1; padding:0;
   }
   .lbl-info:hover{background:var(--emerald); color:#04140d;}
-  .cat-select-btn{
+  .cat-select{
     background:transparent; border:none; border-bottom:1.5px dashed rgba(255,255,255,0.55); color:#fff; font-weight:800; font-size:clamp(10px,1.1vw,13px);
-    letter-spacing:.04em; text-align:center; cursor:pointer; padding:0 14px 2px 0; position:relative;
-    display:flex; align-items:center; gap:5px; font-family:'Inter';
+    letter-spacing:.04em; text-align:center; cursor:pointer; appearance:none; padding-right:14px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'><path d='M0 0 L5 6 L10 0 Z' fill='white'/></svg>");
+    background-repeat:no-repeat; background-position:right 0 center; background-size:9px 6px;
   }
-  .cat-select-btn::after{
-    content:''; width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent;
-    border-top:5px solid #fff; margin-left:1px;
-  }
-  .cat-select-btn:hover, .cat-select-btn:focus-visible{border-bottom-color:var(--emerald);}
-  .cat-select-btn:hover::after{border-top-color:var(--emerald);}
-
-  #categoryModal{position:fixed; inset:0; z-index:39; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:flex-end; justify-content:center;}
-  #categoryModal.show{display:flex;}
-  .cat-box{width:min(380px,100vw); background:#0c2018; border:1px solid var(--panel-brd); border-radius:22px 22px 0 0; padding:20px; padding-bottom:max(20px, env(safe-area-inset-bottom));}
-  .cat-box-head{display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--emerald); margin-bottom:14px;}
-  .cat-box-head button{background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer;}
-  .cat-opt-list{display:flex; flex-direction:column; gap:8px;}
-  .cat-opt{
-    display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.05); border:1.5px solid var(--panel-brd);
-    border-radius:12px; padding:14px 16px; cursor:pointer; font-weight:700; font-size:14px; color:var(--ink);
-  }
-  .cat-opt:active{background:rgba(23,226,154,0.15);}
-  .cat-opt.selected{border-color:var(--emerald); background:rgba(23,226,154,0.12);}
-  .cat-opt .co-check{color:var(--emerald); font-weight:800; visibility:hidden;}
-  .cat-opt.selected .co-check{visibility:visible;}
+  .cat-select option{background:#0b2542; color:#fff;}
 
   #fieldInfoModal{position:fixed; inset:0; z-index:43; background:rgba(4,10,7,0.85); backdrop-filter:blur(6px); display:none; align-items:center; justify-content:center; padding:20px;}
   #fieldInfoModal.show{display:flex;}
@@ -364,13 +346,16 @@
 
   /* ================= MODE SELECT / PICKERS ================= */
   #modeSelect, #dayPicker, #matchPicker{
-    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:flex-start; z-index:15; padding:88px 30px 46px;
+    position:fixed; inset:0; display:none; flex-direction:column; align-items:center; justify-content:flex-start; z-index:15; padding:calc(var(--topbar-h) + 16px) 30px 46px;
     overflow-y:auto; -webkit-overflow-scrolling:touch;
   }
   #modeSelect{ justify-content:flex-start; padding-top:90px; }
-  .picker-back{position:absolute; top:96px; left:16px; background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
+  .picker-back{position:absolute; top:calc(var(--topbar-h) + 8px); left:16px; background:rgba(255,255,255,0.06); border:1px solid var(--panel-brd); color:var(--ink); font-weight:700; font-size:13px; padding:9px 16px; border-radius:999px; cursor:pointer;}
   .picker-title{font-family:'Oswald'; font-size:28px; margin:0 0 6px; text-align:center;}
   .picker-sub{color:var(--muted); font-size:14px; margin:0 0 30px; text-align:center; max-width:60ch;}
+  .comp-tabs{display:flex; gap:6px; background:rgba(255,255,255,0.04); border:1px solid var(--panel-brd); border-radius:999px; padding:4px; margin-bottom:22px;}
+  .comp-tab{border:none; background:transparent; color:var(--muted); font-weight:800; font-size:12.5px; padding:9px 18px; border-radius:999px; cursor:pointer;}
+  .comp-tab.active{background:var(--emerald); color:#04140d;}
 
   .mode-cards{display:flex; gap:18px; flex-wrap:wrap; justify-content:center; max-width:1000px;}
   .mode-card{
@@ -479,6 +464,10 @@
 </head>
 <body>
 
+<!-- Reprodutor oficial embutido do YouTube para a música de fundo — carregado via API oficial do
+     YouTube (não é uma cópia do áudio, é o player deles tocando o vídeo deles). Fica invisível na tela. -->
+<audio id="bgMusic" src="bg_music.mp3" loop preload="auto"></audio>
+
 <div id="liveTicker"><div class="lt-track" id="tickerTrack"></div></div>
 
 <div class="top-bar">
@@ -553,25 +542,29 @@
     <span class="cutoff-ring" id="cutoffRingMode"><svg viewBox="0 0 40 40"><circle class="cr-bg" cx="20" cy="20" r="16"/><circle class="cr-fg" id="cr-fg-mode" cx="20" cy="20" r="16"/></svg></span>
     <span data-i18n="cutoff_label">Rodada fecha em</span> <span class="cc-time" id="cutoffTimeMode" role="timer" aria-live="off">--:--:--</span>
   </div>
+  <div class="comp-tabs">
+    <button class="comp-tab active" data-comp="serieA" onclick="setCompetition('serieA')" data-i18n="comp_serieA">Brasileirão Série A</button>
+    <button class="comp-tab" data-comp="copa" onclick="setCompetition('copa')" data-i18n="comp_copa">Copa do Brasil</button>
+  </div>
   <h2 class="picker-title" data-i18n="mode_title">Como você quer jogar?</h2>
-  <p class="picker-sub" data-i18n="mode_sub">4ª rodada · Brasileirão Série A 2026</p>
+  <p class="picker-sub" id="mode_sub_dyn" data-i18n="mode_sub">4ª rodada · Brasileirão Série A 2026</p>
   <button class="rebet-btn" id="rebetBtn" style="display:none" onclick="repeatLastBet()">
     <span>🔁</span> <span data-i18n="rebet_label">Repetir última jogada</span> <b id="rebetPrice"></b>
   </button>
   <div class="mode-cards">
     <div class="mode-card" onclick="chooseMode('rodada')">
-      <div class="mc-icon">5</div>
+      <div class="mc-icon" id="modeRodadaIcon">5</div>
       <h3 data-i18n="mode_rodada_t">Rodada completa</h3>
-      <p data-i18n="mode_rodada_p">Os 5 jogos da rodada. Maior prêmio, precisa acertar as 3 linhas.</p>
-      <div class="mc-row"><span data-i18n="mode_price">Jogada</span><b>R$ 10,00</b></div>
+      <p id="modeRodadaDesc" data-i18n="mode_rodada_p">Os 5 jogos da rodada. Maior prêmio, precisa acertar as 3 linhas.</p>
+      <div class="mc-row"><span data-i18n="mode_price">Jogada</span><b id="modeRodadaPrice">R$ 10,00</b></div>
     </div>
-    <div class="mode-card" onclick="chooseMode('dia')">
+    <div class="mode-card" id="modeDiaCard" onclick="chooseMode('dia')">
       <div class="mc-icon">D</div>
       <h3 data-i18n="mode_dia_t">Por dia</h3>
       <p data-i18n="mode_dia_p">Escolha um dia da rodada (ex.: sábado, com 2 jogos) e jogue só sobre eles.</p>
       <div class="mc-row"><span data-i18n="mode_price">Jogada</span><b id="modeDiaPrice">R$ 5–7</b></div>
     </div>
-    <div class="mode-card" onclick="chooseMode('partido')">
+    <div class="mode-card" id="modePartidoCard" onclick="chooseMode('partido')">
       <div class="mc-icon">1</div>
       <h3 data-i18n="mode_partido_t">Partido único</h3>
       <p data-i18n="mode_partido_p">Escolha 1 jogo específico da rodada. Entrada mais baixa, prêmio mais frequente.</p>
@@ -635,16 +628,26 @@
         <div class="cells c2">
           <div class="cell">
             <label>
-              <button type="button" class="cat-select-btn" id="catBtnCabeca" onclick="openCategoryModal('v-cabeca')"><span id="catBtnCabecaLabel" data-i18n="f_cabeca">CABEÇA</span></button>
-              <button class="lbl-info" onclick="openFieldInfo(activeCategory['v-cabeca'])">ℹ</button>
+              <select class="cat-select" id="catSelectCabeca" onchange="onCategoryChange('v-cabeca', this.value)">
+                <option value="cabeca" data-i18n="f_cabeca">CABEÇA</option>
+                <option value="penalti" data-i18n="cat_penalti">PÊNALTI</option>
+                <option value="foraarea" data-i18n="cat_foraarea">FORA DA ÁREA</option>
+                <option value="corners" data-i18n="cat_corners">ESCANTEIOS</option>
+              </select>
+              <button class="lbl-info" onclick="openFieldInfo(document.getElementById('catSelectCabeca').value)">ℹ</button>
             </label>
             <input type="text" inputmode="none" readonly id="v-cabeca" onclick="openKeypad('v-cabeca')">
             <div class="chip-row" id="chipsCabeca"></div>
           </div>
           <div class="cell">
             <label>
-              <button type="button" class="cat-select-btn" id="catBtnFaltas" onclick="openCategoryModal('v-faltas')"><span id="catBtnFaltasLabel" data-i18n="f_faltas">FALTAS</span></button>
-              <button class="lbl-info" onclick="openFieldInfo(activeCategory['v-faltas'])">ℹ</button>
+              <select class="cat-select" id="catSelectFaltas" onchange="onCategoryChange('v-faltas', this.value)">
+                <option value="faltas" data-i18n="f_faltas">FALTAS</option>
+                <option value="penalti" data-i18n="cat_penalti">PÊNALTI</option>
+                <option value="foraarea" data-i18n="cat_foraarea">FORA DA ÁREA</option>
+                <option value="corners" data-i18n="cat_corners">ESCANTEIOS</option>
+              </select>
+              <button class="lbl-info" onclick="openFieldInfo(document.getElementById('catSelectFaltas').value)">ℹ</button>
             </label>
             <input type="text" inputmode="none" readonly id="v-faltas" onclick="openKeypad('v-faltas')">
             <div class="chip-row" id="chipsFaltas"></div>
@@ -670,14 +673,6 @@
         <button class="confirm-btn" onclick="confirmJogada()" id="confirmBtn">Confirmar jogada — R$ 10,00</button>
       </div>
     </div>
-  </div>
-</div>
-
-<!-- category picker (cabeça/faltas ↔ pênalti/fora da área/escanteios) -->
-<div id="categoryModal">
-  <div class="cat-box">
-    <div class="cat-box-head"><span id="catBoxTitle">CATEGORIA</span><button onclick="closeCategoryModal()">✕</button></div>
-    <div class="cat-opt-list" id="catOptList"></div>
   </div>
 </div>
 
@@ -745,6 +740,7 @@ const T = {
   pt:{
     ss_sub:'TÍTULO DE CAPITALIZAÇÃO', ss_cta:'Toque para jogar', ss_foot:'Jogada de R$ 10,00 · Brasileirão Série A · Ambiente de demonstração',
     ss_teams:'⚽ Ver equipes e tabela', league_title:'Equipes e tabela', league_sub:'Times reais do futebol brasileiro. Insígnias genéricas — não são os escudos oficiais.',
+    my_bets:'🎟 Minhas jogadas', comp_serieA:'Brasileirão Série A', comp_copa:'Copa do Brasil', comp_label:'Competição',
     league_search_ph:'Buscar time...', standings_title:'Tabela Brasileirão Série A · início da temporada 2026', st_team:'Time', mi_last5:'Últimos 5 jogos (ilustrativo)',
     gs_back:'← Sair', gs_round:'Rodada', board_tag:'JOGADA R$ 10,00', board_note:'Os valores são distribuídos entre clube, escolinha e federações.',
     board_confirm:'Confirmar jogada — R$ 10,00', err_fill:'Preencha todos os campos para confirmar a jogada.',
@@ -755,7 +751,6 @@ const T = {
     fi_corners:'Quantidade de escanteios (tiros de canto) no(s) jogo(s). Atenção: aqui não é gol, é a quantidade de escanteios cobrados.',
     fi_faltas:'Gols marcados de falta (tiro livre direto).', fi_primeiro:'Minuto em que sai o primeiro gol da jogada.',
     cat_penalti:'PÊNALTI', cat_foraarea:'FORA DA ÁREA', cat_corners:'ESCANTEIOS', fi_ok:'Entendi',
-    cat_title_cabeca:'ESCOLHA A CATEGORIA', cat_title_faltas:'ESCOLHA A CATEGORIA',
     ok_title:'Jogada confirmada!', ok_sub:'Boa sorte na rodada. Voltando para a tela inicial...',
     slide1_eb:'Mecânica', slide1_p:'Preveja os gols de 5 jogos de uma rodada do Brasileirão Série A: total, 2º tempo, gols de atacantes, de cabeça, de falta e o minuto do primeiro gol.',
     slide2_eb:'Os 5 jogos desta rodada', slide2_p:'4ª rodada · Brasileirão Série A 2026',
@@ -768,7 +763,9 @@ const T = {
     match_title:'Escolha o jogo', match_sub:'Jogada de R$ 3,00 sobre este jogo específico.',
     day_sab:'Sábado', day_dom:'Domingo', day_games:'jogos',
     gs_history:'Histórico', hist_title:'Últimas jogadas', hist_close:'Fechar', hist_empty:'Nenhuma jogada ainda.',
-    scope_rodada:'Rodada completa (5 jogos)', scope_dia:'jogos',
+    scope_rodada:'Rodada completa (5 jogos)', scope_copa:'Oitavas de final (8 jogos)', scope_dia:'jogos',
+    comp_copa_sub:'Oitavas de final · Copa do Brasil 2026', mode_rodada_p_copa:'Os 8 jogos das oitavas de final. Maior prêmio, precisa acertar as 3 linhas.',
+    mode_partido_p_copa:'Escolha 1 confronto específico das oitavas. Entrada mais baixa, prêmio mais frequente.',
     err_saldo:'Saldo insuficiente.',
     cutoff_label:'Rodada fecha em', cutoff_closed:'Rodada encerrada', rg_title:'Jogo responsável', rg_msg:'Jogue com moderação · +18', rg_today:'jogadas hoje',
     rg_limit_msg:'Você atingiu o limite de jogadas de hoje. Volte amanhã!', goal_word:'GOL!', kp_ok:'OK',
@@ -776,6 +773,7 @@ const T = {
   es:{
     ss_sub:'TÍTULO DE CAPITALIZACIÓN', ss_cta:'Tocá para jugar', ss_foot:'Jugada de R$ 10,00 · Brasileirão Serie A · Entorno de demostración',
     ss_teams:'⚽ Ver equipos y tabla', league_title:'Equipos y tabla', league_sub:'Equipos reales del fútbol brasileño. Insignias genéricas — no son los escudos oficiales.',
+    my_bets:'🎟 Mis jugadas', comp_serieA:'Brasileirão Serie A', comp_copa:'Copa do Brasil', comp_label:'Competición',
     league_search_ph:'Buscar equipo...', standings_title:'Tabla Brasileirão Serie A · inicio de temporada 2026', st_team:'Equipo', mi_last5:'Últimos 5 partidos (ilustrativo)',
     gs_back:'← Salir', gs_round:'Fecha', board_tag:'JUGADA R$ 10,00', board_note:'Los valores se reparten entre club, escuelita y federaciones.',
     board_confirm:'Confirmar jugada — R$ 10,00', err_fill:'Completá todos los campos para confirmar la jugada.',
@@ -786,7 +784,6 @@ const T = {
     fi_corners:'Cantidad de córners (tiros de esquina) en el/los partido(s). Atención: acá no es gol, es la cantidad de córners cobrados.',
     fi_faltas:'Goles marcados de tiro libre directo.', fi_primeiro:'Minuto en el que llega el primer gol de la jugada.',
     cat_penalti:'PENAL', cat_foraarea:'FUERA DEL ÁREA', cat_corners:'CÓRNERS', fi_ok:'Entendido',
-    cat_title_cabeca:'ELEGÍ LA CATEGORÍA', cat_title_faltas:'ELEGÍ LA CATEGORÍA',
     ok_title:'¡Jugada confirmada!', ok_sub:'Suerte en la fecha. Volviendo a la pantalla inicial...',
     slide1_eb:'Mecánica', slide1_p:'Predecí los goles de 5 partidos de una fecha del Brasileirão Serie A: total, 2º tiempo, goles de delanteros, de cabeza, de tiro libre y el minuto del primer gol.',
     slide2_eb:'Los 5 partidos de esta fecha', slide2_p:'4ª fecha · Brasileirão Serie A 2026',
@@ -799,7 +796,9 @@ const T = {
     match_title:'Elegí el partido', match_sub:'Jugada de R$ 3,00 sobre este partido específico.',
     day_sab:'Sábado', day_dom:'Domingo', day_games:'partidos',
     gs_history:'Historial', hist_title:'Últimas jugadas', hist_close:'Cerrar', hist_empty:'Todavía no hay jugadas.',
-    scope_rodada:'Fecha completa (5 partidos)', scope_dia:'partidos',
+    scope_rodada:'Fecha completa (5 partidos)', scope_copa:'Octavos de final (8 partidos)', scope_dia:'partidos',
+    comp_copa_sub:'Octavos de final · Copa do Brasil 2026', mode_rodada_p_copa:'Los 8 partidos de los octavos de final. Mayor premio, hay que acertar las 3 líneas.',
+    mode_partido_p_copa:'Elegí 1 cruce específico de los octavos. Entrada más baja, premio más frecuente.',
     err_saldo:'Saldo insuficiente.',
     cutoff_label:'La fecha cierra en', cutoff_closed:'Fecha cerrada', rg_title:'Juego responsable', rg_msg:'Jugá con moderación · +18', rg_today:'jugadas hoy',
     rg_limit_msg:'Llegaste al límite de jugadas de hoy. ¡Volvé mañana!', goal_word:'¡GOL!', kp_ok:'OK',
@@ -845,13 +844,46 @@ function renderTicker(){
 // Rodada real do Brasileirão Série A 2026 (tabela básica oficial CBF, 4ª rodada).
 // Trocar por a rodada vigente quando a tabela detalhada da semana estiver confirmada.
 // "day" é uma distribuição sábado/domingo razoável — a tabela detalhada oficial confirma isso mais perto da data.
-const fixtures = [
+const serieAFixtures = [
   {home:'Cruzeiro', away:'Corinthians', day:'sab'},
   {home:'Grêmio', away:'Atlético-MG', day:'sab'},
   {home:'Coritiba', away:'São Paulo', day:'dom'},
   {home:'Bahia', away:'Chapecoense', day:'dom'},
   {home:'Remo', away:'Internacional', day:'dom'},
 ];
+
+// Copa do Brasil 2026 — oitavas de final, os 8 confrontos reais do sorteio da CBF.
+// Fonte: cobertura verificada do sorteio (não é uma rodada de pontos corridos — é mata-mata).
+const copaFixtures = [
+  {home:'Vasco da Gama', away:'Fluminense', day:'sab'},
+  {home:'Atlético-MG', away:'Juventude', day:'sab'},
+  {home:'Santos', away:'Remo', day:'sab'},
+  {home:'Palmeiras', away:'Fortaleza', day:'sab'},
+  {home:'Mirassol', away:'Grêmio', day:'dom'},
+  {home:'Chapecoense', away:'Cruzeiro', day:'dom'},
+  {home:'Internacional', away:'Corinthians', day:'dom'},
+  {home:'Athletico Paranaense', away:'Vitória', day:'dom'},
+];
+
+let competition = 'serieA'; // 'serieA' | 'copa'
+let fixtures = serieAFixtures;
+function setCompetition(comp){
+  if(competition === comp) return;
+  sfxClick();
+  competition = comp;
+  fixtures = comp === 'copa' ? copaFixtures : serieAFixtures;
+  document.querySelectorAll('.comp-tab').forEach(el => el.classList.toggle('active', el.dataset.comp === comp));
+  document.getElementById('modePartidoCard').querySelector('p').textContent =
+    comp === 'copa' ? t('mode_partido_p_copa') : t('mode_partido_p');
+  document.getElementById('modeDiaCard').style.display = comp === 'copa' ? 'none' : '';
+  const rodadaGamesN = fixtures.length;
+  document.getElementById('modeRodadaIcon').textContent = rodadaGamesN;
+  document.getElementById('modeRodadaPrice').textContent = 'R$ ' + rodadaPriceFor(comp).toFixed(2).replace('.',',');
+  document.getElementById('modeRodadaDesc').textContent = comp === 'copa' ? t('mode_rodada_p_copa') : t('mode_rodada_p');
+  document.getElementById('mode_sub_dyn').textContent = comp === 'copa' ? t('comp_copa_sub') : t('mode_sub');
+  renderTicker();
+}
+function rodadaPriceFor(comp){ return comp === 'copa' ? 15 : 10; }
 
 /* ---------------- club badges (iniciais genéricas — sem escudos reais por marca) ---------------- */
 function clubColor(name){ let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))%360; return `hsl(${h},55%,42%)`; }
@@ -1040,13 +1072,13 @@ function activeFixtures(){
   return fixtures;
 }
 function activePrice(){
-  if(mode === 'rodada') return 10;
+  if(mode === 'rodada') return rodadaPriceFor(competition);
   if(mode === 'partido') return 3;
   const n = activeFixtures().length;
   return dayPriceTable[n] || 10;
 }
 function activeScopeLabel(){
-  if(mode === 'rodada') return t('scope_rodada');
+  if(mode === 'rodada') return competition === 'copa' ? t('scope_copa') : t('scope_rodada');
   if(mode === 'partido'){ const f = fixtures[selectedMatchIdx]; return `${f.home} x ${f.away}`; }
   const dayName = selectedDay === 'sab' ? t('day_sab') : t('day_dom');
   return `${dayName} (${activeFixtures().length} ${t('scope_dia')})`;
@@ -1064,7 +1096,6 @@ const fieldInfoKeys = {
 };
 const catFieldLabelKey = { cabeca:'f_cabeca', penalti:'cat_penalti', foraarea:'cat_foraarea', corners:'cat_corners', faltas:'f_faltas' };
 const activeCategory = { 'v-cabeca':'cabeca', 'v-faltas':'faltas' };
-const catOptionsFor = { 'v-cabeca':['cabeca','penalti','foraarea','corners'], 'v-faltas':['faltas','penalti','foraarea','corners'] };
 
 function openFieldInfo(key){
   sfxClick();
@@ -1075,38 +1106,11 @@ function openFieldInfo(key){
 }
 function closeFieldInfo(){ document.getElementById('fieldInfoModal').classList.remove('show'); }
 
-/* ---------------- custom category picker (replaces native <select>) ---------------- */
-let categoryField = null;
-function openCategoryModal(fieldId){
-  sfxClick();
-  categoryField = fieldId;
-  const titleKey = fieldId === 'v-cabeca' ? 'cat_title_cabeca' : 'cat_title_faltas';
-  document.getElementById('catBoxTitle').textContent = t(titleKey);
-  const current = activeCategory[fieldId];
-  document.getElementById('catOptList').innerHTML = catOptionsFor[fieldId].map(cat=>{
-    const sel = cat === current ? 'selected' : '';
-    return `<div class="cat-opt ${sel}" onclick="pickCategory('${cat}')">
-      <span>${t(catFieldLabelKey[cat])}</span><span class="co-check">✓</span>
-    </div>`;
-  }).join('');
-  document.getElementById('categoryModal').classList.add('show');
-  resetIdleTimer();
-}
-function closeCategoryModal(){
-  document.getElementById('categoryModal').classList.remove('show');
-  categoryField = null;
-}
-function pickCategory(cat){
-  if(!categoryField) return;
-  sfxClick();
-  onCategoryChange(categoryField, cat);
-  closeCategoryModal();
-}
-
 function onCategoryChange(fieldId, cat){
+  sfxClick();
   activeCategory[fieldId] = cat;
-  const labelId = fieldId === 'v-cabeca' ? 'catBtnCabecaLabel' : 'catBtnFaltasLabel';
-  document.getElementById(labelId).textContent = t(catFieldLabelKey[cat]);
+  // sincroniza os dois <select> se algum dia forem a mesma categoria — cada campo é independente,
+  // mas guardamos o texto do rótulo pra usar no botão de info e no resumo.
   document.getElementById(fieldId).value = '';
   refreshBoardDerived();
 }
@@ -1324,17 +1328,17 @@ function backToScreensaver(){
   slideTimer = setInterval(cycleSlides, 4200);
   clearTimeout(idleTimer);
 }
-/* ---------------- synthesized sound effects + background music (no audio files — Web Audio API) ---------------- */
+/* ---------------- synthesized sound effects (no audio files — Web Audio API) ---------------- */
 let actx = null;
-let masterGain = null;      // everything (sfx + music) routes through this — one slider controls both
-let isMuted = true;         // matches the slider's initial value="0" in the markup
-let masterVolume = 0;       // 0-100, mirrors the slider
+let masterGain = null; // efeitos sonoros passam por aqui — controlado pelo mesmo slider que a música
+let isMuted = true;    // bate com value="0" do slider no HTML
+let masterVolume = 0;  // 0-100, espelha o slider
 function getActx(){
   if(!actx){
     const AC = window.AudioContext || window.webkitAudioContext;
     actx = new AC();
     masterGain = actx.createGain();
-    masterGain.gain.value = (isMuted ? 0 : masterVolume/100);
+    masterGain.gain.value = isMuted ? 0 : masterVolume/100;
     masterGain.connect(actx.destination);
   }
   if(actx.state === 'suspended') actx.resume();
@@ -1387,96 +1391,21 @@ function sfxWhoosh(){
 function sfxCardSelect(){ playTone(440, 0.05, 'triangle', 0.06, 0); playTone(880, 0.07, 'triangle', 0.06, 0.05); }
 function sfxChip(){ playTone(760, 0.035, 'square', 0.045, 0); }
 
-/* ---------------- background music: original synthesized "stadium batucada" loop ----------------
-   No usamos audio de terceros (por derechos de autor) — esto es un loop propio de percusión de
-   torcida + bajo tipo samba, generado 100% con osciladores/ruido, en el mismo estilo que los sfx. */
-let musicPlaying = false;
-let musicSchedulerId = null;
-let musicNextNoteTime = 0;
-let musicStep = 0;
-const MUSIC_BPM = 104;
-const MUSIC_STEP_SEC = 60 / MUSIC_BPM / 2; // 8th notes
-const MUSIC_LOOKAHEAD = 0.12; // schedule this far ahead each tick (seconds)
-
-function noiseBurst(time, duration, gainVal, filterFreq){
-  const ctx = getActx();
-  const bufSize = Math.max(1, Math.floor(ctx.sampleRate * duration));
-  const buf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-  const data = buf.getChannelData(0);
-  for(let i=0;i<bufSize;i++) data[i] = (Math.random()*2-1) * (1 - i/bufSize);
-  const src = ctx.createBufferSource(); src.buffer = buf;
-  const filter = ctx.createBiquadFilter(); filter.type = 'bandpass'; filter.frequency.value = filterFreq || 1400;
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(gainVal, time);
-  gain.gain.exponentialRampToValueAtTime(0.0008, time + duration);
-  src.connect(filter); filter.connect(gain); gain.connect(musicBus);
-  src.start(time); src.stop(time + duration + 0.02);
-}
-function musicTone(freq, time, duration, type, gainVal){
-  const ctx = getActx();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = type || 'sine';
-  osc.frequency.setValueAtTime(freq, time);
-  gain.gain.setValueAtTime(0.0001, time);
-  gain.gain.linearRampToValueAtTime(gainVal, time + 0.02);
-  gain.gain.exponentialRampToValueAtTime(0.0006, time + duration);
-  osc.connect(gain); gain.connect(musicBus);
-  osc.start(time); osc.stop(time + duration + 0.03);
-}
-let musicBus = null; // sub-mix for music, feeds into masterGain, kept quieter than sfx
-function ensureMusicBus(){
-  const ctx = getActx();
-  if(!musicBus){
-    musicBus = ctx.createGain();
-    musicBus.gain.value = 0.55; // keeps the loop subtle relative to sfx
-    musicBus.connect(masterGain);
-  }
-}
-// batucada de 16 passos: bumbo (grave), caixa/palma no contratempo, e um baixo tipo samba
-const KICK_STEPS  = [0,0,0,1,0,0,0,0, 0,0,0,1,0,0,0,0].map((v,i)=> i%8===0 ? 1 : v);
-const CLAP_STEPS  = [0,0,0,0,1,0,0,0, 0,0,0,0,1,0,0,0];
-const SHAKER_STEPS= [1,0,1,0,1,0,1,0, 1,0,1,0,1,0,1,0];
-const BASS_NOTES  = [98,null,110,null,98,null,130.8,null, 98,null,110,null,146.8,130.8,110,98]; // samba-ish walking bass (Hz)
-
-function scheduleMusicNote(step, time){
-  if(KICK_STEPS[step])   noiseBurst(time, 0.09, 0.14, 160);
-  if(CLAP_STEPS[step])   noiseBurst(time, 0.05, 0.09, 2200);
-  if(SHAKER_STEPS[step]) noiseBurst(time, 0.03, 0.035, 6500);
-  const bassFreq = BASS_NOTES[step];
-  if(bassFreq) musicTone(bassFreq, time, MUSIC_STEP_SEC*1.7, 'triangle', 0.05);
-  // stab festivo tipo "olé" cada 2 compassos, para dar identidade de torcida
-  if(step === 0 && (musicLoopCount % 2 === 0)) musicTone(523.3, time, 0.5, 'square', 0.02);
-}
-let musicLoopCount = 0;
-function musicSchedulerTick(){
-  const ctx = getActx();
-  while(musicNextNoteTime < ctx.currentTime + MUSIC_LOOKAHEAD){
-    scheduleMusicNote(musicStep, musicNextNoteTime);
-    musicNextNoteTime += MUSIC_STEP_SEC;
-    musicStep++;
-    if(musicStep >= 16){ musicStep = 0; musicLoopCount++; }
-  }
-}
+/* ---------------- background music: arquivo local (instrumental de domínio público) -----------------
+   Toca em loop pelo elemento <audio id="bgMusic">, controlado pelo mesmo botão/slider de som. */
+const bgMusicEl = document.getElementById('bgMusic');
 function startBgMusic(){
-  if(musicPlaying) return;
-  ensureMusicBus();
-  const ctx = getActx();
-  musicNextNoteTime = ctx.currentTime + 0.05;
-  musicStep = 0;
-  musicPlaying = true;
-  musicSchedulerId = setInterval(musicSchedulerTick, 50);
+  if(!bgMusicEl) return;
+  bgMusicEl.play().catch(()=>{ /* navegador pode bloquear até haver gesto do usuário — ok, tentamos de novo no próximo clique */ });
 }
 function stopBgMusic(){
-  musicPlaying = false;
-  if(musicSchedulerId){ clearInterval(musicSchedulerId); musicSchedulerId = null; }
+  if(bgMusicEl) bgMusicEl.pause();
 }
 
-/* ---------------- master volume / mute controls (top bar) ---------------- */
+/* ---------------- controle único de mute/volume (sfx + música) ---------------- */
 function applyMasterGain(){
-  if(!masterGain) return;
-  const target = isMuted ? 0 : masterVolume/100;
-  masterGain.gain.setTargetAtTime(target, actx.currentTime, 0.05);
+  if(masterGain) masterGain.gain.setTargetAtTime(isMuted ? 0 : masterVolume/100, actx.currentTime, 0.05);
+  if(bgMusicEl) bgMusicEl.volume = isMuted ? 0 : masterVolume/100;
 }
 function updateSoundIcon(){
   const btn = document.getElementById('soundToggleBtn');
@@ -1488,16 +1417,17 @@ function updateSoundIcon(){
   if(slider) slider.value = isMuted ? 0 : masterVolume;
 }
 function toggleMute(){
-  getActx(); // AudioContext só pode iniciar/retomar num gesto do usuário — este clique conta
+  getActx(); // AudioContext só liga/retoma dentro de um gesto do usuário — este clique conta
   if(isMuted){
     isMuted = false;
-    if(masterVolume === 0) masterVolume = 35; // primeiro "ligar" já dá um volume audível
+    if(masterVolume === 0) masterVolume = 35; // primeira vez que "liga" já fica num volume audível
+    startBgMusic();
   } else {
     isMuted = true;
+    stopBgMusic();
   }
   applyMasterGain();
   updateSoundIcon();
-  if(!isMuted) startBgMusic(); else stopBgMusic();
 }
 function setVolume(val){
   getActx();
@@ -1505,7 +1435,7 @@ function setVolume(val){
   isMuted = masterVolume === 0;
   applyMasterGain();
   updateSoundIcon();
-  if(!isMuted) startBgMusic(); else stopBgMusic();
+  if(isMuted) stopBgMusic(); else startBgMusic();
 }
 
 function chooseMode(m){
@@ -1590,6 +1520,26 @@ function clearBoard(){
   document.getElementById('errMsg').style.display = 'none';
   refreshBoardDerived();
 }
+/* ---------------- integração Odoo (stub) ----------------
+   Ainda não temos a URL real nem a autenticação do Odoo de vocês. Troquem ODOO_API_URL pelo
+   endpoint real (e adicionem o header de auth que precisar) — o resto já está pronto pra mandar.
+   Enquanto isso, o fetch vai falhar em silêncio (sem internet/servidor real) e só loga no console,
+   nunca trava o jogo. */
+const ODOO_API_URL = 'https://SEU-ODOO-AQUI.exemplo.com/api/goalleague/jogadas'; // <-- trocar pela URL real
+async function sendBetToOdoo(payload){
+  try{
+    const res = await fetch(ODOO_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' /*, 'Authorization': 'Bearer ...' */ },
+      body: JSON.stringify(payload),
+    });
+    if(res.ok) console.log('[Odoo] jogada enviada:', payload);
+    else console.warn('[Odoo] resposta não-OK:', res.status);
+  }catch(e){
+    console.warn('[Odoo] não foi possível conectar (esperado nesta demo sem endpoint real):', e.message, payload);
+  }
+}
+
 function confirmJogada(){
   if(isCutoffPassed()){
     sfxError();
@@ -1631,6 +1581,24 @@ function confirmJogada(){
     ml: document.getElementById('v-ml').checked,
     price
   };
+
+  // envia a jogada para o Odoo (ver ODOO_API_URL no topo do arquivo — hoje é um placeholder)
+  sendBetToOdoo({
+    usuario: 'jogador_cassino', // placeholder — em produção viria da sessão real que o cassino injeta
+    competicao: competition,
+    modo: mode,
+    escopo: activeScopeLabel(),
+    valor: price,
+    categorias: {
+      total: vals[0], segundo_tempo: vals[1], atacantes: vals[2],
+      [activeCategory['v-cabeca']]: vals[3],
+      [activeCategory['v-faltas']]: vals[4],
+      primeiro_gol_min: vals[5],
+    },
+    liga: document.getElementById('v-liga').checked,
+    multiliga: document.getElementById('v-ml').checked,
+    timestamp: new Date().toISOString(),
+  });
 
   const labels = [t('f_total'), t('f_segundo'), t('f_atacantes'), t('f_cabeca'), t('f_faltas'), t('f_primeiro')];
   document.getElementById('okRecap').innerHTML = labels.map((l,i)=>`<span>${l}: ${vals[i]}</span>`).join('');
@@ -1710,7 +1678,6 @@ renderFixtures();
 renderTicker();
 updateWalletDisplay();
 updateRgCounter();
-updateSoundIcon();
 tickCutoff();
 slideTimer = setInterval(cycleSlides, 4200);
 </script>
